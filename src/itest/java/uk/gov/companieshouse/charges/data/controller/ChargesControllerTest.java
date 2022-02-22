@@ -49,4 +49,11 @@ public class ChargesControllerTest {
         mockMvc.perform(get(url)).andExpect(status().isOk());
     }
 
+    @Test
+    @DisplayName("Successfully add a charge")
+    public void addChargeSuccessfully() throws Exception {
+        String url = String.format("/company/{company_number}/charge/{charge_id}");
+        mockMvc.perform(get(url)).andExpect(status().isOk());
+    }
+
 }
