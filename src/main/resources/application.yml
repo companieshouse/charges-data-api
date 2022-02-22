@@ -2,7 +2,7 @@
 logger:
   namespace: charges-data-api
 
-chs:
-  kafka:
-    api:
-      endpoint: ${CHS_KAFKA_API_URL:localhost}
+springfox:
+  documentation:
+    auto-startup: false
+
