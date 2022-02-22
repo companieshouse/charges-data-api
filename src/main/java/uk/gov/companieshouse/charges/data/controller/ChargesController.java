@@ -23,25 +23,30 @@ public class ChargesController {
 
     /**
      * Get charges for company.
-     *
+     * @param  companyNumber  the company number for charge
+     * @param  requestBody  the request body containing insolvency data
+     * @return  ResponseEntity
      */
     @GetMapping(value = "/company/{company_number}/charges")
     public ResponseEntity<?> getChargesByCompanyNumber(
             @PathVariable("company_number") String companyNumber,
-            HttpServletRequest request) {
+            HttpServletRequest requestBody) {
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     /**
      * Get charge for company.
-     *
+     * @param  companyNumber  the company number for charge
+     * @param chargeId the Id for charge
+     * @param  requestBody  the request body containing insolvency data
+     * @return  ResponseEntity
      */
     @GetMapping(value = "/company/{company_number}/charge/{charge_id}")
     public ResponseEntity<?> getChargeByCompanyNumber(
             @PathVariable("company_number") String companyNumber,
             @PathVariable("charge_id") String chargeId,
-            HttpServletRequest request) {
+            HttpServletRequest requestBody) {
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
