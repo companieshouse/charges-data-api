@@ -48,7 +48,7 @@ test-integration:
 	@# Help: Run integration tests
 	mvn integration-test -Dskip.unit.tests=true
 
-,PHONY: run-local
+.PHONY: run-local
 run-local:
 	@# Help: Run springboot app locally
 	mvn spring-boot:run
