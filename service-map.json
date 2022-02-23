@@ -1,0 +1,20 @@
+{
+  "type": "Service",
+  "name": "charges-data-api",
+  "description": "Persisting company charges data",
+  "language": "Java",
+  "integration_outgoing": [
+    "chs-kafka-api"
+  ],
+  "owned_by": "Thunderpigs",
+  "documentation": "https://companieshouse.atlassian.net/wiki/spaces/DSPR/pages/3634724966/Data+Synchronisation+Service+Architecture",
+  "git_repo": "https://github.com/companieshouse/charges-data-api",
+  "specification": "tbc",
+  "public": "false",
+  "users": "internal",
+  "code_analysis_link": "tbc",
+  "test_automation_repo": "https://github.com/companieshouse/taf-api-karate",
+  "service_area": "tbc",
+  "service_component": "tbc",
+  "healthcheck_endpoint": "tbc"
+}
