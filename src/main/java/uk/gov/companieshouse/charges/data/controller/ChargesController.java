@@ -31,11 +31,11 @@ public class ChargesController {
      */
     @PutMapping("/company/{company_number}/charge/{charge_id}/internal")
     public ResponseEntity<Void> saveOrUpdateCharges(
-            @PathVariable("company_number") String companyNumber,
-            @PathVariable("charge_id") String chargeId,
-            @RequestBody ChargesRequest requestBody
+            @PathVariable("company_number") final String companyNumber,
+            @PathVariable("charge_id") final String chargeId,
+            @RequestBody final ChargesRequest requestBody
     ) throws JsonProcessingException {
-        chargesService.saveOrUpdateCharges(companyNumber, chargeId, requestBody);
+        chargesService.upsertCharges(companyNumber, chargeId, requestBody);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

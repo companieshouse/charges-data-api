@@ -12,7 +12,7 @@ public class ChargesService {
 
     private final Logger logger;
 
-    public ChargesService(Logger logger) {
+    public ChargesService(final Logger logger) {
         this.logger = logger;
     }
 
@@ -37,7 +37,7 @@ public class ChargesService {
      * @param chargeId charges Id.
      * @param requestBody request body.
      */
-    public void saveOrUpdateCharges(String companyNumber, String chargeId, ChargesRequest requestBody) {
+    public void upsertCharges(String companyNumber, String chargeId, ChargesRequest requestBody) {
         logger.debug(String.format("Save or Update charge %s with company number %s ", chargeId,
                 companyNumber));
         // TODO Save to database

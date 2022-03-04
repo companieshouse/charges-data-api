@@ -57,7 +57,7 @@ public class ChargesControllerTest {
     public void callChargesPutRequest() throws Exception {
 
         ChargesRequest request = new ChargesRequest();
-        doNothing().when(chargesService).saveOrUpdateCharges(eq("02588581"), eq("02588581"), isA(ChargesRequest.class));
+        doNothing().when(chargesService).upsertCharges(eq("02588581"), eq("02588581"), isA(ChargesRequest.class));
         String url = String.format("/company/%s/charge/%s/internal", "02588581", "02588581");
         mockMvc.perform(put(url).contentType(APPLICATION_JSON)
                 .content(gson.toJson(request))).andExpect(status().isOk());

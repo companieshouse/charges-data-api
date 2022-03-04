@@ -1,0 +1,62 @@
+{
+  "internalCharges": {
+    "put": {
+      "summary": "Create a Charges resource",
+      "description": "Create a Charges resource",
+      "tags": [
+        "internalChargesApi"
+      ],
+      "parameters": [
+        {
+          "in": "path",
+          "name": "company_number",
+          "required": true,
+          "description": "The company number",
+          "type": "string"
+        },
+        {
+          "name": "charge_id",
+          "in": "path",
+          "description": "Hashed representation of Chips mortgage_id",
+          "required": true
+        },
+        {
+          "name": "chargesRequest",
+          "in": "body",
+          "description": "The writable fields to create an charges data resource",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/InternalChargeApi"
+          }
+        }
+      ],
+      "responses": {
+        "201": {
+          "description": "The charges resource was created.",
+          "schema": {
+            "$ref": "#/definitions/InternalChargeApi"
+          }
+        },
+        "401": {
+          "description": "Unauthorised"
+        },
+        "404": {
+          "description": "Resource not found"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "InternalChargeApi": {
+      "type": "object",
+      "properties": {
+        "external_data": {
+          "$ref": "charges.json#/definitions/ChargeApi"
+        },
+        "internal_data": {
+          "$ref": "../common/internal-data.json#/definitions/InternalData"
+        }
+      }
+    }
+  }
+}
