@@ -32,7 +32,7 @@
 		<jib-maven-plugin.version>3.1.1</jib-maven-plugin.version>
 		<skip.integration.tests>false</skip.integration.tests>
 		<skip.unit.tests>false</skip.unit.tests>
-		<api-sdk-manager-java-library.version>1.0.4</api-sdk-manager-java-library.version>
+		<private-api-sdk-java.version>2.0.117</private-api-sdk-java.version>
 		<io-cucumber.version>7.2.3</io-cucumber.version>
 
 		<!--sonar configuration-->
@@ -104,6 +104,19 @@
 			<groupId>org.testcontainers</groupId>
 			<artifactId>junit-jupiter</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-test</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>uk.gov.companieshouse</groupId>
+			<artifactId>private-api-sdk-java</artifactId>
+			<version>${private-api-sdk-java.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.cucumber</groupId>
@@ -258,13 +271,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${maven-surefire-plugin.version}</version>
-				<dependencies>
-					<dependency>
-						<groupId>org.apache.maven.surefire</groupId>
-						<artifactId>surefire-junit47</artifactId>
-						<version>${maven-surefire-plugin.version}</version>
-					</dependency>
-				</dependencies>
 				<configuration>
 					<excludes>
 						<exclude>**/*ITest.java</exclude>
@@ -302,7 +308,6 @@
 						<arg>-Xlint</arg>
 						<arg>-Xlint:-processing</arg>
 						<arg>-Xlint:-serial</arg>
-						<arg>-Werror</arg>
 					</compilerArgs>
 					<showWarnings>true</showWarnings>
 					<showDeprecation>true</showDeprecation>
@@ -321,6 +326,7 @@
 						</goals>
 					</execution>
 				</executions>
+
 				<configuration>
 					<violationSeverity>warning</violationSeverity>
 					<logViolationsToConsole>true</logViolationsToConsole>
