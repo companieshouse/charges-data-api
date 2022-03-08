@@ -26,8 +26,12 @@ public class ExceptionHandlerConfig {
         Map<String, Object> responseBody = new LinkedHashMap<>();
         responseBody.put("timestamp", LocalDateTime.now());
         responseBody.put("message", "There is issue completing the request.");
-        responseBody.put("correlationId", UUID.randomUUID());
+        responseBody.put("correlationId", generateShortCorrelationId());
         request.setAttribute("javax.servlet.error.exception", ex, 0);
         return new ResponseEntity(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    private String generateShortCorrelationId(){
+        return UUID.randomUUID().toString().replace("-","").substring(0,8);
     }
 }
