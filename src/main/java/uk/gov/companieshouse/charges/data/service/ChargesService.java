@@ -14,10 +14,12 @@ import uk.gov.companieshouse.logging.Logger;
 public class ChargesService {
 
     private final Logger logger;
+    private ChargesTransformer chargesTransformer;
 
     @Autowired
     public ChargesService(final Logger logger) {
         this.logger = logger;
+        this.chargesTransformer = new ChargesTransformer(logger);
     }
 
     /**
@@ -45,8 +47,11 @@ public class ChargesService {
             InternalChargeApi requestBody) {
         logger.debug(String.format("Save or Update charge %s with company number %s ", chargeId,
                 companyNumber));
+
+
         ChargesDocument charges =
-                ChargesTransformer.transform(companyNumber, chargeId, requestBody);
+                this.chargesTransformer.transform(companyNumber, chargeId, requestBody);
+
         //TODO save charges
     }
 
