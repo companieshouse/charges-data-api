@@ -7,3 +7,6 @@ chs:
     api:
       endpoint: ${CHS_KAFKA_API_URL:localhost}
 
+server:
+  port : 8081
+

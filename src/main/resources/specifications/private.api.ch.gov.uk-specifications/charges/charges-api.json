@@ -1,0 +1,47 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Companies House Public Data API",
+    "description": "An API suite providing read only access to search and retrieve public company data"
+  },
+  "host": "api.company-information.service.gov.uk",
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "tags": [
+    {
+      "name": "charges",
+      "description": "Charges"
+    }
+  ],
+  "securityDefinitions": {
+    "api_key": {
+      "type": "apiKey",
+      "name": "api_key",
+      "in": "header"
+    }
+  },
+  "security": [{
+    "api_key": []
+  }
+  ],
+  "paths": {
+    "/company/{company_number}/charges": {
+      "$ref": "charges.json#/chargeList"
+    },
+    "/company/{company_number}/charge/{charge_id}}": {
+      "$ref": "charges.json#/chargeDetails"
+    },
+    "/company/{company_number}/charge/{charge_id}}/internal": {
+      "$ref": "internal-charges.json#/internalCharges"
+    }
+  }
+}
