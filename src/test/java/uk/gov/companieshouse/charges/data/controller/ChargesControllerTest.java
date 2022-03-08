@@ -21,7 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.companieshouse.charges.data.requests.ChargesRequest;
+import uk.gov.companieshouse.api.charges.InternalChargeApi;
 import uk.gov.companieshouse.charges.data.service.ChargesService;
 import uk.gov.companieshouse.logging.Logger;
 
@@ -56,12 +56,11 @@ public class ChargesControllerTest {
     @DisplayName("Charges PUT request")
     public void callChargesPutRequest() throws Exception {
 
-        ChargesRequest request = new ChargesRequest();
-        doNothing().when(chargesService).upsertCharges(eq("02588581"), eq("02588581"), isA(ChargesRequest.class));
+        InternalChargeApi request = new InternalChargeApi();
+        doNothing().when(chargesService).upsertCharges(eq("02588581"), eq("02588581"), isA(InternalChargeApi.class));
         String url = String.format("/company/%s/charge/%s/internal", "02588581", "02588581");
         mockMvc.perform(put(url).contentType(APPLICATION_JSON)
                 .content(gson.toJson(request))).andExpect(status().isOk());
     }
-
 
 }

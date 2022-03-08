@@ -1,6 +1,5 @@
 package uk.gov.companieshouse.charges.data.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.companieshouse.charges.data.requests.ChargesRequest;
+import uk.gov.companieshouse.api.charges.InternalChargeApi;
 import uk.gov.companieshouse.charges.data.service.ChargesService;
 
 @RestController
@@ -33,9 +32,9 @@ public class ChargesController {
     public ResponseEntity<Void> saveOrUpdateCharges(
             @PathVariable("company_number") final String companyNumber,
             @PathVariable("charge_id") final String chargeId,
-            @RequestBody final ChargesRequest requestBody
-    ) throws JsonProcessingException {
-        chargesService.upsertCharges(companyNumber, chargeId, requestBody);
+            @RequestBody final InternalChargeApi requestBody
+    ) {
+        this.chargesService.upsertCharges(companyNumber, chargeId, requestBody);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
