@@ -293,6 +293,7 @@
 					</execution>
 				</executions>
 				<configuration>
+					<argLine>-Dfile.encoding=UTF-8</argLine>
 					<classesDirectory>${project.build.outputDirectory}</classesDirectory>
 					<skipITs>${skip.integration.tests}</skipITs>
 					<includes>
