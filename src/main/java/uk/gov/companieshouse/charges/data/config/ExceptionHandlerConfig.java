@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
 @ControllerAdvice
-public class ExceptionHandlerConfig{
+public class ExceptionHandlerConfig {
 
     /**
      * Runtime exception handler.
@@ -31,7 +31,7 @@ public class ExceptionHandlerConfig{
         return new ResponseEntity(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    private String generateShortCorrelationId(){
+    private String generateShortCorrelationId() {
         return UUID.randomUUID().toString().replace("-","").substring(0,8);
     }
 }
