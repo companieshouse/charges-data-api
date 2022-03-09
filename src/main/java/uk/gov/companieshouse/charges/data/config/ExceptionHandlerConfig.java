@@ -31,7 +31,7 @@ public class ExceptionHandlerConfig {
         return new ResponseEntity(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    private String generateShortCorrelationId(){
+    private String generateShortCorrelationId() {
         return UUID.randomUUID().toString().replace("-","").substring(0,8);
     }
 }
