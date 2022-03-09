@@ -272,6 +272,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${maven-surefire-plugin.version}</version>
 				<configuration>
+					<argLine>-Dfile.encoding=UTF-8</argLine>
 					<excludes>
 						<exclude>**/*ITest.java</exclude>
 					</excludes>
