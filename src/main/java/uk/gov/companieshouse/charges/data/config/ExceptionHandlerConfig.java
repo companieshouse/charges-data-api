@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
 @ControllerAdvice
-public class ExceptionHandlerConfig {
+public class ExceptionHandlerConfig{
 
     /**
      * Runtime exception handler.
