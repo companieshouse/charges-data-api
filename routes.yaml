@@ -1,5 +1,5 @@
 app_name: charges-data-api
 group: api
-weight: 991
+weight: 900
 routes:
    1: ^/company/(.*)/charge.*
