@@ -3,6 +3,7 @@ package uk.gov.companieshouse.charges.data.transform;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.time.OffsetDateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -29,6 +30,7 @@ public class ChargesTransformerTest {
         String chargeId = "L5bvSq3ligF_V84zh-ExMxCeU";
         InternalChargeApi requestBody = new InternalChargeApi();
         var internalData = new InternalData();
+        internalData.setDeltaAt(OffsetDateTime.now());
         var externalData = new ChargeApi();
         requestBody.setInternalData(internalData);
         requestBody.setExternalData(externalData);
