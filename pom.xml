@@ -36,8 +36,16 @@
 		<io-cucumber.version>7.2.3</io-cucumber.version>
 
 		<!--sonar configuration-->
-		<sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/target/site/jacoco/jacoco.xml,
-			${project.basedir}/target/site/jacoco-it/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+		<sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
+		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+		<sonar.projectKey>uk.gov.companieshouse:charges-data-api</sonar.projectKey>
+		<sonar.sources>src/main</sonar.sources>
+		<sonar.tests>src/test</sonar.tests>
+		<sonar.verbose>true</sonar.verbose>
+		<sonar.coverage.jacoco.xmlReportPaths>
+			${project.basedir}/target/site/jacoco/jacoco.xml,
+			${project.basedir}/target/site/jacoco-it/jacoco.xml
+		</sonar.coverage.jacoco.xmlReportPaths>
 		<sonar.jacoco.reports>${project.basedir}/target/site</sonar.jacoco.reports>
 	</properties>
 
@@ -240,7 +248,9 @@
 							<goal>report</goal>
 						</goals>
 						<configuration>
+							<!-- Sets the path to the file which contains the execution data. -->
 							<dataFile>${sonar.jacoco.reports}/jacoco-it.exec</dataFile>
+							<!-- Sets the output directory for the code coverage report. -->
 							<outputDirectory>${sonar.jacoco.reports}/jacoco-it</outputDirectory>
 						</configuration>
 					</execution>
@@ -273,6 +283,7 @@
 				<version>${maven-surefire-plugin.version}</version>
 				<configuration>
 					<argLine>-Dfile.encoding=UTF-8</argLine>
+					<argLine>${surefireArgLine}</argLine>
 					<excludes>
 						<exclude>**/*ITest.java</exclude>
 					</excludes>
@@ -294,6 +305,7 @@
 				</executions>
 				<configuration>
 					<argLine>-Dfile.encoding=UTF-8</argLine>
+					<argLine>${failsafeArgLine}</argLine>
 					<classesDirectory>${project.build.outputDirectory}</classesDirectory>
 					<skipITs>${skip.integration.tests}</skipITs>
 					<includes>
