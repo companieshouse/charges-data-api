@@ -13,8 +13,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import uk.gov.companieshouse.api.InternalApiClient;
-import uk.gov.companieshouse.charges.data.converter.CompanyChargesReaderConverter;
-import uk.gov.companieshouse.charges.data.converter.CompanyChargesWriterConverter;
+import uk.gov.companieshouse.charges.data.converter.ReadConverter;
+import uk.gov.companieshouse.charges.data.converter.WriteConverter;
 import uk.gov.companieshouse.charges.data.serialization.LocalDateDeSerializer;
 import uk.gov.companieshouse.charges.data.serialization.LocalDateSerializer;
 import uk.gov.companieshouse.environment.EnvironmentReader;
@@ -40,10 +40,11 @@ public class ApplicationConfig implements WebMvcConfigurer {
      *
      * @return MongoCustomConversions.
      */
+    @Bean("mongoConverterMapper")
     public MongoCustomConversions mongoCustomConversions() {
         ObjectMapper objectMapper = mongoDbObjectMapper();
-        return new MongoCustomConversions(List.of(new CompanyChargesWriterConverter(objectMapper),
-                new CompanyChargesReaderConverter(objectMapper)));
+        return new MongoCustomConversions(List.of(new WriteConverter(objectMapper),
+                new ReadConverter(objectMapper)));
     }
 
     /**

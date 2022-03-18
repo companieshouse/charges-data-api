@@ -1,7 +1,6 @@
 package uk.gov.companieshouse.charges.data.model;
 
 import java.util.Objects;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -9,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import uk.gov.companieshouse.api.charges.ChargeApi;
 
-@Document(collection = "company-mortgages")
+@Document(collection = "#{@environment.getProperty('mongodb.charges.collection.name')}")
 public class ChargesDocument {
 
     @Id

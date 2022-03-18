@@ -1,6 +1,5 @@
 package uk.gov.companieshouse.charges.data.service;
 
-import java.util.List;
 import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
@@ -14,6 +13,7 @@ public class ChargesService {
     private final Logger logger;
     private ChargesTransformer chargesTransformer;
     private ChargesRepository chargesRepository;
+
 
     /**
      * ChargesService constructor.
@@ -45,8 +45,6 @@ public class ChargesService {
                 this.chargesTransformer.transform(companyNumber, chargeId, requestBody);
         logger.debug(String.format("Started : Saving charges in DB "));
         this.chargesRepository.save(charges);
-        List<ChargesDocument> chargesCollection = this.chargesRepository.findAll();
-        System.out.println("Data Fetched" + chargesCollection);
         logger.debug(String.format("Finished : Save or Update charge %s with company number %s",
                 chargeId,
                 companyNumber));
