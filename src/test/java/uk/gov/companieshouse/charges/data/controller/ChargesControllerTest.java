@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
 import uk.gov.companieshouse.charges.data.service.ChargesService;
+import uk.gov.companieshouse.charges.data.tranform.ChargesTransformer;
 import uk.gov.companieshouse.logging.Logger;
 
 @SpringBootTest
@@ -39,6 +40,9 @@ public class ChargesControllerTest {
 
     @InjectMocks
     private ChargesController chargesController;
+
+    @Mock
+    private ChargesTransformer chargesTransformer;
 
     private ObjectMapper mapper = new ObjectMapper();
 

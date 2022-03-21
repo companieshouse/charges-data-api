@@ -8,5 +8,14 @@ chs:
       endpoint: ${CHS_KAFKA_API_URL:localhost}
 
 server:
-  port : 8081
+  port : 8082
 
+spring:
+  data:
+    mongodb:
+      uri: ${MONGODB_URL:mongodb://localhost:27017/company-mortgages}
+
+mongodb:
+  charges:
+    collection:
+      name: ${CHARGES_COLLECTION_NAME:company_mortgages}
