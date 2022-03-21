@@ -3,6 +3,7 @@ package uk.gov.companieshouse.charges.data.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
+import uk.gov.companieshouse.charges.data.api.ChargesApiService;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.repository.ChargesRepository;
 import uk.gov.companieshouse.charges.data.tranform.ChargesTransformer;
@@ -14,6 +15,7 @@ public class ChargesService {
     private final Logger logger;
     private ChargesTransformer chargesTransformer;
     private ChargesRepository chargesRepository;
+    private final ChargesApiService chargesApiService;
 
 
     /**
@@ -23,10 +25,11 @@ public class ChargesService {
      * @param chargesRepository chargesRepository.
      */
     public ChargesService(final Logger logger, final ChargesRepository chargesRepository,
-            final ChargesTransformer chargesTransformer) {
+            final ChargesTransformer chargesTransformer, ChargesApiService chargesApiService) {
         this.logger = logger;
         this.chargesRepository = chargesRepository;
         this.chargesTransformer = chargesTransformer;
+        this.chargesApiService = chargesApiService;
     }
 
     /**
@@ -50,6 +53,11 @@ public class ChargesService {
         logger.debug(String.format("Finished : Save or Update charge %s with company number %s",
                 chargeId,
                 companyNumber));
+
+        chargesApiService.invokeChsKafkaApi(companyNumber);
+
+        logger.info(String.format("DSND-542: ChsKafka api invoked successfully for company number"
+                + " %s", companyNumber));
     }
 
 
