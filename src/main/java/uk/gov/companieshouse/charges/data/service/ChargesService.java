@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.charges.data.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.repository.ChargesRepository;
@@ -35,6 +36,7 @@ public class ChargesService {
      * @param chargeId      charges Id.
      * @param requestBody   request body.
      */
+    @Transactional
     public void upsertCharges(String companyNumber, String chargeId,
             InternalChargeApi requestBody) {
         logger.debug(String.format("Started : Save or Update charge %s with company number %s ",

@@ -3,7 +3,6 @@ package uk.gov.companieshouse.charges.data.model;
 import java.util.Objects;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import uk.gov.companieshouse.api.charges.ChargeApi;
@@ -15,7 +14,8 @@ public class ChargesDocument {
     private String id;
 
     @Field(value = "company_number")
-    @Indexed(unique = true)
+    //TODO Zahid is going to confirm whether we need to index on charges or company_number
+    //@Indexed(unique = true)
     private String companyNumber;
 
     private ChargeApi data;
