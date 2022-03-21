@@ -14,10 +14,8 @@ import uk.gov.companieshouse.logging.Logger;
 public class ChargesApiService {
 
     private static final String CHANGED_RESOURCE_URI = "/resource-changed";
-    public static final String COMPANY_URI = "/company/";
-    public static final String COMPANY_CHARGES_URI = "/company-charges";
     public static final String RESOURCE_KIND = "company-charges";
-    public static final String CHANGED_ENVENT_TYPE = "changed";
+    public static final String CHANGED_EVENT_TYPE = "changed";
     private final Logger logger;
     private final String chsKafkaUrl;
     private final ApiClientService apiClientService;
@@ -37,7 +35,7 @@ public class ChargesApiService {
      * @param companyNumber company charges number
      * @return response returned from chs-kafka api
      */
-    public ApiResponse<?> invokeChsKafkaApi(String companyNumber) {
+    public ApiResponse<Void> invokeChsKafkaApi(String companyNumber) {
         InternalApiClient internalApiClient = apiClientService.getInternalApiClient();
         internalApiClient.setBasePath(chsKafkaUrl);
 
@@ -54,10 +52,10 @@ public class ChargesApiService {
     }
 
     private ChangedResource mapChangedResource(String companyNumber) {
-        String resourceUri = COMPANY_URI + companyNumber + COMPANY_CHARGES_URI;
+        String resourceUri = String.format("/company/%s/company-charges", companyNumber);
 
         ChangedResourceEvent event = new ChangedResourceEvent();
-        event.setType(CHANGED_ENVENT_TYPE);
+        event.setType(CHANGED_EVENT_TYPE);
         ChangedResource changedResource = new ChangedResource();
         changedResource.setResourceUri(resourceUri);
         changedResource.event(event);
