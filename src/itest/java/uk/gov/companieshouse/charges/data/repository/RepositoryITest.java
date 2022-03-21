@@ -86,10 +86,10 @@ public class RepositoryITest {
     mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
     InternalChargeApi chargesDocument = mapper.readValue(incomingData, InternalChargeApi.class);
-    ChargesDocument chargesDocument1 =
+    ChargesDocument transformedChargesDocument =
             transform("02327864", "2m1l9ofMOYNsHxDiSC_FkHw9lOw", chargesDocument);
 
-    return chargesDocument1;
+    return transformedChargesDocument;
   }
 
   @AfterAll
