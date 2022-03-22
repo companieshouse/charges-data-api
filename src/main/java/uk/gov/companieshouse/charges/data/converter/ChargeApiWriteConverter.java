@@ -1,24 +1,24 @@
 package uk.gov.companieshouse.charges.data.converter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.bson.Document;
+import com.mongodb.BasicDBObject;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.data.convert.ReadingConverter;
+import org.springframework.data.convert.WritingConverter;
 import uk.gov.companieshouse.api.charges.ChargeApi;
 
-@ReadingConverter
-public class ReadConverter implements Converter<Document, ChargeApi> {
+@WritingConverter
+public class ChargeApiWriteConverter implements Converter<ChargeApi, BasicDBObject> {
 
     private final ObjectMapper objectMapper;
 
-    public ReadConverter(ObjectMapper objectMapper) {
+    public ChargeApiWriteConverter(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
     @Override
-    public ChargeApi convert(Document source) {
+    public BasicDBObject convert(ChargeApi source) {
         try {
-            return objectMapper.readValue(source.toJson(), ChargeApi.class);
+            return BasicDBObject.parse(objectMapper.writeValueAsString(source));
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
