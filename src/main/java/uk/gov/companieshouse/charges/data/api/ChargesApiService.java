@@ -13,9 +13,12 @@ import uk.gov.companieshouse.logging.Logger;
 @Service
 public class ChargesApiService {
 
-    private static final String CHANGED_RESOURCE_URI = "/resource-changed";
-    public static final String RESOURCE_KIND = "company-charges";
-    public static final String CHANGED_EVENT_TYPE = "changed";
+    @Value("${CHARGES_API_RESOURCE_CHANGED_URI}")
+    private String resourceChangedUri;
+    @Value("${CHARGES_API_RESOURCE_KIND}")
+    private String resourceKind;
+    private static final String CHANGED_EVENT_TYPE = "changed";
+    private static final String COMPANY_CHARGES_URI = "/company/%s/company-charges";
     private final Logger logger;
     private final String chsKafkaUrl;
     private final ApiClientService apiClientService;
@@ -41,7 +44,7 @@ public class ChargesApiService {
 
         PrivateChangedResourcePost changedResourcePost =
                 internalApiClient.privateChangedResourceHandler().postChangedResource(
-                        CHANGED_RESOURCE_URI, mapChangedResource(companyNumber));
+                        resourceChangedUri, mapChangedResource(companyNumber));
 
         try {
             return changedResourcePost.execute();
@@ -52,14 +55,14 @@ public class ChargesApiService {
     }
 
     private ChangedResource mapChangedResource(String companyNumber) {
-        String resourceUri = String.format("/company/%s/company-charges", companyNumber);
+        String resourceUri = String.format(COMPANY_CHARGES_URI, companyNumber);
 
         ChangedResourceEvent event = new ChangedResourceEvent();
         event.setType(CHANGED_EVENT_TYPE);
         ChangedResource changedResource = new ChangedResource();
         changedResource.setResourceUri(resourceUri);
         changedResource.event(event);
-        changedResource.setResourceKind(RESOURCE_KIND);
+        changedResource.setResourceKind(resourceKind);
 
         return changedResource;
     }
