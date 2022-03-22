@@ -13,9 +13,9 @@ import uk.gov.companieshouse.logging.Logger;
 @Service
 public class ChargesApiService {
 
-    @Value("${CHARGES_API_RESOURCE_CHANGED_URI}")
+    @Value("${charges.api.resource.changed.uri}")
     private String resourceChangedUri;
-    @Value("${CHARGES_API_RESOURCE_KIND}")
+    @Value("${charges.api.resource.kind}")
     private String resourceKind;
     private static final String CHANGED_EVENT_TYPE = "changed";
     private static final String COMPANY_CHARGES_URI = "/company/%s/company-charges";
