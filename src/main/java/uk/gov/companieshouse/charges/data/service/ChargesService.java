@@ -36,6 +36,7 @@ public class ChargesService {
      * @param chargeId      charges Id.
      * @param requestBody   request body.
      */
+    @Transactional
     public void upsertCharges(String companyNumber, String chargeId,
             InternalChargeApi requestBody) {
         logger.debug(String.format("Started : Save or Update charge %s with company number %s ",

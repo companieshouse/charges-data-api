@@ -13,7 +13,7 @@ server:
 spring:
   data:
     mongodb:
-      uri: ${MONGODB_URL:mongodb://localhost:27017/company-mortgages}
+      uri: ${MONGODB_URL:mongodb://localhost:27017/company-mortgages?retryWrites=false}
       name: company-mortgages
 
 

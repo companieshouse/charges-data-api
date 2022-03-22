@@ -17,7 +17,6 @@ import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.MongoTransactionManager;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import uk.gov.companieshouse.charges.data.converter.ChargeApiReadConverter;
 import uk.gov.companieshouse.charges.data.converter.ChargeApiWriteConverter;
@@ -35,7 +34,7 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
     private String databaseUri;
 
     @Bean
-    PlatformTransactionManager transactionManager(MongoDatabaseFactory dbFactory) {
+    MongoTransactionManager transactionManager(MongoDatabaseFactory dbFactory) {
         return new MongoTransactionManager(dbFactory);
     }
 
@@ -73,8 +72,10 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
         return this.databaseName == null ? "company-mortgages" : this.databaseName;
     }
 
-    protected  String getDatabaseUri() {
-        return this.databaseUri == null ? "" : this.databaseUri;
+    protected String getDatabaseUri() {
+        return this.databaseUri == null
+                ? "mongodb://localhost:27017/company-mortgages?retryWrites=false"
+                : this.databaseUri;
     }
 
     @Override

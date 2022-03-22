@@ -68,7 +68,7 @@ public class ChargesDocument {
         sb.append(", company_number=").append(companyNumber);
         sb.append(", data=").append(data.toString());
         sb.append(", updated=").append(updated.toString());
-        sb.append(", version=").append(version.toString());
+        sb.append(", version=").append(version);
         sb.append('}');
         return sb.toString();
     }
