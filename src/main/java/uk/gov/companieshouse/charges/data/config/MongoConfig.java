@@ -17,6 +17,7 @@ import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.MongoTransactionManager;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import uk.gov.companieshouse.charges.data.converter.ChargeApiReadConverter;
 import uk.gov.companieshouse.charges.data.converter.ChargeApiWriteConverter;
@@ -34,7 +35,7 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
     private String databaseUri;
 
     @Bean
-    MongoTransactionManager transactionManager(MongoDatabaseFactory dbFactory) {
+    PlatformTransactionManager transactionManager(MongoDatabaseFactory dbFactory) {
         return new MongoTransactionManager(dbFactory);
     }
 
