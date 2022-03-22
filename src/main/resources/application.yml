@@ -6,6 +6,7 @@ chs:
   kafka:
     api:
       endpoint: ${CHS_KAFKA_API_URL:localhost}
+      key: ${CHS_API_KEY:chsApiKey}
 
 server:
   port : 8082
@@ -19,3 +20,10 @@ mongodb:
   charges:
     collection:
       name: ${CHARGES_COLLECTION_NAME:company_mortgages}
+
+charges:
+  api:
+    resource:
+      changed:
+        uri: ${CHARGES_API_RESOURCE_CHANGED_URI:/resource-changed}
+      kind: ${CHARGES_API_RESOURCE_KIND:company-charges}
