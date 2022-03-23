@@ -38,12 +38,12 @@ public class ChargesController {
             @RequestBody final InternalChargeApi requestBody
     ) {
         logger.debug(String.format(
-                "ChargesController:Started : Save or Update charge %s with company number %s ",
+                "Started : Save or Update charge %s with company number %s ",
                 chargeId,
                 companyNumber));
         this.chargesService.upsertCharges(companyNumber, chargeId, requestBody);
         logger.debug(String.format(
-                "ChargesController:Started : Save or Update charge %s with company number %s ",
+                "Finished : Save or Update charge %s with company number %s ",
                 chargeId,
                 companyNumber));
         return ResponseEntity.status(HttpStatus.OK).build();

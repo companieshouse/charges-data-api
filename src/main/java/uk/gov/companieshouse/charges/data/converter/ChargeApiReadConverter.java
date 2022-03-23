@@ -15,6 +15,11 @@ public class ChargeApiReadConverter implements Converter<Document, ChargeApi> {
         this.objectMapper = objectMapper;
     }
 
+    /**
+     * Read convertor.
+     * @param source source Document.
+     * @return charge object.
+     */
     @Override
     public ChargeApi convert(Document source) {
         try {

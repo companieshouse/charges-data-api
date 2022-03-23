@@ -53,7 +53,7 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
     }
 
     /**
-     * mongoDbObjectMapper.
+     * Mongo DB Object Mapper.
      *
      * @return ObjectMapper.
      */

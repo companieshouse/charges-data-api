@@ -15,6 +15,11 @@ public class ChargeApiWriteConverter implements Converter<ChargeApi, BasicDBObje
         this.objectMapper = objectMapper;
     }
 
+    /**
+     * Write convertor.
+     * @param source source Document.
+     * @return charge BSON object.
+     */
     @Override
     public BasicDBObject convert(ChargeApi source) {
         try {
