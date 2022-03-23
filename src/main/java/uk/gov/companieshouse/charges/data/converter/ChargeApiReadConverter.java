@@ -7,14 +7,19 @@ import org.springframework.data.convert.ReadingConverter;
 import uk.gov.companieshouse.api.charges.ChargeApi;
 
 @ReadingConverter
-public class ReadConverter implements Converter<Document, ChargeApi> {
+public class ChargeApiReadConverter implements Converter<Document, ChargeApi> {
 
     private final ObjectMapper objectMapper;
 
-    public ReadConverter(ObjectMapper objectMapper) {
+    public ChargeApiReadConverter(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
+    /**
+     * Read convertor.
+     * @param source source Document.
+     * @return charge object.
+     */
     @Override
     public ChargeApi convert(Document source) {
         try {

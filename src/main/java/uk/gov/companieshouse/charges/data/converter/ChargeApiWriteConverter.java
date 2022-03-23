@@ -7,14 +7,19 @@ import org.springframework.data.convert.WritingConverter;
 import uk.gov.companieshouse.api.charges.ChargeApi;
 
 @WritingConverter
-public class WriteConverter implements Converter<ChargeApi, BasicDBObject> {
+public class ChargeApiWriteConverter implements Converter<ChargeApi, BasicDBObject> {
 
     private final ObjectMapper objectMapper;
 
-    public WriteConverter(ObjectMapper objectMapper) {
+    public ChargeApiWriteConverter(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
+    /**
+     * Write convertor.
+     * @param source source Document.
+     * @return charge BSON object.
+     */
     @Override
     public BasicDBObject convert(ChargeApi source) {
         try {

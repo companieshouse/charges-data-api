@@ -8,33 +8,34 @@ import java.io.InputStreamReader;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Component;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.util.FileCopyUtils;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
-import uk.gov.companieshouse.api.charges.ChargeApi;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
-import uk.gov.companieshouse.api.company.Data;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.model.Updated;
-import uk.gov.companieshouse.charges.data.tranform.ChargesTransformer;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Testcontainers
-@DataMongoTest(excludeAutoConfiguration = EmbeddedMongoAutoConfiguration.class)
+@DataMongoTest(excludeAutoConfiguration = EmbeddedMongoAutoConfiguration.class, includeFilters = @ComponentScan.Filter(Component.class))
+@TestInstance(Lifecycle.PER_CLASS)
 public class RepositoryITest {
 
   static final MongoDBContainer mongoDBContainer = new MongoDBContainer(
@@ -43,19 +44,18 @@ public class RepositoryITest {
   @Autowired
   ChargesRepository chargesRepository;
 
-  @Value("classpath:company-api-request-data.json")
+  @Value("file:src/itest/resources/company-api-request-data.json")
   Resource resourceFile;
 
   @DynamicPropertySource
   static void setProperties(DynamicPropertyRegistry registry) {
-    registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
+    registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl );
     mongoDBContainer.start();
-
   }
 
   @BeforeAll
-  static void setup(){
-    mongoDBContainer.start();
+  public void setup(){
+    this.chargesRepository.deleteAll();
   }
 
   @Test
@@ -66,7 +66,7 @@ public class RepositoryITest {
   @Test
   void should_save_and_retrieve_charges_data() throws IOException {
 
-    ChargesDocument chargesDocument = createChargesDocument("CH253434", "jbvgV-Zu-i8bRkypE0AEJx1N_Sk");
+    ChargesDocument chargesDocument = createChargesDocument(UUID.randomUUID().toString(), UUID.randomUUID().toString());
 
     chargesRepository.save(chargesDocument);
 
@@ -87,13 +87,14 @@ public class RepositoryITest {
 
     InternalChargeApi chargesDocument = mapper.readValue(incomingData, InternalChargeApi.class);
     ChargesDocument transformedChargesDocument =
-            transform("02327864", "2m1l9ofMOYNsHxDiSC_FkHw9lOw", chargesDocument);
+            transform(companyNumber, chargeId, chargesDocument);
 
     return transformedChargesDocument;
   }
 
   @AfterAll
-  static void tear(){
+  public void tear() {
+    this.chargesRepository.deleteAll();;
     mongoDBContainer.stop();
   }
 
