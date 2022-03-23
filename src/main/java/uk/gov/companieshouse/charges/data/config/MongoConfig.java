@@ -11,6 +11,7 @@ import com.mongodb.client.MongoClients;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
@@ -23,6 +24,7 @@ import uk.gov.companieshouse.charges.data.converter.ChargeApiWriteConverter;
 import uk.gov.companieshouse.charges.data.serialization.LocalDateDeSerializer;
 import uk.gov.companieshouse.charges.data.serialization.LocalDateSerializer;
 
+@ConditionalOnProperty(name = "mongodb.charges.transactions", havingValue = "true")
 @Configuration
 @EnableTransactionManagement
 public class MongoConfig extends AbstractMongoClientConfiguration {
@@ -69,13 +71,11 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
 
     @Override
     protected String getDatabaseName() {
-        return this.databaseName == null ? "company-mortgages" : this.databaseName;
+        return this.databaseName;
     }
 
     protected String getDatabaseUri() {
-        return this.databaseUri == null
-                ? "mongodb://localhost:27017/company-mortgages?retryWrites=false"
-                : this.databaseUri;
+        return this.databaseUri;
     }
 
     @Override

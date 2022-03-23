@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.charges.data.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
@@ -50,6 +51,10 @@ public class ChargesService {
         logger.debug(String.format("Finished : Save or Update charge %s with company number %s",
                 chargeId,
                 companyNumber));
+    }
+
+    public Propagation isTransactionEnabled() {
+        return Propagation.NEVER;
     }
 
 

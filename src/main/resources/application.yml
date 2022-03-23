@@ -16,8 +16,8 @@ spring:
       uri: ${MONGODB_URL:mongodb://localhost:27017/company-mortgages?retryWrites=false}
       name: company-mortgages
 
-
 mongodb:
   charges:
+    transactions: ${TRANSACTIONS_ENABLED:false}
     collection:
       name: ${CHARGES_COLLECTION_NAME:company_mortgages}
