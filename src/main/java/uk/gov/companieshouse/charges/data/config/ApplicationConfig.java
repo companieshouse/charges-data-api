@@ -15,6 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import uk.gov.companieshouse.api.InternalApiClient;
 import uk.gov.companieshouse.charges.data.converter.ChargeApiReadConverter;
 import uk.gov.companieshouse.charges.data.converter.ChargeApiWriteConverter;
+import uk.gov.companieshouse.charges.data.converter.EnumConverters;
 import uk.gov.companieshouse.charges.data.serialization.LocalDateDeSerializer;
 import uk.gov.companieshouse.charges.data.serialization.LocalDateSerializer;
 import uk.gov.companieshouse.environment.EnvironmentReader;
@@ -44,7 +45,8 @@ public class ApplicationConfig implements WebMvcConfigurer {
     public MongoCustomConversions mongoCustomConversions() {
         ObjectMapper objectMapper = mongoDbObjectMapper();
         return new MongoCustomConversions(List.of(new ChargeApiWriteConverter(objectMapper),
-                new ChargeApiReadConverter(objectMapper)));
+                new ChargeApiReadConverter(objectMapper),new EnumConverters.StringToEnum(),
+                new EnumConverters.EnumToString()));
     }
 
     /**

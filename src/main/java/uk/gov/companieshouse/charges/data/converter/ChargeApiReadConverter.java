@@ -2,6 +2,7 @@ package uk.gov.companieshouse.charges.data.converter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.Document;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.convert.ReadingConverter;
 import uk.gov.companieshouse.api.charges.ChargeApi;
