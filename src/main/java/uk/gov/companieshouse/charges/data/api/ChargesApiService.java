@@ -1,7 +1,10 @@
 package uk.gov.companieshouse.charges.data.api;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import uk.gov.companieshouse.api.InternalApiClient;
 import uk.gov.companieshouse.api.chskafka.ChangedResource;
 import uk.gov.companieshouse.api.chskafka.ChangedResourceEvent;
@@ -20,16 +23,14 @@ public class ChargesApiService {
     private static final String CHANGED_EVENT_TYPE = "changed";
     private static final String COMPANY_CHARGES_URI = "/company/%s/company-charges";
     private final Logger logger;
-    private final String chsKafkaUrl;
-    private final ApiClientService apiClientService;
+    private final ApiClientServiceImpl apiClientServiceImpl;
 
     /**
      * Invoke Charges API.
      */
-    public ChargesApiService(@Value("chs.kafka.api.endpoint")String chsKafkaUrl,
-                             ApiClientService apiClientService, Logger logger) {
-        this.chsKafkaUrl = chsKafkaUrl;
-        this.apiClientService = apiClientService;
+    @Autowired
+    public ChargesApiService(ApiClientServiceImpl apiClientService, Logger logger) {
+        this.apiClientServiceImpl = apiClientService;
         this.logger = logger;
     }
 
@@ -39,8 +40,7 @@ public class ChargesApiService {
      * @return response returned from chs-kafka api
      */
     public ApiResponse<Void> invokeChsKafkaApi(String companyNumber) {
-        InternalApiClient internalApiClient = apiClientService.getInternalApiClient();
-        internalApiClient.setBasePath(chsKafkaUrl);
+        InternalApiClient internalApiClient = apiClientServiceImpl.getInternalApiClient();
 
         PrivateChangedResourcePost changedResourcePost =
                 internalApiClient.privateChangedResourceHandler().postChangedResource(
@@ -50,7 +50,8 @@ public class ChargesApiService {
             return changedResourcePost.execute();
         } catch (ApiErrorResponseException exp) {
             logger.error("Error occurred while calling /resource-changed endpoint", exp);
-            throw new RuntimeException();
+            throw new ResponseStatusException(HttpStatus.valueOf(exp.getStatusCode()),
+                    exp.getStatusMessage(), exp);
         }
     }
 

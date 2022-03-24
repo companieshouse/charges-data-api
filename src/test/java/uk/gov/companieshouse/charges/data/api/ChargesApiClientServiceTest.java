@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
 public class ChargesApiClientServiceTest {
 
     @Mock
-    private ApiClientService apiClientService;
+    private ApiClientServiceImpl apiClientService;
 
     @Mock
     private InternalApiClient internalApiClient;
