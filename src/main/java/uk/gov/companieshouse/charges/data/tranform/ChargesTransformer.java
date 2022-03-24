@@ -2,6 +2,7 @@ package uk.gov.companieshouse.charges.data.tranform;
 
 import java.time.OffsetDateTime;
 import org.springframework.stereotype.Component;
+import uk.gov.companieshouse.GenerateEtagUtil;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.model.Updated;
@@ -33,9 +34,11 @@ public class ChargesTransformer {
         OffsetDateTime at = requestBody.getInternalData().getDeltaAt();
 
         String by = requestBody.getInternalData().getUpdatedBy();
+        var externalData = requestBody.getExternalData();
+        externalData.setEtag(GenerateEtagUtil.generateEtag());
         final Updated updated = new Updated().setAt(at.toLocalDate()).setType(type).setBy(by);
         var chargesDocument = new ChargesDocument().setId(chargeId)
-                .setCompanyNumber(companyNumber).setData(requestBody.getExternalData())
+                .setCompanyNumber(companyNumber).setData(externalData)
                 .setUpdated(updated);
         logger.debug(String.format("Finished: Transformation complete successfully", chargeId,
                 companyNumber));
