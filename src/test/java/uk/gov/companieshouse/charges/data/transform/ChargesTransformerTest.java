@@ -27,7 +27,7 @@ public class ChargesTransformerTest {
     @Test
     public void shouldTransformPayloadCorrectly(){
         String companyNumber = "companyNumber";
-        String chargeId = "L5bvSq3ligF_V84zh-ExMxCeU";
+        String chargeId = "MzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==";
         InternalChargeApi requestBody = new InternalChargeApi();
         var internalData = new InternalData();
         internalData.setDeltaAt(OffsetDateTime.now());
