@@ -6,7 +6,7 @@ chs:
   kafka:
     api:
       endpoint: ${CHS_KAFKA_API_URL:localhost}
-      key: ${CHS_API_KEY:chsApiKey}
+      key: ${CHS_INTERNAL_API_KEY:chsInternalApiKey}
 
 server:
   port : 8088
