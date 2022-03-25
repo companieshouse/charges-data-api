@@ -9,9 +9,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import uk.gov.companieshouse.logging.Logger;
 
 @ControllerAdvice
 public class ExceptionHandlerConfig {
+
+    private final Logger logger;
+
+    public ExceptionHandlerConfig(final Logger logger) {
+        this.logger = logger;
+    }
 
     /**
      * Runtime exception handler.
@@ -22,12 +29,17 @@ public class ExceptionHandlerConfig {
      */
     @ExceptionHandler(value = {Exception.class})
     public ResponseEntity<Object> handleException(Exception ex, WebRequest request) {
-
+        logger.error(String.format("Started: handleException: Generating error response for "
+                + "Exception: % "
+                + "Cause: %"
+                + "StackTrace: % ",
+                ex.getClass().toString(), ex.getCause().toString(), ex.getStackTrace().toString()));
         Map<String, Object> responseBody = new LinkedHashMap<>();
         responseBody.put("timestamp", LocalDateTime.now());
         responseBody.put("message", "There is issue completing the request.");
         responseBody.put("correlationId", generateShortCorrelationId());
         request.setAttribute("javax.servlet.error.exception", ex, 0);
+        logger.error("Finished:  handleException");
         return new ResponseEntity(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
