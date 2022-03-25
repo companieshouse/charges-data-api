@@ -49,7 +49,6 @@ public class ChargesApiService {
         try {
             return changedResourcePost.execute();
         } catch (ApiErrorResponseException exp) {
-            logger.error("Error occurred while calling /resource-changed endpoint", exp);
             throw new ResponseStatusException(HttpStatus.valueOf(exp.getStatusCode()),
                     exp.getStatusMessage(), exp);
         }
