@@ -40,7 +40,7 @@ public class ChargesService {
      * @param requestBody   request body.
      */
     @Transactional
-    public void upsertCharges(String companyNumber, String chargeId,
+    public void upsertCharges(String contextId, String companyNumber, String chargeId,
             InternalChargeApi requestBody) {
         logger.debug(String.format("Started : Save or Update charge %s with company number %s ",
                 chargeId,
@@ -54,7 +54,7 @@ public class ChargesService {
                 chargeId,
                 companyNumber));
 
-        chargesApiService.invokeChsKafkaApi(companyNumber);
+        chargesApiService.invokeChsKafkaApi(contextId, companyNumber);
 
         logger.info(String.format("DSND-542: ChsKafka api invoked successfully for company number"
                 + " %s", companyNumber));

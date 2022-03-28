@@ -1,8 +1,11 @@
 package uk.gov.companieshouse.charges.data.api;
 
+import java.time.OffsetDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import uk.gov.companieshouse.api.InternalApiClient;
 import uk.gov.companieshouse.api.chskafka.ChangedResource;
 import uk.gov.companieshouse.api.chskafka.ChangedResourceEvent;
@@ -38,12 +41,12 @@ public class ChargesApiService {
      * @param companyNumber company charges number
      * @return response returned from chs-kafka api
      */
-    public ApiResponse<Void> invokeChsKafkaApi(String companyNumber) {
+    public ApiResponse<Void> invokeChsKafkaApi(String contextId, String companyNumber) {
         InternalApiClient internalApiClient = apiClientServiceImpl.getInternalApiClient();
 
         PrivateChangedResourcePost changedResourcePost =
                 internalApiClient.privateChangedResourceHandler().postChangedResource(
-                        resourceChangedUri, mapChangedResource(companyNumber));
+                        resourceChangedUri, mapChangedResource(contextId, companyNumber));
 
         try {
             return changedResourcePost.execute();
@@ -52,22 +55,22 @@ public class ChargesApiService {
                     "Error occurred while calling /resource-changed endpoint. "
                     + "Message: %s StackTrace: ",
                     exp.getMessage(), exp.getStackTrace().toString()));
-            //TODO This is commented so to progress test on 541.
-            /*throw new ResponseStatusException(HttpStatus.valueOf(exp.getStatusCode()),
-                    exp.getStatusMessage(), exp);*/
-            return null;
+            throw new ResponseStatusException(HttpStatus.valueOf(exp.getStatusCode()),
+                    exp.getStatusMessage(), exp);
         }
     }
 
-    private ChangedResource mapChangedResource(String companyNumber) {
+    private ChangedResource mapChangedResource(String contextId, String companyNumber) {
         String resourceUri = String.format(COMPANY_CHARGES_URI, companyNumber);
 
         ChangedResourceEvent event = new ChangedResourceEvent();
         event.setType(CHANGED_EVENT_TYPE);
+        event.setPublishedAt(String.valueOf(OffsetDateTime.now()));
         ChangedResource changedResource = new ChangedResource();
         changedResource.setResourceUri(resourceUri);
         changedResource.event(event);
         changedResource.setResourceKind(resourceKind);
+        changedResource.setContextId(contextId);
 
         return changedResource;
     }
