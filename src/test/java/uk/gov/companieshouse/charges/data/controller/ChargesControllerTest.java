@@ -64,6 +64,7 @@ public class ChargesControllerTest {
         doNothing().when(chargesService).upsertCharges(eq("02588581"), eq("02588581"), eq("02588581"), isA(InternalChargeApi.class));
         String url = String.format("/company/%s/charge/%s/internal", "02588581", "02588581");
         mockMvc.perform(put(url).contentType(APPLICATION_JSON)
+                .header("x-request-id", "02588581")
                 .content(gson.toJson(request))).andExpect(status().isOk());
     }
 
