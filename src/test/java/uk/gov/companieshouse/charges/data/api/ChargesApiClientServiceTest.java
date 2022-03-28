@@ -46,7 +46,7 @@ public class ChargesApiClientServiceTest {
         when(privateChangedResourceHandler.postChangedResource(Mockito.any(), Mockito.any())).thenReturn(changedResourcePost);
         when(changedResourcePost.execute()).thenReturn(response);
 
-        ApiResponse<?> apiResponse = chargesApiService.invokeChsKafkaApi("CH4000056");
+        ApiResponse<?> apiResponse = chargesApiService.invokeChsKafkaApi("1234", "CH4000056");
 
         Assertions.assertThat(apiResponse).isNotNull();
 
@@ -65,7 +65,7 @@ public class ChargesApiClientServiceTest {
         when(changedResourcePost.execute()).thenThrow(RuntimeException.class);
 
 
-        Assert.assertThrows(RuntimeException.class, () -> chargesApiService.invokeChsKafkaApi("CH4000056"));
+        Assert.assertThrows(RuntimeException.class, () -> chargesApiService.invokeChsKafkaApi("1234", "CH4000056"));
 
         verify(apiClientService, times(1)).getInternalApiClient();
         verify(internalApiClient, times(1)).privateChangedResourceHandler();

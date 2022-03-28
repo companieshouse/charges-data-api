@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
 import uk.gov.companieshouse.charges.data.service.ChargesService;
@@ -33,6 +34,7 @@ public class ChargesController {
      */
     @PutMapping("/company/{company_number}/charge/{charge_id}/internal")
     public ResponseEntity<Void> saveOrUpdateCharges(
+            @RequestHeader("x-request-id") final String contextId,
             @PathVariable("company_number") final String companyNumber,
             @PathVariable("charge_id") final String chargeId,
             @RequestBody final InternalChargeApi requestBody
@@ -41,7 +43,7 @@ public class ChargesController {
                 "Started : Save or Update charge %s with company number %s ",
                 chargeId,
                 companyNumber));
-        this.chargesService.upsertCharges(companyNumber, chargeId, requestBody);
+        this.chargesService.upsertCharges(contextId, companyNumber, chargeId, requestBody);
         logger.debug(String.format(
                 "Finished : Save or Update charge %s with company number %s ",
                 chargeId,
