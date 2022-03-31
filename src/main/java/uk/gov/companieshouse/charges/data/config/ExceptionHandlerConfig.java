@@ -29,21 +29,23 @@ public class ExceptionHandlerConfig {
      */
     @ExceptionHandler(value = {Exception.class})
     public ResponseEntity<Object> handleException(Exception ex, WebRequest request) {
-        logger.error(String.format("Started: handleException: Generating error response for "
-                + "Exception: % "
-                + "Cause: %"
-                + "StackTrace: % ",
-                ex.getClass().toString(), ex.getCause().toString(), ex.getStackTrace().toString()));
+        var correlationId = generateShortCorrelationId();
+        logger.error(String.format("Started: handleException: %s Generating error response for "
+                        + "Exception: % "
+                        + "Cause: %"
+                        + "StackTrace: % ",
+                correlationId, ex.getClass().toString(), ex.getCause().toString(),
+                ex.getStackTrace().toString()));
         Map<String, Object> responseBody = new LinkedHashMap<>();
         responseBody.put("timestamp", LocalDateTime.now());
         responseBody.put("message", "There is issue completing the request.");
-        responseBody.put("correlationId", generateShortCorrelationId());
+        responseBody.put("correlationId", correlationId);
         request.setAttribute("javax.servlet.error.exception", ex, 0);
-        logger.error("Finished:  handleException");
+        logger.error(String.format("Finished: handleException: %s handleException", correlationId));
         return new ResponseEntity(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private String generateShortCorrelationId() {
-        return UUID.randomUUID().toString().replace("-","").substring(0,8);
+        return UUID.randomUUID().toString().replace("-", "").substring(0, 8);
     }
 }
