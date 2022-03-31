@@ -2,7 +2,6 @@ package uk.gov.companieshouse.charges.data.model;
 
 import java.util.Objects;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -21,9 +20,6 @@ public class ChargesDocument {
     private ChargeApi data;
 
     private Updated updated;
-
-    @Version
-    private Long version;
 
     public String getId() {
         return id;
@@ -68,7 +64,6 @@ public class ChargesDocument {
         sb.append(", company_number=").append(companyNumber);
         sb.append(", data=").append(data.toString());
         sb.append(", updated=").append(updated.toString());
-        sb.append(", version=").append(version);
         sb.append('}');
         return sb.toString();
     }
@@ -84,12 +79,11 @@ public class ChargesDocument {
         ChargesDocument that = (ChargesDocument) obj;
         return id.equals(that.id) && companyNumber.equals(that.companyNumber) && data.equals(
                 that.data)
-                && updated.equals(that.updated)
-                && version.equals(that.version);
+                && updated.equals(that.updated);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, companyNumber, data, updated, version);
+        return Objects.hash(id, companyNumber, data, updated);
     }
 }
