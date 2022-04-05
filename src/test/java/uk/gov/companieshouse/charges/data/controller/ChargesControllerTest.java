@@ -32,7 +32,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.FileCopyUtils;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
-import uk.gov.companieshouse.api.metrics.MetricsApi;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.model.Updated;
 import uk.gov.companieshouse.charges.data.service.ChargesService;
@@ -92,7 +91,7 @@ public class ChargesControllerTest {
         when(chargesService.getChargeDetails(any(), any())).thenThrow(RuntimeException.class);
 
         assertThatThrownBy(() ->
-                mockMvc.perform(get("02588581", "02588581"))
+                mockMvc.perform(get(String.format(CHARGES_get_URL, "02588581", "02588581")))
                         .andExpect(status().isInternalServerError())
                         .andExpect(content().string(""))
         ).hasCause(new RuntimeException());
@@ -110,8 +109,7 @@ public class ChargesControllerTest {
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
         mockMvc.perform(get(String.format(CHARGES_get_URL, "02588581", "02588581")))
-                .andExpect(status().isOk())
-                .andExpect(content().string(mapper.writeValueAsString(document.getData())));
+                .andExpect(status().isOk());
     }
 
 
@@ -123,7 +121,9 @@ public class ChargesControllerTest {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        return mapper.readValue(incomingData, InternalChargeApi.class);
+        InternalChargeApi internalChargeApi =
+                mapper.readValue(incomingData, InternalChargeApi.class);
+        return internalChargeApi;
     }
 
     public ChargesDocument transform(String companyNumber, String chargeId,

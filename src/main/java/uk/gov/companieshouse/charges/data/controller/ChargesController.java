@@ -54,11 +54,11 @@ public class ChargesController {
     }
 
     /**
-     * Retrieve a company charges details using a company number and chargeId.
+     * Retrieve a company charge details using a company number and chargeId.
      *
      * @param companyNumber the company number of the company
      * @param chargeId      the chargeId
-     * @return company profile api
+     * @return company charge api
      */
     @GetMapping("/company/{company_number}/charges/{charge_id}")
     public ResponseEntity<ChargeApi> getCompanyCharge(
@@ -75,7 +75,7 @@ public class ChargesController {
                                         chargesDocument,
                                         HttpStatus.OK))
                         .orElse(ResponseEntity.notFound().build());
-        logger.debug(String.format("Finished : Charges found for Company Number %s "
+        logger.debug(String.format("Finished : Charge details found for Company Number %s "
                         + "with Charge id %s",
                 companyNumber,
                 chargeId
