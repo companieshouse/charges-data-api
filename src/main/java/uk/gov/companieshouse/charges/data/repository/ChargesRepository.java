@@ -9,6 +9,9 @@ import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 @Repository
 public interface ChargesRepository extends MongoRepository<ChargesDocument, String> {
 
+    @Query("{'company_number': ?0, '_id': ?1 }")
+    List<ChargesDocument> findChargeById(String companyNumber, String chargeId);
+
     @Query("{'company_number': ?0, '_id': ?1, 'updated.at':{$gte : { \"$date\" : ?2 } }}")
     List findChargesDelta(String companyNumber, String chargeId, String at);
 

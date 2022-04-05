@@ -3,8 +3,10 @@ package uk.gov.companieshouse.charges.data.service;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import uk.gov.companieshouse.api.charges.ChargeApi;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
 import uk.gov.companieshouse.charges.data.api.ChargesApiService;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
@@ -60,7 +62,6 @@ public class ChargesService {
             logger.debug(String.format("Finished : Save or Update charge %s with company number %s",
                     chargeId,
                     companyNumber));
-
             chargesApiService.invokeChsKafkaApi(contextId, companyNumber);
         } else {
             logger.debug("Record is not a latest.");
@@ -78,6 +79,39 @@ public class ChargesService {
                 this.chargesRepository.findChargesDelta(companyNumber, chargeId,
                         format);
         return chargesDelta != null && chargesDelta.isEmpty();
+    }
+
+    /**
+     * Retrieve a company charges details using a company number and chargeId.
+     *
+     * @param companyNumber the company number of the company.
+     * @param chargeId      the chargeId.
+     * @return charge.
+     */
+    public Optional<ChargeApi> getChargeDetails(final String companyNumber, final String chargeId) {
+        logger.debug(String.format("Started : get Charge Details for Company Number %s "
+                        + " Charge Id %s ",
+                companyNumber,
+                chargeId
+        ));
+        List<ChargesDocument> chargesDocuments =
+                this.chargesRepository.findChargeById(companyNumber, chargeId);
+        if (chargesDocuments.isEmpty()) {
+            logger.trace(
+                    String.format(
+                            "Finished: Company charges not found for company %s with charge id %s",
+                            companyNumber, chargeId));
+            return Optional.empty();
+        }
+        Optional<ChargeApi> chargeDetails =
+                chargesDocuments.stream().map(chargeDocument -> chargeDocument.getData())
+                        .findFirst();
+        logger.debug(String.format("Finished : Charges found for Company Number %s "
+                        + "with Charge id %s",
+                companyNumber,
+                chargeId
+        ));
+        return chargeDetails;
     }
 
 }
