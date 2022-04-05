@@ -43,7 +43,7 @@ import uk.gov.companieshouse.logging.Logger;
 public class ChargesControllerTest {
 
     private final String CHARGES_PUT_URL = "/company/%s/charge/%s/internal";
-    private final String CHARGES_get_URL = "/company/%s/charges/%s";
+    private final String CHARGE_GET_URL = "/company/%s/charge/%s";
 
     private MockMvc mockMvc;
 
@@ -91,7 +91,7 @@ public class ChargesControllerTest {
         when(chargesService.getChargeDetails(any(), any())).thenThrow(RuntimeException.class);
 
         assertThatThrownBy(() ->
-                mockMvc.perform(get(String.format(CHARGES_get_URL, "02588581", "02588581")))
+                mockMvc.perform(get(String.format(CHARGE_GET_URL, "02588581", "02588581")))
                         .andExpect(status().isInternalServerError())
                         .andExpect(content().string(""))
         ).hasCause(new RuntimeException());
@@ -108,7 +108,7 @@ public class ChargesControllerTest {
         mapper.registerModule(new JavaTimeModule());
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
-        mockMvc.perform(get(String.format(CHARGES_get_URL, "02588581", "02588581")))
+        mockMvc.perform(get(String.format(CHARGE_GET_URL, "02588581", "02588581")))
                 .andExpect(status().isOk());
     }
 
