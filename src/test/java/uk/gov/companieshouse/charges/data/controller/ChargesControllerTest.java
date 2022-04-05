@@ -43,7 +43,7 @@ import uk.gov.companieshouse.logging.Logger;
 public class ChargesControllerTest {
 
     private final String CHARGES_PUT_URL = "/company/%s/charge/%s/internal";
-    private final String CHARGE_GET_URL = "/company/%s/charge/%s";
+    private final String CHARGE_GET_URL = "/company/%s/charges/%s";
 
     private MockMvc mockMvc;
 

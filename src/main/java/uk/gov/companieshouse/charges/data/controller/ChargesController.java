@@ -60,7 +60,7 @@ public class ChargesController {
      * @param chargeId      the chargeId
      * @return company charge api
      */
-    @GetMapping("/company/{company_number}/charge/{charge_id}")
+    @GetMapping("/company/{company_number}/charges/{charge_id}")
     public ResponseEntity<ChargeApi> getCompanyCharge(
             @PathVariable("company_number") final String companyNumber,
             @PathVariable("charge_id") final String chargeId) {

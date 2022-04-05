@@ -75,7 +75,7 @@ public class ChargesService {
             InternalChargeApi requestBody) {
         OffsetDateTime localDate = requestBody.getInternalData().getDeltaAt();
         String format = localDate.format(dateTimeFormatter);
-        List chargesDelta =
+        List<ChargesDocument> chargesDelta =
                 this.chargesRepository.findCharges(companyNumber, chargeId,
                         format);
         return chargesDelta != null && chargesDelta.isEmpty();
@@ -94,7 +94,7 @@ public class ChargesService {
                 companyNumber,
                 chargeId
         ));
-        List<ChargesDocument> chargesDocuments =
+        Optional<ChargesDocument> chargesDocuments =
                 this.chargesRepository.findChargeDetails(companyNumber, chargeId);
         if (chargesDocuments.isEmpty()) {
             logger.trace(
@@ -104,8 +104,7 @@ public class ChargesService {
             return Optional.empty();
         }
         Optional<ChargeApi> chargeDetails =
-                chargesDocuments.stream().map(chargeDocument -> chargeDocument.getData())
-                        .findFirst();
+                chargesDocuments.map(chargeDocument -> chargeDocument.getData());
         logger.debug(String.format("Finished : Charges details found for Company Number %s "
                         + "with Charge id %s",
                 companyNumber,
