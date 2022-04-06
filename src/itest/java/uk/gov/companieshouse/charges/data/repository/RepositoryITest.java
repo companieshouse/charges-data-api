@@ -44,7 +44,7 @@ public class RepositoryITest {
   @Autowired
   ChargesRepository chargesRepository;
 
-  @Value("file:src/itest/resources/company-api-request-data.json")
+  @Value("file:src/itest/resources/charge-api-request-data.json")
   Resource resourceFile;
 
   @DynamicPropertySource

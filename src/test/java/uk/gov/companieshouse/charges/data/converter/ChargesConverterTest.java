@@ -25,7 +25,7 @@ class ChargesConverterTest {
     @Autowired
     private ObjectMapper mongoCustomConversions;
 
-    @Value("classpath:charges-test-record.json")
+    @Value("classpath:charges-test-DB-record.json")
     private Resource resource;
 
     @BeforeEach
