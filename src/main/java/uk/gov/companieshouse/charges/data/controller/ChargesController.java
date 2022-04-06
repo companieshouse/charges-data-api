@@ -75,8 +75,9 @@ public class ChargesController {
                                         chargesDocument,
                                         HttpStatus.OK))
                         .orElse(ResponseEntity.notFound().build());
-        logger.debug(String.format("Finished : Charge details found for Company Number %s "
+        logger.debug(String.format("Finished : %s Charge details found for Company Number %s "
                         + "with Charge id %s",
+                chargeApiResponse.getStatusCode() != HttpStatus.OK ? "No" : "",
                 companyNumber,
                 chargeId
         ));
