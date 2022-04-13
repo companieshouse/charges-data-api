@@ -2,39 +2,35 @@ package uk.gov.companieshouse.charges.data.api;
 
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import uk.gov.companieshouse.api.InternalApiClient;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.handler.metrics.request.PrivateCompanyMetricsGet;
-import uk.gov.companieshouse.api.http.ApiKeyHttpClient;
-import uk.gov.companieshouse.api.http.HttpClient;
 import uk.gov.companieshouse.api.metrics.MetricsApi;
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.logging.Logger;
 
 
 @Service
-public class CompanyMetricsApiService implements ApiClientService {
+public class CompanyMetricsApiService {
 
     private static final String GET_COMPANY_METRICS_ENDPOINT = "/company/%s/metrics";
     private final Logger logger;
 
-    @Value("${api.company.metrics.key}")
-    private String companyMetricsApiKey;
 
-    @Value("${api.company.metrics.endpoint}")
-    private String companyMetricsApiUrl;
+    private ApiClientService apiClientService;
 
     /**
      * Invoke Company Metrics API.
      */
     @Autowired
-    public CompanyMetricsApiService(Logger logger) {
+    public CompanyMetricsApiService(Logger logger,
+            @Qualifier("CompanyMetricsApiClient") ApiClientService apiClientService) {
         this.logger = logger;
+        this.apiClientService = apiClientService;
     }
 
     /**
@@ -47,7 +43,7 @@ public class CompanyMetricsApiService implements ApiClientService {
         logger.debug(String.format("Started : getCompanyMetrics for Company Number %s ",
                 companyNumber
         ));
-        final InternalApiClient internalApiClient = getInternalApiClient();
+        final InternalApiClient internalApiClient = this.apiClientService.getInternalApiClient();
         PrivateCompanyMetricsGet companyMetrics =
                 internalApiClient.privateCompanyMetricsResourceHandler()
                         .getCompanyMetrics(
@@ -66,7 +62,7 @@ public class CompanyMetricsApiService implements ApiClientService {
                     "Error occurred while calling /resource-changed endpoint. "
                             + "Message: %s StackTrace: ",
                     exp.getMessage(), exp.getStackTrace().toString()));
-            throw new ResponseStatusException(HttpStatus.valueOf(exp.getStatusCode()),
+            throw new ResponseStatusException(exp.getStatusCode(),
                     exp.getStatusMessage(), exp);
         }
         logger.debug(String.format("Finished : getCompanyMetrics for Company Number %s ",
@@ -74,20 +70,4 @@ public class CompanyMetricsApiService implements ApiClientService {
         ));
         return Optional.empty();
     }
-
-    /**
-     * Get an internal api client instance.
-     */
-    @Override
-    public InternalApiClient getInternalApiClient() {
-        InternalApiClient apiClient = new InternalApiClient(getHttpClient());
-        apiClient.setBasePath(companyMetricsApiUrl);
-        return apiClient;
-    }
-
-    private HttpClient getHttpClient() {
-        ApiKeyHttpClient httpClient = new ApiKeyHttpClient(companyMetricsApiKey);
-        return httpClient;
-    }
-
 }
