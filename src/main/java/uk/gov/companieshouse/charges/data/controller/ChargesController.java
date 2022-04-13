@@ -1,6 +1,8 @@
 package uk.gov.companieshouse.charges.data.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.companieshouse.api.charges.ChargeApi;
+import uk.gov.companieshouse.api.charges.ChargesApi;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
 import uk.gov.companieshouse.charges.data.service.ChargesService;
 import uk.gov.companieshouse.logging.Logger;
@@ -82,6 +85,35 @@ public class ChargesController {
                 chargeId
         ));
         return chargeApiResponse;
+    }
+
+    /**
+     * Retrieve a company charges using a company number.
+     *
+     * @param companyNumber the company number of the company
+     * @return company charge api
+     */
+    @GetMapping("/company/{company_number}/charges/{items_per_page}/{start_index}")
+    public ResponseEntity<ChargesApi> getCompanyCharges(
+            @PathVariable("company_number") final String companyNumber,
+            @PathVariable("items_per_page") final Integer itemsPerPage,
+            @PathVariable("start_index") final Integer startIndex) {
+        logger.debug(String.format("Started : getCompanyCharges Charges for Company Number %s ",
+                companyNumber
+        ));
+        Pageable pageable = PageRequest.of(startIndex, itemsPerPage);
+        ResponseEntity<ChargesApi> chargesApiResponseEntity =
+                chargesService.findCharges(companyNumber, pageable).map(chargesDocument ->
+                                new ResponseEntity<>(
+                                        chargesDocument,
+                                        HttpStatus.OK))
+                        .orElse(ResponseEntity.notFound().build());
+
+        logger.debug(
+                String.format("Finished : getCompanyCharges Charges found for Company Number %s ",
+                        companyNumber
+                ));
+        return chargesApiResponseEntity;
     }
 
 }

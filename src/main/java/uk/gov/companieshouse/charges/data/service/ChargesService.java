@@ -2,12 +2,18 @@ package uk.gov.companieshouse.charges.data.service;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.companieshouse.api.charges.ChargeApi;
+import uk.gov.companieshouse.api.charges.ChargesApi;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
+import uk.gov.companieshouse.api.metrics.MetricsApi;
+import uk.gov.companieshouse.api.metrics.MortgageApi;
 import uk.gov.companieshouse.charges.data.api.ChargesApiService;
+import uk.gov.companieshouse.charges.data.api.CompanyMetricsApiService;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.repository.ChargesRepository;
 import uk.gov.companieshouse.charges.data.tranform.ChargesTransformer;
@@ -22,6 +28,7 @@ public class ChargesService {
             DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
     private ChargesTransformer chargesTransformer;
     private ChargesRepository chargesRepository;
+    private CompanyMetricsApiService companyMetricsApiService;
 
 
     /**
@@ -31,11 +38,13 @@ public class ChargesService {
      * @param chargesRepository chargesRepository.
      */
     public ChargesService(final Logger logger, final ChargesRepository chargesRepository,
-            final ChargesTransformer chargesTransformer, ChargesApiService chargesApiService) {
+            final ChargesTransformer chargesTransformer, ChargesApiService chargesApiService,
+            CompanyMetricsApiService companyMetricsApiService) {
         this.logger = logger;
         this.chargesRepository = chargesRepository;
         this.chargesTransformer = chargesTransformer;
         this.chargesApiService = chargesApiService;
+        this.companyMetricsApiService = companyMetricsApiService;
     }
 
     /**
@@ -78,7 +87,7 @@ public class ChargesService {
         OffsetDateTime localDate = requestBody.getInternalData().getDeltaAt();
         String format = localDate.format(dateTimeFormatter);
         Optional<ChargesDocument> chargesDelta =
-                this.chargesRepository.findCharges(companyNumber, chargeId,
+                this.chargesRepository.findCharge(companyNumber, chargeId,
                         format);
         return chargesDelta.isEmpty();
     }
@@ -115,4 +124,55 @@ public class ChargesService {
         return chargeDetails;
     }
 
+    /**
+     * Find charges for company number.
+     *
+     * @param companyNumber company Number.
+     * @return charges.
+     */
+    public Optional<ChargesApi> findCharges(final String companyNumber, final Pageable pageable) {
+        logger.debug(String.format("Started : findCharges for Company Number %s ",
+                companyNumber
+        ));
+
+        List<ChargesDocument> charges =
+                this.chargesRepository.findCharges(companyNumber, pageable).getContent();
+        if (charges.isEmpty()) {
+            logger.error(
+                    String.format(
+                            "Finished: findCharges No charges found for company %s ",
+                            companyNumber));
+            return Optional.empty();
+        }
+
+        Optional<MetricsApi> companyMetrics =
+                companyMetricsApiService.getCompanyMetrics(companyNumber);
+
+        if (companyMetrics.isEmpty()) {
+            logger.error(
+                    String.format(
+                            "Finished: findCharges No company metrics data found for company %s ",
+                            companyNumber));
+            return Optional.empty();
+        }
+        var result = companyMetrics.map(metrics -> {
+            var chargesApi = new ChargesApi();
+            charges.stream().forEach(charge -> chargesApi.addItemsItem(charge.getData()));
+            MortgageApi mortgage = metrics.getMortgage();
+            int totalCount = chargesApi.getItems().size();
+            int satisfiedCount = mortgage.getSatisfiedCount();
+            int partSatisfiedCount = mortgage.getPartSatisfiedCount();
+            int unfilteredCount = mortgage.getTotalCount();
+            chargesApi.setTotalCount(totalCount);
+            chargesApi.setSatisfiedCount(satisfiedCount);
+            chargesApi.setEtag(metrics.getEtag());
+            chargesApi.setPartSatisfiedCount(partSatisfiedCount);
+            chargesApi.setUnfilteredCount(unfilteredCount);
+            return chargesApi;
+        });
+        logger.debug(String.format("Finished : findCharges charges found for Company Number %s ",
+                companyNumber
+        ));
+        return result;
+    }
 }
