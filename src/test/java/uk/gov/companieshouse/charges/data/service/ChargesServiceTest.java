@@ -104,10 +104,7 @@ public class ChargesServiceTest {
 
     private ChargesDocument createCharges() throws
             IOException {
-        String chargesData =
-                FileCopyUtils.copyToString(new InputStreamReader(Objects.requireNonNull(
-                        chargesFile.getInputStream())));
-        Document chargesBson = Document.parse(chargesData);
+        Document chargesBson = readData(chargesFile);
         ChargesDocument chargesDocument =
                 mongoCustomConversions.convertValue(chargesBson, ChargesDocument.class);
         return chargesDocument;
@@ -115,12 +112,15 @@ public class ChargesServiceTest {
 
     private MetricsApi createMetrics() throws
             IOException {
-        String metricsData =
-                FileCopyUtils.copyToString(new InputStreamReader(Objects.requireNonNull(
-                        metricsFile.getInputStream())));
-        Document chargesBson = Document.parse(metricsData);
+        Document chargesBson = readData(metricsFile);
         MetricsApi metricsApi =
                 mongoCustomConversions.convertValue(chargesBson, MetricsApi.class);
         return metricsApi;
+    }
+    private Document readData(Resource resource) throws IOException {
+        var data= FileCopyUtils.copyToString(new InputStreamReader(Objects.requireNonNull(
+                resource.getInputStream())));
+        Document document = Document.parse(data);
+        return document;
     }
 }
