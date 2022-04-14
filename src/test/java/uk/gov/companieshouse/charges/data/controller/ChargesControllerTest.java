@@ -1,7 +1,11 @@
 package uk.gov.companieshouse.charges.data.controller;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -31,6 +35,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.util.NestedServletException;
 import uk.gov.companieshouse.api.charges.ChargesApi;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
@@ -42,10 +47,13 @@ import uk.gov.companieshouse.logging.Logger;
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
 public class ChargesControllerTest {
-
-    private final String CHARGES_PUT_URL = "/company/%s/charge/%s/internal";
-    private final String CHARGE_DETAILS_GET_URL = "/company/%s/charges/%s";
-    private final String CHARGES_GET_URL = "/company/%s/charges/%d/%d";
+    private final String companyNumber = "02588581";
+    private final String chargeId = "18588520";
+    private final int itemsPerPage = 1;
+    private final int startIndex = 0;
+    private final String CHARGES_PUT_URL = "/company/" + companyNumber + "/charge/" + chargeId + "/internal";
+    private final String CHARGE_DETAILS_GET_URL = "/company/" + companyNumber + "/charges/" + chargeId;
+    private final String CHARGES_GET_URL = "/company/" + companyNumber + "/charges/" + itemsPerPage + "/" + startIndex;
 
     private MockMvc mockMvc;
 
@@ -61,9 +69,9 @@ public class ChargesControllerTest {
     @Mock
     private ChargesTransformer chargesTransformer;
 
-    private ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper();
 
-    private Gson gson = new Gson();
+    private final Gson gson = new Gson();
 
     @Value("file:src/test/resources/charges-api-request-data.json")
     Resource resourceFile;
@@ -79,21 +87,33 @@ public class ChargesControllerTest {
     @Test
     @DisplayName("Charges PUT request")
     public void callChargesPutRequest() throws Exception {
-
-        InternalChargeApi request = createChargesDocument("02588581", "02588581");
-        String url = String.format(CHARGES_PUT_URL, "02588581", "02588581");
-        mockMvc.perform(put(url).contentType(APPLICATION_JSON)
-                .header("x-request-id", "02588581")
+        InternalChargeApi request = createChargesDocument();
+        mockMvc.perform(put(CHARGES_PUT_URL).contentType(APPLICATION_JSON)
+                .header("x-request-id", companyNumber)
                 .content(gson.toJson(request))).andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Charges PUT request throws exception")
+    public void callChargesPutRequestThrowException() throws Exception {
+        InternalChargeApi request = createChargesDocument();
+        String contextId = companyNumber;
+        doThrow(new Exception("Test exception")).when(chargesService).upsertCharges(eq(contextId), eq(companyNumber), eq(chargeId), any(InternalChargeApi.class));
+        NestedServletException exception = assertThrows( NestedServletException.class, () -> {
+            mockMvc.perform(put(CHARGES_PUT_URL).contentType(APPLICATION_JSON)
+                    .header("x-request-id", companyNumber)
+                    .content(gson.toJson(request))).andExpect(status().isOk());
+        });
+        assertEquals("Test exception", exception.getRootCause().getMessage());
     }
 
     @Test()
     @DisplayName("When calling get charges - returns a 500 INTERNAL SERVER ERROR")
-    void getChargeInternalServerError() throws Exception {
+    void getChargeInternalServerError(){
         when(chargesService.getChargeDetails(any(), any())).thenThrow(RuntimeException.class);
 
         assertThatThrownBy(() ->
-                mockMvc.perform(get(String.format(CHARGE_DETAILS_GET_URL, "02588581", "02588581")))
+                mockMvc.perform(get(CHARGE_DETAILS_GET_URL))
                         .andExpect(status().isInternalServerError())
                         .andExpect(content().string(""))
         ).hasCause(new RuntimeException());
@@ -103,15 +123,14 @@ public class ChargesControllerTest {
     @DisplayName("Retrieve company charge details for a given company number and chargeId")
     void getCharge() throws Exception {
 
-        InternalChargeApi request = createChargesDocument("02588581", "02588581");
-        ChargesDocument document = transform("02588581", "02588581", request);
-        when(chargesService.getChargeDetails("02588581", "02588581")).thenReturn(Optional.of(document.getData()));
+        InternalChargeApi request = createChargesDocument();
+        ChargesDocument document = transform(companyNumber, chargeId, request);
+        when(chargesService.getChargeDetails(companyNumber, chargeId)).thenReturn(Optional.of(document.getData()));
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
-        mockMvc.perform(get(String.format(CHARGE_DETAILS_GET_URL, "02588581", "02588581")))
-                .andExpect(status().isOk());
+        mockMvc.perform(get(CHARGE_DETAILS_GET_URL)).andExpect(status().isOk());
     }
 
     @Test
@@ -119,37 +138,29 @@ public class ChargesControllerTest {
     void getCharges() throws Exception {
         var charges = new ChargesApi();
         when(chargesService.findCharges(any(), any())).thenReturn(Optional.of(charges));
-        var requestUri = String.format(CHARGES_GET_URL, "02588581", 1, 0);
-        mockMvc.perform(get(requestUri))
+        mockMvc.perform(get(CHARGES_GET_URL))
                 .andExpect(status().isOk());
     }
 
-
-
-    private InternalChargeApi createChargesDocument(String companyNumber, String chargeId) throws IOException {
+    private InternalChargeApi createChargesDocument() throws IOException {
         String incomingData =
                 FileCopyUtils.copyToString(new InputStreamReader(Objects.requireNonNull(
                         resourceFile.getInputStream())));
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        InternalChargeApi internalChargeApi =
-                mapper.readValue(incomingData, InternalChargeApi.class);
-        return internalChargeApi;
+        return mapper.readValue(incomingData, InternalChargeApi.class);
     }
 
-    public ChargesDocument transform(String companyNumber, String chargeId,
-            InternalChargeApi requestBody) {
-
+    private ChargesDocument transform(String companyNumber, String chargeId, InternalChargeApi requestBody) {
         OffsetDateTime at = requestBody.getInternalData().getDeltaAt();
 
         String by = requestBody.getInternalData().getUpdatedBy();
         final Updated updated = new Updated().setAt(at.toLocalDate()).setType("mortgage_delta").setBy(by);
-        var chargesDocument = new ChargesDocument().setId(chargeId)
+
+        return new ChargesDocument().setId(chargeId)
                 .setCompanyNumber(companyNumber).setData(requestBody.getExternalData())
                 .setUpdated(updated);
-
-        return chargesDocument;
     }
 
 }

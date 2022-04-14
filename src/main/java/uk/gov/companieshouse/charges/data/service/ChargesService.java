@@ -65,7 +65,7 @@ public class ChargesService {
 
             ChargesDocument charges =
                     this.chargesTransformer.transform(companyNumber, chargeId, requestBody);
-            logger.debug(String.format("Started : Saving charges in DB "));
+            logger.debug("Started : Saving charges in DB ");
             this.chargesRepository.save(charges);
             logger.debug(
                     String.format("Finished : upsertCharges for chargeId %s company number %s ",

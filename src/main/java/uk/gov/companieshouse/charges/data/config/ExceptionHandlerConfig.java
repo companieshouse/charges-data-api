@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.charges.data.config;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -35,7 +36,7 @@ public class ExceptionHandlerConfig {
                         + "Cause: %"
                         + "StackTrace: % ",
                 correlationId, ex.getClass().toString(), ex.getCause().toString(),
-                ex.getStackTrace().toString()));
+                Arrays.toString(ex.getStackTrace())));
         Map<String, Object> responseBody = new LinkedHashMap<>();
         responseBody.put("timestamp", LocalDateTime.now());
         responseBody.put("message", "There is issue completing the request.");
