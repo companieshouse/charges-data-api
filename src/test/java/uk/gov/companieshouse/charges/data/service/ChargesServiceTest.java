@@ -52,10 +52,10 @@ public class ChargesServiceTest {
     @Mock
     CompanyMetricsApiService companyMetricsApiService;
 
-    @Value("file:src/test/resources/company-metrics-data.json")
+    @Value("classpath:company-metrics-data.json")
     Resource metricsFile;
 
-    @Value("file:src/test/resources/charges-test-DB-record.json")
+    @Value("classpath:charges-test-DB-record.json")
     Resource chargesFile;
 
     @InjectMocks
