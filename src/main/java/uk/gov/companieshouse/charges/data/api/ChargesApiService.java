@@ -20,7 +20,7 @@ public class ChargesApiService {
     private static final String CHANGED_EVENT_TYPE = "changed";
     private static final String COMPANY_CHARGES_URI = "/company/%s/charges";
     private final Logger logger;
-    private final ApiClientServiceImpl apiClientServiceImpl;
+    private final ChsKafkaApiClientServiceImpl apiClientServiceImpl;
     @Value("${charges.api.resource.changed.uri}")
     private String resourceChangedUri;
     @Value("${charges.api.resource.kind}")
@@ -30,7 +30,7 @@ public class ChargesApiService {
      * Invoke Charges API.
      */
     @Autowired
-    public ChargesApiService(ApiClientServiceImpl apiClientService, Logger logger) {
+    public ChargesApiService(ChsKafkaApiClientServiceImpl apiClientService, Logger logger) {
         this.apiClientServiceImpl = apiClientService;
         this.logger = logger;
     }

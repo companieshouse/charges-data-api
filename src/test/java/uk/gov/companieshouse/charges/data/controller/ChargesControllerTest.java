@@ -31,6 +31,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.FileCopyUtils;
+import uk.gov.companieshouse.api.charges.ChargesApi;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.model.Updated;
@@ -43,7 +44,8 @@ import uk.gov.companieshouse.logging.Logger;
 public class ChargesControllerTest {
 
     private final String CHARGES_PUT_URL = "/company/%s/charge/%s/internal";
-    private final String CHARGE_GET_URL = "/company/%s/charges/%s";
+    private final String CHARGE_DETAILS_GET_URL = "/company/%s/charges/%s";
+    private final String CHARGES_GET_URL = "/company/%s/charges/%d/%d";
 
     private MockMvc mockMvc;
 
@@ -91,14 +93,14 @@ public class ChargesControllerTest {
         when(chargesService.getChargeDetails(any(), any())).thenThrow(RuntimeException.class);
 
         assertThatThrownBy(() ->
-                mockMvc.perform(get(String.format(CHARGE_GET_URL, "02588581", "02588581")))
+                mockMvc.perform(get(String.format(CHARGE_DETAILS_GET_URL, "02588581", "02588581")))
                         .andExpect(status().isInternalServerError())
                         .andExpect(content().string(""))
         ).hasCause(new RuntimeException());
     }
 
     @Test
-    @DisplayName("Retrieve company metrics for a given company number")
+    @DisplayName("Retrieve company charge details for a given company number and chargeId")
     void getCharge() throws Exception {
 
         InternalChargeApi request = createChargesDocument("02588581", "02588581");
@@ -108,7 +110,17 @@ public class ChargesControllerTest {
         mapper.registerModule(new JavaTimeModule());
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
-        mockMvc.perform(get(String.format(CHARGE_GET_URL, "02588581", "02588581")))
+        mockMvc.perform(get(String.format(CHARGE_DETAILS_GET_URL, "02588581", "02588581")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Retrieve company charges for a given company number")
+    void getCharges() throws Exception {
+        var charges = new ChargesApi();
+        when(chargesService.findCharges(any(), any())).thenReturn(Optional.of(charges));
+        var requestUri = String.format(CHARGES_GET_URL, "02588581", 1, 0);
+        mockMvc.perform(get(requestUri))
                 .andExpect(status().isOk());
     }
 

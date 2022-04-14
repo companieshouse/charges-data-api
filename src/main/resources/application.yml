@@ -29,3 +29,9 @@ charges:
       changed:
         uri: ${CHARGES_API_RESOURCE_CHANGED_URI:/resource-changed}
       kind: ${CHARGES_API_RESOURCE_KIND:company-charges}
+
+api:
+  company:
+    metrics:
+        endpoint: ${COMPANY_METRICS_API_URL:https://localhost}
+        key: ${COMPANY_METRICS_API_KEY:apiKey}

@@ -1,19 +1,19 @@
 package uk.gov.companieshouse.charges.data.api;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.api.InternalApiClient;
 import uk.gov.companieshouse.api.http.ApiKeyHttpClient;
 import uk.gov.companieshouse.api.http.HttpClient;
 
-@Component
 public class ApiClientServiceImpl implements ApiClientService {
 
-    @Value("${chs.kafka.api.key}")
-    private String chsApiKey;
+    private String apiKey;
 
-    @Value("${chs.kafka.api.endpoint}")
     private String internalApiUrl;
+
+    public ApiClientServiceImpl(String apiKey, String internalApiUrl) {
+        this.apiKey = apiKey;
+        this.internalApiUrl = internalApiUrl;
+    }
 
     @Override
     public InternalApiClient getInternalApiClient() {
@@ -26,7 +26,8 @@ public class ApiClientServiceImpl implements ApiClientService {
 
 
     private HttpClient getHttpClient() {
-        ApiKeyHttpClient httpClient = new ApiKeyHttpClient(chsApiKey);
+        ApiKeyHttpClient httpClient = new ApiKeyHttpClient(apiKey);
         return httpClient;
     }
+
 }
