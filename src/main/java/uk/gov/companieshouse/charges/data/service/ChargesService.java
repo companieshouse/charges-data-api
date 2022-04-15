@@ -1,7 +1,6 @@
 package uk.gov.companieshouse.charges.data.service;
 
 import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +16,7 @@ import uk.gov.companieshouse.charges.data.api.CompanyMetricsApiService;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.repository.ChargesRepository;
 import uk.gov.companieshouse.charges.data.tranform.ChargesTransformer;
+import uk.gov.companieshouse.charges.data.util.DateFormatter;
 import uk.gov.companieshouse.logging.Logger;
 
 @Service
@@ -24,8 +24,6 @@ public class ChargesService {
 
     private final Logger logger;
     private final ChargesApiService chargesApiService;
-    private final DateTimeFormatter dateTimeFormatter =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
     private ChargesTransformer chargesTransformer;
     private ChargesRepository chargesRepository;
     private CompanyMetricsApiService companyMetricsApiService;
@@ -85,7 +83,7 @@ public class ChargesService {
     private boolean isLatestRecord(String companyNumber, String chargeId,
             InternalChargeApi requestBody) {
         OffsetDateTime localDate = requestBody.getInternalData().getDeltaAt();
-        String format = localDate.format(dateTimeFormatter);
+        String format = DateFormatter.format(localDate.toLocalDate());
         Optional<ChargesDocument> chargesDelta =
                 this.chargesRepository.findCharge(companyNumber, chargeId,
                         format);
