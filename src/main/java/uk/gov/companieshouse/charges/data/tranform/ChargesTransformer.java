@@ -1,7 +1,6 @@
 package uk.gov.companieshouse.charges.data.tranform;
 
 import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.GenerateEtagUtil;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
@@ -15,8 +14,6 @@ public class ChargesTransformer {
     static String type = "mortgage_delta";
 
     private Logger logger;
-    private final DateTimeFormatter dateTimeFormatter =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     public ChargesTransformer(final Logger logger) {
         this.logger = logger;
