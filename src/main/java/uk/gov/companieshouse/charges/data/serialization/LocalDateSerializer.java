@@ -9,7 +9,6 @@ import uk.gov.companieshouse.charges.data.util.DateFormatter;
 
 public class LocalDateSerializer extends JsonSerializer<LocalDate> {
 
-
     @Override
     public void serialize(LocalDate localDate, JsonGenerator jsonGenerator,
             SerializerProvider serializerProvider) throws IOException {

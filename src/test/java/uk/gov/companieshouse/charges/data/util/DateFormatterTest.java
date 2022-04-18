@@ -10,7 +10,7 @@ public class DateFormatterTest {
 
     @Test
     public void shouldParseAndFormatGivenDateString() {
-        LocalDate parsedValue = DateFormatter.parse("2015-06-26 08:31:35.058Z");
+        LocalDate parsedValue = DateFormatter.parse("2015-06-26T08:31:35.058Z");
         assertThat(parsedValue).isNotNull();
         assertThat(parsedValue.toString()).isEqualTo("2015-06-26");
     }

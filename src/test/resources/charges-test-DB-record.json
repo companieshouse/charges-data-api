@@ -1,87 +1,50 @@
 {
-  "_id" : "MzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==",
-  "company_number" : "NI622400",
+  "_id" : "IgrPykm5_32LEdQVva1tLbkkIx0",
   "data" : {
-    "etag" : "0950a94c6283006f904b94614a8b7b2996e86915",
-    "id" : null,
-    "charge_code" : "NI6224000001",
     "classification" : {
       "type" : "charge-description",
-      "description" : "A REGISTERED CHARGE"
+      "description" : "Legal charge"
     },
-    "charge_number" : 1,
-    "status" : "outstanding",
-    "assets_ceased_released" : "property-ceased-to-belong",
-    "acquired_on" : "1982-06-10T00:00:00.000Z",
-    "delivered_on" : "2014-12-16T00:00:00.000Z",
-    "resolved_on" : null,
-    "covering_instrument_date" : "1993-08-09T00:00:00.000Z",
-    "created_on" : "2014-08-04T00:00:00.000Z",
-    "satisfied_on" : "1999-12-01T00:00:00.000Z",
-    "particulars" : {
-      "type" : "brief-description",
-      "description" : "LAND KNOWN AS UNIT 3 MARSHES TRADE CENTRE,GREENBANK INDUSTRIAL ESTATE, NEWRY BEING ALL OF THE LANDS COMPRISED IN FOLIO DN198519L COUNTY DOWN.",
-      "contains_floating_charge" : true,
-      "contains_fixed_charge" : true,
-      "floating_charge_covers_all" : true,
-      "contains_negative_pledge" : true,
-      "chargor_acting_as_bare_trustee" : null
-    },
-    "secured_details" : {
-      "type" : "obligations-secured",
-      "description" : "A REGISTERED CHARGE"
-    },
-    "scottish_alterations" : {
-      "type" : null,
-      "description" : null,
-      "has_alterations_to_order" : true,
-      "has_alterations_to_prohibitions" : false,
-      "has_restricting_provisions" : true
-    },
-    "more_than_four_persons_entitled" : false,
+    "status" : "fully-satisfied",
+    "charge_number" : 6,
     "persons_entitled" : [
       {
-        "name" : "THE GOVERNOR AND COMPANY OF THE BANK OF IRELAND"
-      }
-    ],
-    "transactions" : [
-      {
-        "filing_type" : "403a",
-        "transaction_id" : null,
-        "delivered_on" : "2016-12-16T00:00:00.000Z",
-        "insolvency_case_number" : 1,
-        "links" : {
-          "filing" : "/company/NI622400/filing-history/MzM4Nzc3OHRyYW5zSWRfc2FsdA==",
-          "insolvency_case" : null
-        }
-      },
-      {
-        "filing_type" : "MR01",
-        "transaction_id" : null,
-        "delivered_on" : null,
-        "insolvency_case_number" : null,
-        "links" : {
-          "filing" : "/company/NI622400/filing-history/MzExMzg5MjgyM3RyYW5zSWRfc2FsdA==",
-          "insolvency_case" : null
-        }
-      }
-    ],
-    "insolvency_cases" : [
-      {
-        "case_number" : 2,
-        "transaction_id" : 22222,
-        "links" : null
+        "name" : "S G N Mitchell"
       }
     ],
     "links" : {
-      "self" : "/company/NI622400/charges/MzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng=="
-    }
+      "self" : "/company/00006400/charges/IgrPykm5_32LEdQVva1tLbkkIx0"
+    },
+    "created_on" : "1963-02-28T00:00:00.000Z",
+    "transactions" : [
+      {
+        "filing_type" : "create-charge",
+        "delivered_on" : "1963-03-14T00:00:00.000Z"
+      },
+      {
+        "links" : {
+          "filing" : "/company/00006400/filing-history/MDExNTM4MTg4NmFkaXF6a2N4"
+        },
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act",
+        "delivered_on" : "1993-09-10T00:00:00.000Z"
+      }
+    ],
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "£8,000"
+    },
+    "particulars" : {
+      "type" : "short-particulars",
+      "description" : "Upnah house forest road east nottingham."
+    },
+    "delivered_on" : "1963-03-14T00:00:00.000Z",
+    "satisfied_on" : "1993-09-10T00:00:00.000Z",
+    "etag" : "aa50ad9118a9a1451a3fced413084fa111ce28dc"
   },
+  "company_number" : "00006400",
   "updated" : {
-    "at" : "2015-06-24T23:00:00.000Z",
+    "at" : "2015-06-26T08:31:08.420Z",
     "type" : "mortgage_delta",
-    "by" : "test-partition_1-offset_1"
-  },
-  "version" : 0,
-  "_class" : "uk.gov.companieshouse.charges.data.model.ChargesDocument"
+    "by" : "558d0dcc85dccb0f1b4ede06"
+  }
 }
