@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Date;
 import uk.gov.companieshouse.charges.data.util.DateFormatter;
 
 public class LocalDateDeSerializer extends JsonDeserializer<LocalDate> {
@@ -17,11 +19,11 @@ public class LocalDateDeSerializer extends JsonDeserializer<LocalDate> {
         try {
             var dateJsonNode = jsonNode.get("$date");
             if (dateJsonNode.isTextual()) {
-                String dateStr = dateJsonNode.textValue();
+                var dateStr = dateJsonNode.textValue();
                 return DateFormatter.parse(dateStr);
             } else {
                 var longDate = dateJsonNode.get("$numberLong").asLong();
-                String dateStr = LocalDate.ofEpochDay(longDate).toString();
+                var dateStr = Instant.ofEpochMilli(new Date(longDate).getTime()).toString();
                 return DateFormatter.parse(dateStr);
             }
         } catch (Exception ex) {
