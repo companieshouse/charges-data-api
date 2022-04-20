@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -55,6 +56,9 @@ public class ExceptionHandlerConfig {
             if ("invokeChsKafkaApi".equals(rse.getReason())){
                 return new ResponseEntity(responseBody, HttpStatus.NOT_EXTENDED);
             }
+        }
+        if (ex instanceof HttpMessageNotReadableException){
+            return new ResponseEntity(responseBody, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
     }

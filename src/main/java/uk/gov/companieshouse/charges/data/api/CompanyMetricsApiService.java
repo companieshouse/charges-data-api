@@ -52,16 +52,10 @@ public class CompanyMetricsApiService {
             ApiResponse<MetricsApi> execute = companyMetrics.execute();
             return Optional.ofNullable(execute.getData());
         } catch (URIValidationException exp) {
-            logger.error(String.format(
-                    "Error occurred while calling /resource-changed endpoint. "
-                            + "Message: %s StackTrace: ",
-                    exp.getMessage(), exp.getStackTrace().toString()));
+            logger.error("Error occurred while calling getCompanyMetrics endpoint. ", exp);
 
         } catch (ApiErrorResponseException exp) {
-            logger.error(String.format(
-                    "Error occurred while calling /resource-changed endpoint. "
-                            + "Message: %s StackTrace: ",
-                    exp.getMessage(), exp.getStackTrace().toString()));
+            logger.error("Error occurred while calling getCompanyMetrics endpoint. ", exp);
             throw new ResponseStatusException(exp.getStatusCode(),
                     exp.getStatusMessage(), exp);
         }

@@ -41,7 +41,7 @@ class ChargesConverterTest {
                 mongoCustomConversions.convertValue(chargesBson, ChargesDocument.class);
        assertThat(chargesDocument).isNotNull();
        assertThat(chargesDocument.getData().getStatus()).isNotNull();
-       assertThat(chargesDocument.getData().getStatus()).isEqualTo(StatusEnum.OUTSTANDING);
+       assertThat(chargesDocument.getData().getStatus()).isEqualTo(StatusEnum.FULLY_SATISFIED);
     }
 
 }

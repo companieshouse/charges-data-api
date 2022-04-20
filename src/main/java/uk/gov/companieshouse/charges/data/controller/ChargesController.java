@@ -94,15 +94,22 @@ public class ChargesController {
      * @param companyNumber the company number of the company
      * @return company charge api
      */
-    @GetMapping("/company/{company_number}/charges/{items_per_page}/{start_index}")
+    @GetMapping(value = {"/company/{company_number}/charges",
+            "/company/{company_number}/charges/{items_per_page}/{start_index}"})
     public ResponseEntity<ChargesApi> getCompanyCharges(
             @PathVariable("company_number") final String companyNumber,
-            @PathVariable("items_per_page") final Integer itemsPerPage,
-            @PathVariable("start_index") final Integer startIndex) {
+            @PathVariable(value = "items_per_page", required = false)
+            final Integer itemsPerPage,
+            @PathVariable(value = "start_index", required = false)
+            final Integer startIndex) {
         logger.debug(String.format("Started : getCompanyCharges Charges for Company Number %s ",
                 companyNumber
         ));
-        Pageable pageable = PageRequest.of(startIndex, itemsPerPage);
+
+        Pageable pageable = Pageable.unpaged();
+        if (itemsPerPage != null && startIndex != null) {
+            pageable = PageRequest.of(startIndex, itemsPerPage);
+        }
         ResponseEntity<ChargesApi> chargesApiResponseEntity =
                 chargesService.findCharges(companyNumber, pageable).map(chargesDocument ->
                                 new ResponseEntity<>(

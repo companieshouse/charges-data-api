@@ -1,87 +1,50 @@
 {
-  "_id" : "MzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==",
-  "company_number" : "NI622400",
+  "_id" : "Wt1poFfN7wAkoSpHyv922w_ZpB0",
+  "updated" : {
+    "type" : "mortgage_delta",
+    "by" : "558d0dd3afa24c7af459c706",
+    "at" : "2015-06-26T08:31:25.161Z"
+  },
   "data" : {
-    "etag" : "0950a94c6283006f904b94614a8b7b2996e86915",
-    "id" : null,
-    "charge_code" : "NI6224000001",
-    "classification" : {
-      "type" : "charge-description",
-      "description" : "A REGISTERED CHARGE"
-    },
-    "charge_number" : 1,
-    "status" : "outstanding",
-    "assets_ceased_released" : "property-ceased-to-belong",
-    "acquired_on" : "1982-06-10T00:00:00.000Z",
-    "delivered_on" : "2014-12-16T00:00:00.000Z",
-    "resolved_on" : null,
-    "covering_instrument_date" : "1993-08-09T00:00:00.000Z",
-    "created_on" : "2014-08-04T00:00:00.000Z",
-    "satisfied_on" : "1999-12-01T00:00:00.000Z",
-    "particulars" : {
-      "type" : "brief-description",
-      "description" : "LAND KNOWN AS UNIT 3 MARSHES TRADE CENTRE,GREENBANK INDUSTRIAL ESTATE, NEWRY BEING ALL OF THE LANDS COMPRISED IN FOLIO DN198519L COUNTY DOWN.",
-      "contains_floating_charge" : true,
-      "contains_fixed_charge" : true,
-      "floating_charge_covers_all" : true,
-      "contains_negative_pledge" : true,
-      "chargor_acting_as_bare_trustee" : null
-    },
-    "secured_details" : {
-      "type" : "obligations-secured",
-      "description" : "A REGISTERED CHARGE"
-    },
-    "scottish_alterations" : {
-      "type" : null,
-      "description" : null,
-      "has_alterations_to_order" : true,
-      "has_alterations_to_prohibitions" : false,
-      "has_restricting_provisions" : true
-    },
-    "more_than_four_persons_entitled" : false,
+    "etag" : "822f73eb83a4aeb97853572e9f238beb3b296920",
+    "satisfied_on" : "1993-08-21T00:00:00.000Z",
+    "delivered_on" : "1951-09-05T00:00:00.000Z",
+    "charge_number" : 2,
     "persons_entitled" : [
       {
-        "name" : "THE GOVERNOR AND COMPANY OF THE BANK OF IRELAND"
+        "name" : "(Miss) E.R.Linley"
       }
     ],
+    "particulars" : {
+      "type" : "short-particulars",
+      "description" : "Beechen cliff house, beechen cliff road, bath."
+    },
+    "created_on" : "1951-06-29T00:00:00.000Z",
+    "links" : {
+      "self" : "/company/00006400/charges/Wt1poFfN7wAkoSpHyv922w_ZpB0"
+    },
     "transactions" : [
       {
-        "filing_type" : "403a",
-        "transaction_id" : null,
-        "delivered_on" : "2016-12-16T00:00:00.000Z",
-        "insolvency_case_number" : 1,
-        "links" : {
-          "filing" : "/company/NI622400/filing-history/MzM4Nzc3OHRyYW5zSWRfc2FsdA==",
-          "insolvency_case" : null
-        }
+        "filing_type" : "create-charge",
+        "delivered_on" : "1951-09-05T00:00:00.000Z"
       },
       {
-        "filing_type" : "MR01",
-        "transaction_id" : null,
-        "delivered_on" : null,
-        "insolvency_case_number" : null,
+        "delivered_on" : "1993-08-21T00:00:00.000Z",
         "links" : {
-          "filing" : "/company/NI622400/filing-history/MzExMzg5MjgyM3RyYW5zSWRfc2FsdA==",
-          "insolvency_case" : null
-        }
+          "filing" : "/company/00006400/filing-history/YWRpcXprY3g"
+        },
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act"
       }
     ],
-    "insolvency_cases" : [
-      {
-        "case_number" : 2,
-        "transaction_id" : 22222,
-        "links" : null
-      }
-    ],
-    "links" : {
-      "self" : "/company/NI622400/charges/MzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng=="
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "£3,000"
+    },
+    "status" : "fully-satisfied",
+    "classification" : {
+      "type" : "charge-description",
+      "description" : "Legal charge registered pursuant to an order of court dated 24/8/51"
     }
   },
-  "updated" : {
-    "at" : "2015-06-24T23:00:00.000Z",
-    "type" : "mortgage_delta",
-    "by" : "test-partition_1-offset_1"
-  },
-  "version" : 0,
-  "_class" : "uk.gov.companieshouse.charges.data.model.ChargesDocument"
+  "company_number" : "00006400"
 }

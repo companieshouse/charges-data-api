@@ -1,12 +1,12 @@
 package uk.gov.companieshouse.charges.data.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -82,13 +82,7 @@ public class CompanyMetricsApiServiceTest {
         when(privateCompanyMetricsResourceHandler.getCompanyMetrics(Mockito.any())).thenReturn(
                 privateCompanyMetricsGet);
         when(privateCompanyMetricsGet.execute()).thenThrow(ApiErrorResponseException.class);
-        try {
-            Optional<MetricsApi> apiResponse = companyMetricsApiService.getCompanyMetrics("00006400");
-            Assert.fail();
-        } catch (ResponseStatusException exp ) {
-            // Do nothing
-        }
-
+        assertThrows(ResponseStatusException.class, () -> companyMetricsApiService.getCompanyMetrics("00006400"));
         verify(apiClientService, times(1)).getInternalApiClient();
         verify(privateCompanyMetricsResourceHandler, times(1)).getCompanyMetrics(Mockito.any());
         verify(privateCompanyMetricsGet, times(1)).execute();
