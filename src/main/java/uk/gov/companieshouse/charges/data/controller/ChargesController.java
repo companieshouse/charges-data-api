@@ -49,6 +49,7 @@ public class ChargesController {
                 chargeId,
                 companyNumber));
         chargesService.upsertCharges(contextId, companyNumber, chargeId, requestBody);
+
         logger.debug(String.format(
                 "Finished : Save or Update charge %s with company number %s ",
                 chargeId,

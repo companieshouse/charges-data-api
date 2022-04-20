@@ -1,11 +1,7 @@
 package uk.gov.companieshouse.charges.data.controller;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -25,17 +21,14 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.web.util.NestedServletException;
 import uk.gov.companieshouse.api.charges.ChargesApi;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
@@ -45,7 +38,6 @@ import uk.gov.companieshouse.charges.data.tranform.ChargesTransformer;
 import uk.gov.companieshouse.logging.Logger;
 
 @SpringBootTest
-@ExtendWith(MockitoExtension.class)
 public class ChargesControllerTest {
     private final String companyNumber = "02588581";
     private final String chargeId = "18588520";
@@ -93,20 +85,6 @@ public class ChargesControllerTest {
                 .content(gson.toJson(request))).andExpect(status().isOk());
     }
 
-    @Test
-    @DisplayName("Charges PUT request throws exception")
-    public void callChargesPutRequestThrowException() throws Exception {
-        InternalChargeApi request = createChargesDocument();
-        String contextId = companyNumber;
-        doThrow(new Exception("Test exception")).when(chargesService).upsertCharges(eq(contextId), eq(companyNumber), eq(chargeId), any(InternalChargeApi.class));
-        NestedServletException exception = assertThrows( NestedServletException.class, () -> {
-            mockMvc.perform(put(CHARGES_PUT_URL).contentType(APPLICATION_JSON)
-                    .header("x-request-id", companyNumber)
-                    .content(gson.toJson(request))).andExpect(status().isOk());
-        });
-        assertEquals("Test exception", exception.getRootCause().getMessage());
-    }
-
     @Test()
     @DisplayName("When calling get charges - returns a 500 INTERNAL SERVER ERROR")
     void getChargeInternalServerError(){
@@ -122,14 +100,9 @@ public class ChargesControllerTest {
     @Test
     @DisplayName("Retrieve company charge details for a given company number and chargeId")
     void getCharge() throws Exception {
-
         InternalChargeApi request = createChargesDocument();
         ChargesDocument document = transform(companyNumber, chargeId, request);
         when(chargesService.getChargeDetails(companyNumber, chargeId)).thenReturn(Optional.of(document.getData()));
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-
         mockMvc.perform(get(CHARGE_DETAILS_GET_URL)).andExpect(status().isOk());
     }
 

@@ -1,6 +1,8 @@
 package uk.gov.companieshouse.charges.data.api;
 
 import java.time.OffsetDateTime;
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -53,8 +55,8 @@ public class ChargesApiService {
         } catch (ApiErrorResponseException exp) {
             logger.error(String.format(
                     "Error occurred while calling /resource-changed endpoint. "
-                    + "Message: %s StackTrace: ",
-                    exp.getMessage(), exp.getStackTrace().toString()));
+                    + "Message: %s StackTrace: %s",
+                    exp.getMessage(), Arrays.toString(exp.getStackTrace())));
             throw new ResponseStatusException(HttpStatus.valueOf(exp.getStatusCode()),
                     exp.getStatusMessage(), exp);
         }

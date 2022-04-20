@@ -3,15 +3,19 @@ package uk.gov.companieshouse.charges.data.service;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import uk.gov.companieshouse.api.charges.ChargeApi;
 import uk.gov.companieshouse.api.charges.ChargesApi;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
 import uk.gov.companieshouse.api.metrics.MetricsApi;
 import uk.gov.companieshouse.api.metrics.MortgageApi;
+import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.charges.data.api.ChargesApiService;
 import uk.gov.companieshouse.charges.data.api.CompanyMetricsApiService;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
@@ -26,9 +30,9 @@ public class ChargesService {
     private final ChargesApiService chargesApiService;
     private final DateTimeFormatter dateTimeFormatter =
             DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
-    private ChargesTransformer chargesTransformer;
-    private ChargesRepository chargesRepository;
-    private CompanyMetricsApiService companyMetricsApiService;
+    private final ChargesTransformer chargesTransformer;
+    private final ChargesRepository chargesRepository;
+    private final CompanyMetricsApiService companyMetricsApiService;
 
 
     /**
@@ -71,7 +75,10 @@ public class ChargesService {
                     String.format("Finished : upsertCharges for chargeId %s company number %s ",
                             chargeId,
                             companyNumber));
-            chargesApiService.invokeChsKafkaApi(contextId, companyNumber);
+            ApiResponse<Void> res = chargesApiService.invokeChsKafkaApi(contextId, companyNumber);
+            if (res.getStatusCode() != 200){
+                throw new ResponseStatusException(Objects.requireNonNull(HttpStatus.resolve(res.getStatusCode())), "invokeChsKafkaApi");
+            }
             logger.info(
                     String.format("DSND-542: ChsKafka api invoked successfully for company number"
                             + " %s", companyNumber));
