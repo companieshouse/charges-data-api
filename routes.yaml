@@ -5,4 +5,4 @@ routes:
    1: ^/charges-data-api/healthcheck
    2: ^/company/(.*)/charges/(.*)
    3: ^/company/(.*)/charge/(.*)
-   4: ^/company/(.*)/charges
+   4: ^/company/(.*)/charges.*
