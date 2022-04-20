@@ -2,10 +2,8 @@ package uk.gov.companieshouse.charges.data.config;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -24,6 +22,12 @@ public class ExceptionHandlerConfig {
         this.logger = logger;
     }
 
+    private void populateResponseBody(Map<String, Object> responseBody , String correlationId){
+        responseBody.put("timestamp", LocalDateTime.now());
+        responseBody.put("message", "There is issue completing the request.");
+        responseBody.put("correlationId", correlationId);
+    }
+
     /**
      * Runtime exception handler.
      *
@@ -34,17 +38,10 @@ public class ExceptionHandlerConfig {
     @ExceptionHandler(value = {Exception.class})
     public ResponseEntity<Object> handleException(Exception ex, WebRequest request) {
         var correlationId = generateShortCorrelationId();
-        logger.error(String.format("Started: handleException: %s Generating error response for "
-                        + "Exception: %s  Cause: %s StackTrace: %s",
-                correlationId, ex.getClass().toString(),
-                ex.getCause() == null ? "None exception cause" :  ex.getCause(),
-                Arrays.toString(ex.getStackTrace())));
-
-
+        logger.error(String.format("Started: handleException: %s Generating error response ",
+                correlationId), ex);
         Map<String, Object> responseBody = new LinkedHashMap<>();
-        responseBody.put("timestamp", LocalDateTime.now());
-        responseBody.put("message", "There is issue completing the request.");
-        responseBody.put("correlationId", correlationId);
+        populateResponseBody(responseBody, correlationId);
         request.setAttribute("javax.servlet.error.exception", ex, 0);
         logger.error(String.format("Finished: handleException: %s handleException", correlationId));
         if (ex instanceof ResponseStatusException){
@@ -57,10 +54,35 @@ public class ExceptionHandlerConfig {
                 return new ResponseEntity(responseBody, HttpStatus.NOT_EXTENDED);
             }
         }
-        if (ex instanceof HttpMessageNotReadableException){
-            return new ResponseEntity(responseBody, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(value = {ResponseStatusException.class})
+    public ResponseEntity<Object> handleException(ResponseStatusException ex, WebRequest request) {
+        var correlationId = generateShortCorrelationId();
+        logger.error(String.format("Started: handleException: %s Generating error response ",
+                correlationId), ex);
+        Map<String, Object> responseBody = new LinkedHashMap<>();
+        populateResponseBody(responseBody, correlationId);
+        Throwable cause = ex.getCause();
+        if (cause instanceof IOException){
+            return new ResponseEntity(responseBody, HttpStatus.SERVICE_UNAVAILABLE);
+        }
+        if ("invokeChsKafkaApi".equals(ex.getReason())){
+            return new ResponseEntity(responseBody, HttpStatus.NOT_EXTENDED);
         }
         return new ResponseEntity(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
+    @ExceptionHandler(value = {HttpMessageNotReadableException.class})
+    public ResponseEntity<Object> handleException(HttpMessageNotReadableException ex, WebRequest request) {
+        var correlationId = generateShortCorrelationId();
+        logger.error(String.format("Started: handleException: %s Generating error response ",
+                correlationId), ex);
+        Map<String, Object> responseBody = new LinkedHashMap<>();
+        populateResponseBody(responseBody, correlationId);
+        return new ResponseEntity(responseBody, HttpStatus.BAD_REQUEST);
     }
 
     private String generateShortCorrelationId() {
