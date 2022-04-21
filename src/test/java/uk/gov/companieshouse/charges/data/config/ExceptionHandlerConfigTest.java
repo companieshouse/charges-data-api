@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpStatus;
@@ -69,19 +70,15 @@ public class ExceptionHandlerConfigTest {
     @DisplayName("Handle Exception when KafkaApi returns Non 200 Response")
     public void handleExceptionKafkaNon200ResponseTest() {
         ResponseStatusException rse = new ResponseStatusException(Objects.requireNonNull(HttpStatus.resolve(404)), "invokeChsKafkaApi");
-
         ResponseEntity<Object> response = exceptionHanler.handleException(rse, request);
         assertEquals(510, response.getStatusCodeValue());
     }
 
     @Test
-    @DisplayName("Handle cause IOException")
+    @DisplayName("Handle DataAccessResourceFailureException")
     public void handleCausedByIOExceptionTest() {
-        IOException ioException = new IOException("Test exception");
-        ApiErrorResponseException exp = ApiErrorResponseException.fromIOException(ioException);
-        ResponseStatusException rse = new ResponseStatusException(exp.getStatusCode(), exp.getStatusMessage(), exp);
-
-        ResponseEntity<Object> response = exceptionHanler.handleException(rse, request);
+        DataAccessResourceFailureException exp = new DataAccessResourceFailureException("Test exception");
+        ResponseEntity<Object> response = exceptionHanler.handleException(exp, request);
         assertEquals(503, response.getStatusCodeValue());
     }
 

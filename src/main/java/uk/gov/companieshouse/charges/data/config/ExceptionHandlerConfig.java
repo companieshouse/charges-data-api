@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -49,6 +50,18 @@ public class ExceptionHandlerConfig {
         return new ResponseEntity(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(value = {DataAccessResourceFailureException.class})
+    public ResponseEntity<Object> handleException(DataAccessResourceFailureException ex, WebRequest request) {
+        var correlationId = generateShortCorrelationId();
+        logger.error(String.format("Started: handleException: %s Generating error response ",
+            correlationId), ex);
+        Map<String, Object> responseBody = new LinkedHashMap<>();
+        populateResponseBody(responseBody, correlationId);
+        Throwable cause = ex.getCause();
+
+        return new ResponseEntity(responseBody, HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
     @ExceptionHandler(value = {ResponseStatusException.class})
     public ResponseEntity<Object> handleException(ResponseStatusException ex, WebRequest request) {
         var correlationId = generateShortCorrelationId();
@@ -56,10 +69,7 @@ public class ExceptionHandlerConfig {
                 correlationId), ex);
         Map<String, Object> responseBody = new LinkedHashMap<>();
         populateResponseBody(responseBody, correlationId);
-        Throwable cause = ex.getCause();
-        if (cause instanceof IOException){
-            return new ResponseEntity(responseBody, HttpStatus.SERVICE_UNAVAILABLE);
-        }
+
         if ("invokeChsKafkaApi".equals(ex.getReason())){
             return new ResponseEntity(responseBody, HttpStatus.NOT_EXTENDED);
         }
