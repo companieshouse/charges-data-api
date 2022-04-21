@@ -4,8 +4,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>uk.gov.companieshouse</groupId>
-		<artifactId>companies-house-spring-boot-parent</artifactId>
-		<version>1.5.0-rc1</version>
+		<artifactId>companies-house-parent</artifactId>
+		<version>1.3.0</version>
 	</parent>
 
 	<artifactId>charges-data-api</artifactId>
@@ -20,6 +20,10 @@
 
 		<main.class>uk.gov.companieshouse.charges.data.ChargesDataApiApplication</main.class>
 
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+		<spring.boot.version>2.6.4</spring.boot.version>
 		<assertj-core.version>3.22.0</assertj-core.version>
 		<test-containers.version>1.16.3</test-containers.version>
 		<maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
@@ -49,6 +53,25 @@
 		</sonar.coverage.jacoco.xmlReportPaths>
 		<sonar.jacoco.reports>${project.basedir}/target/site</sonar.jacoco.reports>
 	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${spring.boot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.testcontainers</groupId>
+				<artifactId>testcontainers-bom</artifactId>
+				<version>${test-containers.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<dependencies>
 		<dependency>
@@ -157,18 +180,6 @@
 		</dependency>
 	</dependencies>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.testcontainers</groupId>
-				<artifactId>testcontainers-bom</artifactId>
-				<version>${test-containers.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -191,6 +202,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>${spring.boot.version}</version>
 				<configuration>
 					<mainClass>${main.class}</mainClass>
 				</configuration>
@@ -318,6 +330,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
 				<configuration>
 					<compilerArgs>
 						<arg>-Xlint</arg>

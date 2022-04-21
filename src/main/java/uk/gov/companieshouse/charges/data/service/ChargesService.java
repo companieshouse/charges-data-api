@@ -21,6 +21,7 @@ import uk.gov.companieshouse.charges.data.api.CompanyMetricsApiService;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.repository.ChargesRepository;
 import uk.gov.companieshouse.charges.data.tranform.ChargesTransformer;
+import uk.gov.companieshouse.charges.data.util.DateFormatter;
 import uk.gov.companieshouse.logging.Logger;
 
 @Service
@@ -75,7 +76,7 @@ public class ChargesService {
                     String.format("Finished : upsertCharges for chargeId %s company number %s ",
                             chargeId,
                             companyNumber));
-            ApiResponse<Void> res = chargesApiService.invokeChsKafkaApi(contextId, companyNumber);
+            ApiResponse<Void> res = chargesApiService.invokeChsKafkaApi(contextId, companyNumber, chargeId);
             if (res.getStatusCode() != 200){
                 throw new ResponseStatusException(Objects.requireNonNull(HttpStatus.resolve(res.getStatusCode())), "invokeChsKafkaApi");
             }
@@ -92,7 +93,7 @@ public class ChargesService {
     private boolean isLatestRecord(String companyNumber, String chargeId,
             InternalChargeApi requestBody) {
         OffsetDateTime localDate = requestBody.getInternalData().getDeltaAt();
-        String format = localDate.format(dateTimeFormatter);
+        String format = DateFormatter.format(localDate.toLocalDate());
         Optional<ChargesDocument> chargesDelta =
                 this.chargesRepository.findCharge(companyNumber, chargeId,
                         format);
