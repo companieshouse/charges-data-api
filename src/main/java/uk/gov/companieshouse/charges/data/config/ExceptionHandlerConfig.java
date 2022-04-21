@@ -44,16 +44,6 @@ public class ExceptionHandlerConfig {
         populateResponseBody(responseBody, correlationId);
         request.setAttribute("javax.servlet.error.exception", ex, 0);
         logger.error(String.format("Finished: handleException: %s handleException", correlationId));
-        if (ex instanceof ResponseStatusException){
-            ResponseStatusException rse = (ResponseStatusException)ex;
-            Throwable cause = rse.getCause();
-            if (cause instanceof IOException){
-                return new ResponseEntity(responseBody, HttpStatus.SERVICE_UNAVAILABLE);
-            }
-            if ("invokeChsKafkaApi".equals(rse.getReason())){
-                return new ResponseEntity(responseBody, HttpStatus.NOT_EXTENDED);
-            }
-        }
         return new ResponseEntity(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
