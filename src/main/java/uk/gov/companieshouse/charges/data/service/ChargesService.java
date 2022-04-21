@@ -69,7 +69,7 @@ public class ChargesService {
                     String.format("Finished : upsertCharges for chargeId %s company number %s ",
                             chargeId,
                             companyNumber));
-            chargesApiService.invokeChsKafkaApi(contextId, companyNumber);
+            chargesApiService.invokeChsKafkaApi(contextId, companyNumber, chargeId);
             logger.info(
                     String.format("DSND-542: ChsKafka api invoked successfully for company number"
                             + " %s", companyNumber));
