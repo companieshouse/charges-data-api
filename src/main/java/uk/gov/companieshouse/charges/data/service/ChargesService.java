@@ -76,9 +76,11 @@ public class ChargesService {
                     String.format("Finished : upsertCharges for chargeId %s company number %s ",
                             chargeId,
                             companyNumber));
-            ApiResponse<Void> res = chargesApiService.invokeChsKafkaApi(contextId, companyNumber, chargeId);
-            if (res.getStatusCode() != 200){
-                throw new ResponseStatusException(Objects.requireNonNull(HttpStatus.resolve(res.getStatusCode())), "invokeChsKafkaApi");
+            ApiResponse<Void> res = chargesApiService.invokeChsKafkaApi(contextId, companyNumber,
+                    chargeId);
+            if (res.getStatusCode() != 200) {
+                throw new ResponseStatusException(HttpStatus.resolve(res.getStatusCode()),
+                    "invokeChsKafkaApi");
             }
             logger.info(
                     String.format("DSND-542: ChsKafka api invoked successfully for company number"

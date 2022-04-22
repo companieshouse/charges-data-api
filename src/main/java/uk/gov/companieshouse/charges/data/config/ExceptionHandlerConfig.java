@@ -25,7 +25,7 @@ public class ExceptionHandlerConfig {
         this.logger = logger;
     }
 
-    private void populateResponseBody(Map<String, Object> responseBody , String correlationId){
+    private void populateResponseBody(Map<String, Object> responseBody , String correlationId) {
         responseBody.put("timestamp", LocalDateTime.now());
         responseBody.put("message", "There is issue completing the request.");
         responseBody.put("correlationId", correlationId);
@@ -50,11 +50,19 @@ public class ExceptionHandlerConfig {
         return new ResponseEntity(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    /**
+     * Runtime exception handler DataAccessResourceFailureException.
+     *
+     * @param ex      exception to handle.
+     * @param request request.
+     * @return error response to return.
+     */
     @ExceptionHandler(value = {DataAccessResourceFailureException.class})
-    public ResponseEntity<Object> handleException(DataAccessResourceFailureException ex, WebRequest request) {
+    public ResponseEntity<Object> handleException(DataAccessResourceFailureException ex,
+            WebRequest request) {
         var correlationId = generateShortCorrelationId();
         logger.error(String.format("Started: handleException: %s Generating error response ",
-            correlationId), ex);
+                correlationId), ex);
         Map<String, Object> responseBody = new LinkedHashMap<>();
         populateResponseBody(responseBody, correlationId);
         Throwable cause = ex.getCause();
@@ -62,7 +70,14 @@ public class ExceptionHandlerConfig {
         return new ResponseEntity(responseBody, HttpStatus.SERVICE_UNAVAILABLE);
     }
 
-    @ExceptionHandler(value = {ResponseStatusException.class})
+    /**
+    * Runtime exception handler ResponseStatusException.
+    *
+    * @param ex      exception to handle.
+    * @param request request.
+    * @return error response to return.
+    */
+    @ExceptionHandler(value = { ResponseStatusException.class })
     public ResponseEntity<Object> handleException(ResponseStatusException ex, WebRequest request) {
         var correlationId = generateShortCorrelationId();
         logger.error(String.format("Started: handleException: %s Generating error response ",
@@ -70,15 +85,23 @@ public class ExceptionHandlerConfig {
         Map<String, Object> responseBody = new LinkedHashMap<>();
         populateResponseBody(responseBody, correlationId);
 
-        if ("invokeChsKafkaApi".equals(ex.getReason())){
+        if ("invokeChsKafkaApi".equals(ex.getReason())) {
             return new ResponseEntity(responseBody, HttpStatus.NOT_EXTENDED);
         }
         return new ResponseEntity(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 
+    /**
+     * Runtime exception handler HttpMessageNotReadableException.
+     *
+     * @param ex      exception to handle.
+     * @param request request.
+     * @return error response to return.
+     */
     @ExceptionHandler(value = {HttpMessageNotReadableException.class})
-    public ResponseEntity<Object> handleException(HttpMessageNotReadableException ex, WebRequest request) {
+    public ResponseEntity<Object> handleException(HttpMessageNotReadableException ex,
+            WebRequest request) {
         var correlationId = generateShortCorrelationId();
         logger.error(String.format("Started: handleException: %s Generating error response ",
                 correlationId), ex);
