@@ -1,14 +1,19 @@
 package uk.gov.companieshouse.charges.data.config;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.server.ResponseStatusException;
 import uk.gov.companieshouse.logging.Logger;
 
 @ControllerAdvice
@@ -18,6 +23,12 @@ public class ExceptionHandlerConfig {
 
     public ExceptionHandlerConfig(final Logger logger) {
         this.logger = logger;
+    }
+
+    private void populateResponseBody(Map<String, Object> responseBody , String correlationId){
+        responseBody.put("timestamp", LocalDateTime.now());
+        responseBody.put("message", "There is issue completing the request.");
+        responseBody.put("correlationId", correlationId);
     }
 
     /**
@@ -30,19 +41,50 @@ public class ExceptionHandlerConfig {
     @ExceptionHandler(value = {Exception.class})
     public ResponseEntity<Object> handleException(Exception ex, WebRequest request) {
         var correlationId = generateShortCorrelationId();
-        logger.error(String.format("Started: handleException: %s Generating error response for "
-                        + "Exception: % "
-                        + "Cause: %"
-                        + "StackTrace: % ",
-                correlationId, ex.getClass().toString(), ex.getCause().toString(),
-                ex.getStackTrace().toString()));
+        logger.error(String.format("Started: handleException: %s Generating error response ",
+                correlationId), ex);
         Map<String, Object> responseBody = new LinkedHashMap<>();
-        responseBody.put("timestamp", LocalDateTime.now());
-        responseBody.put("message", "There is issue completing the request.");
-        responseBody.put("correlationId", correlationId);
+        populateResponseBody(responseBody, correlationId);
         request.setAttribute("javax.servlet.error.exception", ex, 0);
         logger.error(String.format("Finished: handleException: %s handleException", correlationId));
         return new ResponseEntity(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(value = {DataAccessResourceFailureException.class})
+    public ResponseEntity<Object> handleException(DataAccessResourceFailureException ex, WebRequest request) {
+        var correlationId = generateShortCorrelationId();
+        logger.error(String.format("Started: handleException: %s Generating error response ",
+            correlationId), ex);
+        Map<String, Object> responseBody = new LinkedHashMap<>();
+        populateResponseBody(responseBody, correlationId);
+        Throwable cause = ex.getCause();
+
+        return new ResponseEntity(responseBody, HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
+    @ExceptionHandler(value = {ResponseStatusException.class})
+    public ResponseEntity<Object> handleException(ResponseStatusException ex, WebRequest request) {
+        var correlationId = generateShortCorrelationId();
+        logger.error(String.format("Started: handleException: %s Generating error response ",
+                correlationId), ex);
+        Map<String, Object> responseBody = new LinkedHashMap<>();
+        populateResponseBody(responseBody, correlationId);
+
+        if ("invokeChsKafkaApi".equals(ex.getReason())){
+            return new ResponseEntity(responseBody, HttpStatus.NOT_EXTENDED);
+        }
+        return new ResponseEntity(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
+    @ExceptionHandler(value = {HttpMessageNotReadableException.class})
+    public ResponseEntity<Object> handleException(HttpMessageNotReadableException ex, WebRequest request) {
+        var correlationId = generateShortCorrelationId();
+        logger.error(String.format("Started: handleException: %s Generating error response ",
+                correlationId), ex);
+        Map<String, Object> responseBody = new LinkedHashMap<>();
+        populateResponseBody(responseBody, correlationId);
+        return new ResponseEntity(responseBody, HttpStatus.BAD_REQUEST);
     }
 
     private String generateShortCorrelationId() {
