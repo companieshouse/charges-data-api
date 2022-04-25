@@ -2,9 +2,10 @@ package uk.gov.companieshouse.charges.data.service;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -76,9 +77,11 @@ public class ChargesService {
                     String.format("Finished : upsertCharges for chargeId %s company number %s ",
                             chargeId,
                             companyNumber));
-            ApiResponse<Void> res = chargesApiService.invokeChsKafkaApi(contextId, companyNumber, chargeId);
-            if (res.getStatusCode() != 200){
-                throw new ResponseStatusException(Objects.requireNonNull(HttpStatus.resolve(res.getStatusCode())), "invokeChsKafkaApi");
+            ApiResponse<Void> res = chargesApiService.invokeChsKafkaApi(contextId, companyNumber,
+                    chargeId);
+            if (res.getStatusCode() != 200) {
+                throw new ResponseStatusException(HttpStatus.resolve(res.getStatusCode()),
+                    "invokeChsKafkaApi");
             }
             logger.info(
                     String.format("DSND-542: ChsKafka api invoked successfully for company number"
@@ -143,8 +146,8 @@ public class ChargesService {
                 companyNumber
         ));
 
-        List<ChargesDocument> charges =
-                this.chargesRepository.findCharges(companyNumber, pageable).getContent();
+        Page<ChargesDocument> page = chargesRepository.findCharges(companyNumber, pageable);
+        List<ChargesDocument> charges = page == null ? Collections.emptyList() : page.getContent();
         if (charges.isEmpty()) {
             logger.error(
                     String.format(

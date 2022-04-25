@@ -1,6 +1,11 @@
 package uk.gov.companieshouse.charges.data.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -12,6 +17,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.bson.Document;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -38,19 +45,20 @@ import uk.gov.companieshouse.logging.Logger;
 @ExtendWith(MockitoExtension.class)
 public class ChargesServiceTest {
 
+    private final static String companyNumber = "NI622400";
+
     @Autowired
     private ObjectMapper mongoCustomConversions;
 
-    @Mock
-    private Logger logger;
-    @Mock
-    ChargesRepository chargesRepository;
-    @Mock
-    ChargesTransformer chargesTransformer;
-    @Mock
-    ChargesApiService chargesApiService;
-    @Mock
-    CompanyMetricsApiService companyMetricsApiService;
+    private static ChargesRepository chargesRepository;
+
+    private static ChargesTransformer chargesTransformer;
+
+    private static ChargesApiService chargesApiService;
+
+    private static CompanyMetricsApiService companyMetricsApiService;
+
+    private static ChargesService chargesService;
 
     @Value("classpath:company-metrics-data.json")
     Resource metricsFile;
@@ -58,20 +66,46 @@ public class ChargesServiceTest {
     @Value("classpath:charges-test-DB-record.json")
     Resource chargesFile;
 
-    @InjectMocks
-    ChargesService chargesService;
+    /**
+     * Set up mocks and create the chargesService instance.
+     * When using injects mocks and the @mock annotation the mock
+     * in the service was not the same as the mock in the test so the when
+     * was always returing null because it was a different mock instance.
+     *
+     * Suspect this was due to sprint injection, not proven but
+     * mock are now the same in test and serice to tests work and pass.
+     */
+    @BeforeAll
+    public static void setup(){
+        chargesApiService = mock(ChargesApiService.class);
+        companyMetricsApiService = mock(CompanyMetricsApiService.class);
+        chargesTransformer = mock(ChargesTransformer.class);
+        chargesRepository = mock(ChargesRepository.class);
+        Logger logger = mock(Logger.class);
+        chargesService = new ChargesService(logger, chargesRepository,
+            chargesTransformer, chargesApiService, companyMetricsApiService);
+    }
+
+    /**
+     * Reset the mocks so defaults are returned and invocation counters cleared.
+     */
+    @BeforeEach
+    public void resetMocks(){
+        reset(companyMetricsApiService);
+        reset(chargesRepository);
+    }
 
     @Test
     public void find_charges_should_return_charges() throws IOException {
-        var companyNumber = "NI622400";
-        var pageable = Pageable.ofSize(1);
-        var page = new PageImpl<>(
+        Pageable pageable = Pageable.ofSize(1);
+        final PageImpl page = new PageImpl<>(
                 List.of(createCharges()));
-        when(chargesRepository.findCharges(companyNumber, pageable)).thenReturn(page);
+        when(chargesRepository.findCharges(eq(companyNumber), any(Pageable.class))).thenReturn(page);
+
         when(companyMetricsApiService.getCompanyMetrics(companyNumber)).thenReturn(Optional.ofNullable(createMetrics()));
         Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,pageable);
-        assertThat(charges).isNotNull();
-        assertThat(charges.isEmpty()).isFalse();
+        assertThat(charges.isPresent()).isTrue();
+        assertThat(charges.get().getItems().isEmpty()).isFalse();
         assertThat(charges.get().getTotalCount()).isEqualTo(1);
         assertThat(charges.get().getSatisfiedCount()).isEqualTo(1);
         assertThat(charges.get().getPartSatisfiedCount()).isEqualTo(2);
@@ -80,26 +114,21 @@ public class ChargesServiceTest {
 
     @Test
     public void empty_charges_when_repository_returns_empty_result() throws IOException {
-        var companyNumber = "NI622400";
         var pageable = Pageable.ofSize(1);
-        when(chargesRepository.findCharges(companyNumber, pageable)).thenReturn(Page.empty());
         Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,pageable);
-        assertThat(charges).isNotNull();
-        assertThat(charges.isEmpty()).isTrue();
+        assertThat(charges.isPresent()).isFalse();
         verify(companyMetricsApiService, times(0)).getCompanyMetrics(companyNumber);
     }
 
     @Test
     public void empty_charges_when_company_metrics_returns_no_result() throws IOException {
-        var companyNumber = "NI622400";
         var pageable = Pageable.ofSize(1);
         var page = new PageImpl<>(
                 List.of(createCharges()));
-        when(chargesRepository.findCharges(companyNumber, pageable)).thenReturn(page);
-        when(companyMetricsApiService.getCompanyMetrics(companyNumber)).thenReturn(Optional.empty());
+        when(chargesRepository.findCharges(eq(companyNumber), any(Pageable.class))).thenReturn(page);
+
         Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,pageable);
-        assertThat(charges).isNotNull();
-        assertThat(charges.isEmpty()).isTrue();
+        assertThat(charges.isPresent()).isFalse();
     }
 
     private ChargesDocument createCharges() throws
@@ -117,6 +146,7 @@ public class ChargesServiceTest {
                 mongoCustomConversions.convertValue(chargesBson, MetricsApi.class);
         return metricsApi;
     }
+
     private Document readData(Resource resource) throws IOException {
         var data= FileCopyUtils.copyToString(new InputStreamReader(Objects.requireNonNull(
                 resource.getInputStream())));
