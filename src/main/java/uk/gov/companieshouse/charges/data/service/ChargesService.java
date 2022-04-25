@@ -2,9 +2,10 @@ package uk.gov.companieshouse.charges.data.service;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -145,8 +146,8 @@ public class ChargesService {
                 companyNumber
         ));
 
-        List<ChargesDocument> charges =
-                this.chargesRepository.findCharges(companyNumber, pageable).getContent();
+        Page<ChargesDocument> page = chargesRepository.findCharges(companyNumber, pageable);
+        List<ChargesDocument> charges = page == null ? Collections.emptyList() : page.getContent();
         if (charges.isEmpty()) {
             logger.error(
                     String.format(
