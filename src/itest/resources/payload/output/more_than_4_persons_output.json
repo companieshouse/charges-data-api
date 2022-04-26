@@ -1,0 +1,56 @@
+{
+    "_id" : "NTdBQUUzMUI2OTg1RENBRTY3MTdDNjYwMTAzMDBDQzc2M0MyQzlFRA==",
+    "company_number" : "00285630555",
+    "data" : {
+        "etag" : "73930ba6e85ab3611b16441ad89323784ed7c355",
+        "id" : "NTdBQUUzMUI2OTg1RENBRTY3MTdDNjYwMTAzMDBDQzc2M0MyQzlFRA==",
+        "charge_code" : null,
+        "classification" : null,
+        "charge_number" : 6,
+        "status" : null,
+        "assets_ceased_released" : null,
+        "acquired_on" : null,
+        "delivered_on" : null,
+        "resolved_on" : null,
+        "covering_instrument_date" : null,
+        "created_on" : null,
+        "satisfied_on" : null,
+        "particulars" : {
+            "type" : null,
+            "description" : null,
+            "contains_floating_charge" : true,
+            "contains_fixed_charge" : false,
+            "floating_charge_covers_all" : true,
+            "contains_negative_pledge" : true,
+            "chargor_acting_as_bare_trustee" : false
+        },
+        "secured_details" : null,
+        "scottish_alterations" : null,
+        "more_than_four_persons_entitled" : null,
+        "persons_entitled" : [ 
+            {
+                "name" : null
+            }, 
+            {
+                "name" : null
+            }, 
+            {
+                "name" : null
+            }, 
+            {
+                "name" : null
+            }
+        ],
+        "transactions" : null,
+        "insolvency_cases" : null,
+        "links" : {
+            "self" : "/company/00285630555/charges/NTdBQUUzMUI2OTg1RENBRTY3MTdDNjYwMTAzMDBDQzc2M0MyQzlFRA=="
+        }
+    },
+    "updated" : {
+        "at" : "2015-06-24T23:00:00.000Z",
+        "type" : "mortgage_delta",
+        "by" : "test-partition_1-offset_1"
+    },
+    "_class" : "uk.gov.companieshouse.charges.data.model.ChargesDocument"
+}

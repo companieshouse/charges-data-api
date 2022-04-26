@@ -1,0 +1,37 @@
+{
+    "_id" : "MkNCRDZFODY1OTQ2MjcxNTgxREUzNjZCM0RCQTQ5MDkzNzFDRTgxRQ==",
+    "company_number" : "03674789",
+    "data" : {
+        "etag" : "61f5591de1a2d7eaebffc0780ad3cfb68b50a62d",
+        "id" : null,
+        "charge_code" : null,
+        "classification" : null,
+        "charge_number" : null,
+        "status" : null,
+        "assets_ceased_released" : null,
+        "acquired_on" : null,
+        "delivered_on" : null,
+        "resolved_on" : null,
+        "covering_instrument_date" : null,
+        "created_on" : null,
+        "satisfied_on" : null,
+        "particulars" : null,
+        "secured_details" : null,
+        "scottish_alterations" : null,
+        "more_than_four_persons_entitled" : null,
+        "persons_entitled" : [ 
+            {
+                "name" : "GMAC COMMERCIAL FINANCE PLC AS SECURITY TRUSTEE FOR THE BENEFICIARIES"
+            }
+        ],
+        "transactions" : null,
+        "insolvency_cases" : null,
+        "links" : null
+    },
+    "updated" : {
+        "at" : "2015-06-24T23:00:00.000Z",
+        "type" : "mortgage_delta",
+        "by" : "test-partition_1-offset_1"
+    },
+    "_class" : "uk.gov.companieshouse.charges.data.model.ChargesDocument"
+}

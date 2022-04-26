@@ -1,0 +1,102 @@
+{
+  "external_data": {
+    "persons_entitled": [
+      {
+        "name": "CLYDESDALE BANK PLC"
+      }
+    ],
+    "id":"OzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==",
+    "charge_number": 17,
+    "particulars": {
+      "floating_charge_covers_all": false,
+      "contains_floating_charge": false,
+      "contains_fixed_charge": false,
+      "contains_negative_pledge": false,
+      "chargor_acting_as_bare_trustee": false
+    },
+    "secured_details": {
+      "type" : "amount-secured",  
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever" 
+    },
+    "scottish_alterations": {
+      "type": null,
+      "description": null,
+      "has_alterations_to_order": null,
+      "has_alterations_to_prohibitions": null,
+      "has_restricting_provisions": null
+    },
+    "charge_code": null,
+    "insolvency_cases": [
+      { 
+      "case_number" : "1",  
+      "links" : { 
+        "case" : "/company/04796390/insolvency#case-1"  
+      },  
+      "transaction_id" : "3129317274" 
+      } 
+    ],
+    "links": {
+      "self": "/company/071242070043/charges/OzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng=="
+    },                                    
+    "created_on": "2008-05-07",
+    "transactions": [
+      {
+        "filing_type": "create-charge-pre-2006-companies-act",
+        "transaction_id": 3129317274,
+        "delivered_on": "2008-05-13",
+        "insolvency_case_number": 1,
+        "links": {
+          "filing": "/company/04796390/filing-history/MjAwNTQ2ODczNmFkaXF6a2N4",
+          "insolvency_case": null
+        }
+      },
+      {
+        "filing_type": "liquidation-appointment-of-receiver",
+        "transaction_id": 3129317274,
+        "delivered_on": "2015-08-12",
+        "insolvency_case_number": 1,
+        "links": {
+          "filing": "/company/04796390/filing-history/MzEyOTMxNzI3NGFkaXF6a2N4",
+          "insolvency_case": null
+        }
+      },
+      {
+        "filing_type": "liquidation-cease-to-act-receiver",
+        "transaction_id": 3129317274,
+        "delivered_on": "2017-01-14",
+        "insolvency_case_number": 1,
+        "links": {
+          "filing": "/company/04796390/filing-history/MzE2NzIzODEzM2FkaXF6a2N4",
+          "insolvency_case": null
+        }
+      },
+      {
+        "filing_type": "liquidation-cease-to-act-receiver",
+        "transaction_id": 3129317274,
+        "delivered_on": "2017-01-14",
+        "insolvency_case_number": 1,
+        "links": {
+          "filing": "/company/04796390/filing-history/MzE2NzIzODI3MmFkaXF6a2N4",
+          "insolvency_case": null
+        }
+      }
+    ],
+    "status": "outstanding",
+    "classification": {
+      "description": "Legal mortgage",
+      "type": "charge-description"
+    },
+   
+    "delivered_on": "2008-05-13",
+    "assets_ceased_released": null,
+    "acquired_on": null,
+    "resolved_on": null,
+    "covering_instrument_date": null,
+    "more_than_four_persons_entitled": false,
+    "satisfied_on": null
+  },
+  "internal_data": {
+    "updated_by": "test-partition_1-offset_1",
+    "delta_at": "2015-06-25T22:00:00.000Z"
+  }
+}

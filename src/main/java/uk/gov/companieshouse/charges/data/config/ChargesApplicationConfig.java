@@ -23,7 +23,7 @@ import uk.gov.companieshouse.environment.impl.EnvironmentReaderImpl;
 import uk.gov.companieshouse.sdk.manager.ApiSdkManager;
 
 @Configuration
-public class ApplicationConfig implements WebMvcConfigurer {
+public class ChargesApplicationConfig implements WebMvcConfigurer {
 
     @Bean
     EnvironmentReader environmentReader() {

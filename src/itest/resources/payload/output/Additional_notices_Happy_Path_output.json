@@ -1,0 +1,76 @@
+{
+    "_id" : "AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==",
+    "company_number" : "88124207",
+    "data" : {
+        "_id" : "AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==",
+        "etag" : "acee579c81848890b15cc0b9d4442913a2edc9c6",
+        "chargeCode" : "081242070049",
+        "classification" : {
+            "type" : "CHARGE_DESCRIPTION",
+            "description" : "A REGISTERED CHARGE"
+        },
+        "chargeNumber" : 49,
+        "status" : "PART_SATISFIED",
+        "assetsCeasedReleased" : "MULTIPLE_FILINGS",
+        "createdOn" : "2019-10-10T23:00:00.000Z",
+        "particulars" : {
+            "type" : "BRIEF_DESCRIPTION",
+            "description" : "THE FREEHOLD LAND KNOWN AS MILLENNIUM HOUSE, 60 VICTORIA STREET, LIVERPOOL AND REGISTERED WITH HM LAND REGISTRY UNDER TITLE NUMBER MS303172\\n",
+            "containsFloatingCharge" : true,
+            "containsFixedCharge" : true,
+            "floatingChargeCoversAll" : true,
+            "containsNegativePledge" : true,
+            "chargorActingAsBareTrustee" : false
+        },
+        "securedDetails" : {},
+        "scottishAlterations" : {},
+        "moreThanFourPersonsEntitled" : false,
+        "personsEntitled" : [
+            {
+                "name" : "LYELL TRADING LIMITED GIANMARIO ZAHID ATILA"
+            }
+        ],
+        "transactions" : [
+            {
+                "filingType" : "charge-part-both",
+                "deliveredOn" : "2019-10-21T23:00:00.000Z",
+                "links" : {
+                    "filing" : "/company/08124207/filing-history/MzI0NzMyMzEzM2FkaXF6a2N4"
+                }
+            },
+            {
+                "filingType" : "charge-part-satisfaction",
+                "deliveredOn" : "2019-10-16T23:00:00.000Z",
+                "links" : {
+                    "filing" : "/company/08124207/filing-history/MzI0Nzk3OTM0NmFkaXF6a2N4"
+                }
+            },
+            {
+                "filingType" : "charge-part-release",
+                "deliveredOn" : "2019-11-01T00:00:00.000Z",
+                "links" : {
+                    "filing" : "/company/08124207/filing-history/MzI0ODI5MjUyMWFkaXF6a2N4"
+                }
+            },
+            {
+                "filingType" : "create-charge-with-deed-with-court-order",
+                "deliveredOn" : "2019-10-16T23:00:00.000Z",
+                "links" : {
+                    "filing" : "/company/08124207/filing-history/MzI0NzA2NDA2M2FkaXF6a2N4"
+                }
+            }
+        ],
+        "insolvencyCases" : [
+            {}
+        ],
+        "links" : {
+            "self" : "/company/88124207/charges/AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng=="
+        }
+    },
+    "updated" : {
+        "at" : "2015-06-22T23:00:00.000Z",
+        "type" : "mortgage_delta",
+        "by" : "test-partition_1-offset_1"
+    },
+    "_class" : "uk.gov.companieshouse.charges.data.model.ChargesDocument"
+}

@@ -1,0 +1,78 @@
+{
+    "external_data": {
+        "persons_entitled": [
+            {
+                "name": "GMAC COMMERCIAL FINANCE PLC AS SECURITY TRUSTEE FOR THE BENEFICIARIES"
+            }
+        ],
+        "id": "MkNCRDZFODY1OTQ2MjcxNTgxREUzNjZCM0RCQTQ5MDkzNzFDRTgxRQ==",
+        "charge_number": 6,
+        "particulars": {
+            "type": "short-particulars",
+            "description": "L/H PROPERTY AT LAKESIDE 5400, CHEADLE ROYAL BUSINESS PARK, WILMSLOW ROAD, CHEADLE, CHESHIRE T/N GM839134               ",
+            "contains_floating_charge": false,
+            "contains_fixed_charge": false,
+            "floating_charge_covers_all": false,
+            "contains_negative_pledge": false,
+            "chargor_acting_as_bare_trustee": false
+        },
+        "links": {
+            "self": "/company/03674789/charges/MkNCRDZFODY1OTQ2MjcxNTgxREUzNjZCM0RCQTQ5MDkzNzFDRTgxRQ=="
+        },
+        "charge_code": null,
+        "transactions": [
+            {
+                "filing_type": " MR05",
+                "transaction_id": null,
+                "delivered_on": "2015-03-02",
+                "insolvency_case_number": null,
+                "links": {
+                    "filing": "/company/03674789/filing-history/MzExODk1NjU2M2FkaXF6a2N4",
+                    "insolvency_case": null
+                }
+            },
+            {
+                "filing_type": "395",
+                "transaction_id": null,
+                "delivered_on": null,
+                "insolvency_case_number": null,
+                "links": {
+                    "filing": "/company/03674789/filing-history/MDAyNjgxOTI1NGFkaXF6a2N4",
+                    "insolvency_case": null
+                }
+            }
+        ],
+        "insolvency_cases": null,
+        "links": {
+            "self": "/company/03674789/charges/--O3e3v3NGeFlgMZukNX2aLdcZs="
+        },
+        "status": "outstanding",
+        "assets_ceased_released": "whole-property-released",
+        "acquired_on": null,
+        "delivered_on": "2003-08-11",
+        "resolved_on": null,
+        "covering_instrument_date": null,
+        "created_on": "2003-08-04",
+        "satisfied_on": null,
+        "more_than_four_persons_entitled": null,
+        "classification": {
+            "type": "charge-description",
+            "description": "MORTGAGE"
+        },
+        "secured_details": {
+            "type": "obligations-secured",
+            "description": "MORTGAGE"
+        },
+        "scottish_alterations": {
+            "type": null,
+            "description": null,
+            "has_alterations_to_order": false,
+            "has_alterations_to_prohibitions": false,
+            "has_restricting_provisions": false
+        }
+    },
+    "internal_data": {
+        "delta_at": "2015-06-25T22:00:00.000Z",
+        "updated_by": "test-partition_1-offset_1"
+    }
+}

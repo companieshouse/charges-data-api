@@ -1,0 +1,37 @@
+
+logger:
+  namespace: charges-data-api
+
+chs:
+  kafka:
+    api:
+      endpoint: ${CHS_KAFKA_API_URL:http://localhost:8888}
+      key: ${CHS_INTERNAL_API_KEY:chsInternalApiKey}
+
+server:
+  port : 8088
+
+spring:
+  data:
+    mongodb:
+      uri: ${MONGODB_URL:mongodb://0.0.0.0:27017/company-mortgages?retryWrites=false}
+      name: company-mortgages
+
+mongodb:
+  charges:
+    transactions: ${TRANSACTIONS_ENABLED:false}
+    collection:
+      name: ${CHARGES_COLLECTION_NAME:company_mortgages}
+
+charges:
+  api:
+    resource:
+      changed:
+        uri: ${CHARGES_API_RESOURCE_CHANGED_URI:/resource-changed}
+      kind: ${CHARGES_API_RESOURCE_KIND:company-charges}
+
+api:
+  company:
+    metrics:
+        endpoint: ${COMPANY_METRICS_API_URL:http://localhost}
+        key: ${COMPANY_METRICS_API_KEY:apiKey}

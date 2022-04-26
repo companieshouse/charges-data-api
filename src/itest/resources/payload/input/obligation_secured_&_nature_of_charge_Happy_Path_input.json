@@ -1,0 +1,73 @@
+{
+  "external_data": {
+    "persons_entitled": [
+      {
+        "name": "WENDY KERR"
+      }
+    ],
+    "id":"BzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==",
+    "charge_number": 1,
+    "particulars": {
+      "floating_charge_covers_all": false,
+      "type": "charged-property-or-undertaking-description",
+      "contains_floating_charge": false,
+      "description": "OVER USED CAR STOCK",
+      "contains_fixed_charge": false,
+      "contains_negative_pledge": false,
+      "chargor_acting_as_bare_trustee": false
+    },
+    "secured_details": {
+      "type": "obligations-secured",
+      "description": "£225,000 DUE OR TO BECOME DUE"
+    },
+    "scottish_alterations": {
+      "type": null,
+      "description": null,
+      "has_alterations_to_order": null,
+      "has_alterations_to_prohibitions": null,
+      "has_restricting_provisions": null
+    },
+    "charge_code": "102862370001",
+    "insolvency_cases": [
+      {
+        "case_number": null,
+        "transaction_id": null,
+        "links": null
+      }
+    ],
+    "links": {
+      "self": "/company/131242070042/charges/BzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng=="
+    },
+    "created_on": null,
+    "transactions": [
+      {
+        "filing_type": "create-charge-without-deed-with-court-order",
+        "transaction_id": null,
+        "delivered_on": "2019-03-18",
+        "insolvency_case_number": null,
+        "links": {
+          "filing": "/company/10286237/filing-history/MzIyOTk0NzQyMmFkaXF6a2N4",
+          "insolvency_case": null
+        }
+      }
+    ],
+    "status": "outstanding",
+    "classification": {
+      "description": "Floating Charge",
+      "type": "nature-of-charge"
+    },
+   
+    "delivered_on": "2019-03-18",
+    "assets_ceased_released": null,
+    "acquired_on": null,
+    "delivered_on": null,
+    "resolved_on": null,
+    "covering_instrument_date": null,
+    "more_than_four_persons_entitled": false,
+    "satisfied_on": null
+  },
+  "internal_data": {
+    "updated_by": "test-partition_1-offset_1",
+    "delta_at": "2015-06-25T22:00:00.000Z"
+  }
+}

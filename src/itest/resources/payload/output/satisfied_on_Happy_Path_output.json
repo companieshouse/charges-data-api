@@ -1,0 +1,86 @@
+{
+    "_id" : "GzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==",
+    "company_number" : "261242070042",
+    "data" : {
+        "etag" : "2e36ea1d2452cd2cb6e03b7aeb0d32d542d2bf27",
+        "id" : "GWQwYTVlOWVmMGEyMGY1MDEyMzY4ZWYzNzkxMWY5NmMwNWI1MDMzMw==",
+        "charge_code" : "OC3420230003",
+        "classification" : {
+            "type" : "charge-description",
+            "description" : "A REGISTERED CHARGE"
+        },
+        "charge_number" : 3,
+        "status" : "fully-satisfied",
+        "assets_ceased_released" : null,
+        "acquired_on" : null,
+        "delivered_on" : "2016-03-18T00:00:00.000Z",
+        "resolved_on" : null,
+        "covering_instrument_date" : null,
+        "created_on" : "2015-12-18T00:00:00.000Z",
+        "satisfied_on" : "2017-12-15T00:00:00.000Z",
+        "particulars" : {
+            "type" : "brief-description",
+            "description" : "SUNNYHILL ROSE LANE MYNYDD ISA MOLD T/NO CYM343806\\n",
+            "contains_floating_charge" : true,
+            "contains_fixed_charge" : true,
+            "floating_charge_covers_all" : true,
+            "contains_negative_pledge" : true,
+            "chargor_acting_as_bare_trustee" : false
+        },
+        "secured_details" : {
+            "type" : null,
+            "description" : null
+        },
+        "scottish_alterations" : {
+            "type" : null,
+            "description" : null,
+            "has_alterations_to_order" : null,
+            "has_alterations_to_prohibitions" : null,
+            "has_restricting_provisions" : null
+        },
+        "more_than_four_persons_entitled" : false,
+        "persons_entitled" : [ 
+            {
+                "name" : "BRIDGING FINANCE LIMITED"
+            }
+        ],
+        "transactions" : [ 
+            {
+                "filing_type" : "create-charge-with-deed-with-court-order-limited-liability-partnership",
+                "transaction_id" : null,
+                "delivered_on" : "2016-03-18T00:00:00.000Z",
+                "insolvency_case_number" : null,
+                "links" : {
+                    "filing" : "/company/OC342023/filing-history/MzE0NTE4NjY3N2FkaXF6a2N4",
+                    "insolvency_case" : null
+                }
+            }, 
+            {
+                "filing_type" : "charge-part-satisfaction-limited-liability-partnership",
+                "transaction_id" : null,
+                "delivered_on" : "2017-12-15T00:00:00.000Z",
+                "insolvency_case_number" : null,
+                "links" : {
+                    "filing" : "/company/OC342023/filing-history/MzE5Mjk3NjYyNGFkaXF6a2N4",
+                    "insolvency_case" : null
+                }
+            }
+        ],
+        "insolvency_cases" : [ 
+            {
+                "case_number" : null,
+                "transaction_id" : null,
+                "links" : null
+            }
+        ],
+        "links" : {
+            "self" : "/company/261242070042/charges/GWQwYTVlOWVmMGEyMGY1MDEyMzY4ZWYzNzkxMWY5NmMwNWI1MDMzMw=="
+        }
+    },
+    "updated" : {
+        "at" : "2015-06-24T23:00:00.000Z",
+        "type" : "mortgage_delta",
+        "by" : "test-partition_1-offset_1"
+    },
+    "_class" : "uk.gov.companieshouse.charges.data.model.ChargesDocument"
+}

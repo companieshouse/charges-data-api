@@ -34,7 +34,7 @@
       }
     ],
     "links": {
-      "self": "/company/NI622400/charges/MzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng=="
+      "self": "/company/00006400/charges/6Bbb9VQpwyDbMSPSPkjRYrqYeGM"
     },
     "created_on": "2014-08-04",
     "transactions": [
@@ -44,7 +44,7 @@
         "delivered_on": "2016-12-16",
         "insolvency_case_number": 1,
         "links": {
-          "filing": "/company/NI622400/filing-history/MzM4Nzc3OHRyYW5zSWRfc2FsdA==",
+          "filing": "/company/00006400/filing-history/6Bbb9VQpwyDbMSPSPkjRYrqYeGM",
           "insolvency_case": null
         }
       },
@@ -54,7 +54,7 @@
         "delivered_on": null,
         "insolvency_case_number": null,
         "links": {
-          "filing": "/company/NI622400/filing-history/MzExMzg5MjgyM3RyYW5zSWRfc2FsdA==",
+          "filing": "/company/00006400/filing-history/6Bbb9VQpwyDbMSPSPkjRYrqYeGM",
           "insolvency_case": null
         }
       }
@@ -72,7 +72,8 @@
     "resolved_on": null,
     "covering_instrument_date": "1993-08-09",
     "more_than_four_persons_entitled": false,
-    "satisfied_on": "1999-12-01"
+    "satisfied_on": "1999-12-01",
+    "id": "6Bbb9VQpwyDbMSPSPkjRYrqYeGM"
   },
   "internal_data": {
     "updated_by": "test-partition_1-offset_1",

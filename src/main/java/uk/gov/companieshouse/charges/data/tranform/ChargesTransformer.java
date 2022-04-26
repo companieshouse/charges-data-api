@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.charges.data.tranform;
 
 import java.time.OffsetDateTime;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.GenerateEtagUtil;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
@@ -36,6 +37,7 @@ public class ChargesTransformer {
         String by = requestBody.getInternalData().getUpdatedBy();
         var externalData = requestBody.getExternalData();
         externalData.setEtag(GenerateEtagUtil.generateEtag());
+        //externalData.setId(chargeId);
         final Updated updated =
                 new Updated().setAt(at.toLocalDate()).setType(type).setBy(by);
         var chargesDocument = new ChargesDocument().setId(chargeId)

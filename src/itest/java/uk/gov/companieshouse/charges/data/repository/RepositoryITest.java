@@ -9,6 +9,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -44,7 +45,7 @@ public class RepositoryITest {
   @Autowired
   ChargesRepository chargesRepository;
 
-  @Value("file:src/itest/resources/charge-api-request-data.json")
+  @Value("file:src/itest/resources/payload/input/charge-api-request-data.json")
   Resource resourceFile;
 
   @DynamicPropertySource
