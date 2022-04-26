@@ -79,7 +79,8 @@ public class ChargesService {
                             companyNumber));
             ApiResponse<Void> res = chargesApiService.invokeChsKafkaApi(contextId, companyNumber,
                     chargeId);
-            if (res.getStatusCode() != 200) {
+            // Code is not 2xx
+            if (res.getStatusCode() < 200 || res.getStatusCode() > 299) {
                 throw new ResponseStatusException(HttpStatus.resolve(res.getStatusCode()),
                     "invokeChsKafkaApi");
             }
@@ -126,7 +127,7 @@ public class ChargesService {
             return Optional.empty();
         }
         Optional<ChargeApi> chargeDetails =
-                chargesDocuments.map(chargeDocument -> chargeDocument.getData());
+                chargesDocuments.map(ChargesDocument::getData);
         logger.debug(String.format("Finished : Charges details found for Company Number %s "
                         + "with Charge id %s",
                 companyNumber,
