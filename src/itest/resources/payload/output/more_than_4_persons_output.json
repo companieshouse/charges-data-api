@@ -1,20 +1,23 @@
 {
-    "_id" : "NTdBQUUzMUI2OTg1RENBRTY3MTdDNjYwMTAzMDBDQzc2M0MyQzlFRA==",
-    "company_number" : "00285630555",
+    "_id" : "NidBQUUzMUI2OTg1RENBRTY3MTdDNjYwMTAzMDBDQzc2M0MyQzlFRA==",
+    "company_number" : "00285630554",
     "data" : {
-        "etag" : "73930ba6e85ab3611b16441ad89323784ed7c355",
-        "id" : "NTdBQUUzMUI2OTg1RENBRTY3MTdDNjYwMTAzMDBDQzc2M0MyQzlFRA==",
-        "charge_code" : null,
-        "classification" : null,
+        "etag" : "d654b9eb161f92119ba06fed8e1100bdcd476a54",
+        "id" : "NidBQUUzMUI2OTg1RENBRTY3MTdDNjYwMTAzMDBDQzc2M0MyQzlFRA==",
+        "charge_code" : "002856300006",
+        "classification" : {
+            "type" : "charge-description",
+            "description" : "A REGISTERED CHARGE"
+        },
         "charge_number" : 6,
-        "status" : null,
+        "status" : "fully-satisfied",
         "assets_ceased_released" : null,
         "acquired_on" : null,
         "delivered_on" : null,
         "resolved_on" : null,
-        "covering_instrument_date" : null,
-        "created_on" : null,
-        "satisfied_on" : null,
+        "covering_instrument_date" : "2016-10-19T00:00:00.000Z",
+        "created_on" : "2016-10-19T00:00:00.000Z",
+        "satisfied_on" : "2021-11-19T00:00:00.000Z",
         "particulars" : {
             "type" : null,
             "description" : null,
@@ -25,26 +28,53 @@
             "chargor_acting_as_bare_trustee" : false
         },
         "secured_details" : null,
-        "scottish_alterations" : null,
-        "more_than_four_persons_entitled" : null,
+        "scottish_alterations" : {
+            "type" : null,
+            "description" : null,
+            "has_alterations_to_order" : false,
+            "has_alterations_to_prohibitions" : false,
+            "has_restricting_provisions" : false
+        },
+        "more_than_four_persons_entitled" : true,
         "persons_entitled" : [ 
             {
-                "name" : null
+                "name" : "MICHAEL BEVAN"
             }, 
             {
-                "name" : null
+                "name" : "MICHAEL D M THOMAS"
             }, 
             {
-                "name" : null
+                "name" : "CLIVE FRANKTON"
             }, 
             {
-                "name" : null
+                "name" : "JANE REES"
             }
         ],
-        "transactions" : null,
+        "transactions" : [ 
+            {
+                "filing_type" : "charge-satisfaction",
+                "transaction_id" : 3320977379,
+                "delivered_on" : "2021-11-19T00:00:00.000Z",
+                "insolvency_case_number" : null,
+                "links" : {
+                    "filing" : "/company/00285630/filing-history/MzMyMDk3NzM3OWFkaXF6a2N4",
+                    "insolvency_case" : null
+                }
+            }, 
+            {
+                "filing_type" : "debenture-with-deed",
+                "transaction_id" : null,
+                "delivered_on" : "2016-11-01T00:00:00.000Z",
+                "insolvency_case_number" : null,
+                "links" : {
+                    "filing" : "/company/00285630/filing-history/MzE2MjA1MzI1NWFkaXF6a2N4",
+                    "insolvency_case" : null
+                }
+            }
+        ],
         "insolvency_cases" : null,
         "links" : {
-            "self" : "/company/00285630555/charges/NTdBQUUzMUI2OTg1RENBRTY3MTdDNjYwMTAzMDBDQzc2M0MyQzlFRA=="
+            "self" : "/company/00285630/charges/uK2-CmXFEg_0qFF_31yfHkeBbG4="
         }
     },
     "updated" : {

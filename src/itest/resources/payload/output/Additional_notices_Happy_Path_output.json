@@ -2,34 +2,34 @@
     "_id" : "AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==",
     "company_number" : "88124207",
     "data" : {
-        "etag" : "4e56a0bfb71dc05e1ff770aee56be0955c308df3",
+        "etag" : "f15c1fb0b1804470ed2a0f3512f6049acd9e367f",
         "id" : "AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==",
-        "charge_code" : "081242070049",
+        "charge_code" : null,
         "classification" : {
             "type" : "charge-description",
-            "description" : "A REGISTERED CHARGE"
+            "description" : "Legal mortgage"
         },
-        "charge_number" : 49,
-        "status" : "part-satisfied",
-        "assets_ceased_released" : "multiple-filings",
+        "charge_number" : 17,
+        "status" : "outstanding",
+        "assets_ceased_released" : null,
         "acquired_on" : null,
-        "delivered_on" : null,
+        "delivered_on" : "2008-05-13T00:00:00.000Z",
         "resolved_on" : null,
         "covering_instrument_date" : null,
-        "created_on" : "2019-10-11T00:00:00.000Z",
+        "created_on" : "2008-05-07T00:00:00.000Z",
         "satisfied_on" : null,
         "particulars" : {
-            "type" : "brief-description",
-            "description" : "THE FREEHOLD LAND KNOWN AS MILLENNIUM HOUSE, 60 VICTORIA STREET, LIVERPOOL AND REGISTERED WITH HM LAND REGISTRY UNDER TITLE NUMBER MS303172\\n",
-            "contains_floating_charge" : true,
-            "contains_fixed_charge" : true,
-            "floating_charge_covers_all" : true,
-            "contains_negative_pledge" : true,
+            "type" : null,
+            "description" : null,
+            "contains_floating_charge" : false,
+            "contains_fixed_charge" : false,
+            "floating_charge_covers_all" : false,
+            "contains_negative_pledge" : false,
             "chargor_acting_as_bare_trustee" : false
         },
         "secured_details" : {
-            "type" : null,
-            "description" : null
+            "type" : "amount-secured",
+            "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
         },
         "scottish_alterations" : {
             "type" : null,
@@ -39,58 +39,60 @@
             "has_restricting_provisions" : null
         },
         "more_than_four_persons_entitled" : false,
-        "persons_entitled" : [
+        "persons_entitled" : [ 
             {
-                "name" : "LYELL TRADING LIMITED GIANMARIO ZAHID ATILA"
+                "name" : "CLYDESDALE BANK PLC"
             }
         ],
-        "transactions" : [
+        "transactions" : [ 
             {
-                "filing_type" : "charge-part-both",
-                "transaction_id" : null,
-                "delivered_on" : "2019-10-22T00:00:00.000Z",
-                "insolvency_case_number" : null,
+                "filing_type" : "create-charge-pre-2006-companies-act",
+                "transaction_id" : 3129317274,
+                "delivered_on" : "2008-05-13T00:00:00.000Z",
+                "insolvency_case_number" : 1,
                 "links" : {
-                    "filing" : "/company/08124207/filing-history/MzI0NzMyMzEzM2FkaXF6a2N4",
+                    "filing" : "/company/04796390/filing-history/MjAwNTQ2ODczNmFkaXF6a2N4",
                     "insolvency_case" : null
                 }
-            },
+            }, 
             {
-                "filing_type" : "charge-part-satisfaction",
-                "transaction_id" : null,
-                "delivered_on" : "2019-10-17T00:00:00.000Z",
-                "insolvency_case_number" : null,
+                "filing_type" : "liquidation-appointment-of-receiver",
+                "transaction_id" : 3129317274,
+                "delivered_on" : "2015-08-12T00:00:00.000Z",
+                "insolvency_case_number" : 1,
                 "links" : {
-                    "filing" : "/company/08124207/filing-history/MzI0Nzk3OTM0NmFkaXF6a2N4",
+                    "filing" : "/company/04796390/filing-history/MzEyOTMxNzI3NGFkaXF6a2N4",
                     "insolvency_case" : null
                 }
-            },
+            }, 
             {
-                "filing_type" : "charge-part-release",
-                "transaction_id" : null,
-                "delivered_on" : "2019-11-01T00:00:00.000Z",
-                "insolvency_case_number" : null,
+                "filing_type" : "liquidation-cease-to-act-receiver",
+                "transaction_id" : 3129317274,
+                "delivered_on" : "2017-01-14T00:00:00.000Z",
+                "insolvency_case_number" : 1,
                 "links" : {
-                    "filing" : "/company/08124207/filing-history/MzI0ODI5MjUyMWFkaXF6a2N4",
+                    "filing" : "/company/04796390/filing-history/MzE2NzIzODEzM2FkaXF6a2N4",
                     "insolvency_case" : null
                 }
-            },
+            }, 
             {
-                "filing_type" : "create-charge-with-deed-with-court-order",
-                "transaction_id" : null,
-                "delivered_on" : "2019-10-17T00:00:00.000Z",
-                "insolvency_case_number" : null,
+                "filing_type" : "liquidation-cease-to-act-receiver",
+                "transaction_id" : 3129317274,
+                "delivered_on" : "2017-01-14T00:00:00.000Z",
+                "insolvency_case_number" : 1,
                 "links" : {
-                    "filing" : "/company/08124207/filing-history/MzI0NzA2NDA2M2FkaXF6a2N4",
+                    "filing" : "/company/04796390/filing-history/MzE2NzIzODI3MmFkaXF6a2N4",
                     "insolvency_case" : null
                 }
             }
         ],
-        "insolvency_cases" : [
+        "insolvency_cases" : [ 
             {
-                "case_number" : null,
-                "transaction_id" : null,
-                "links" : null
+                "case_number" : 1,
+                "transaction_id" : 3129317274,
+                "links" : {
+                    "case" : "/company/04796390/insolvency#case-1"
+                }
             }
         ],
         "links" : {
@@ -98,7 +100,7 @@
         }
     },
     "updated" : {
-        "at" : "2015-06-22T23:00:00.000Z",
+        "at" : "2015-06-24T23:00:00.000Z",
         "type" : "mortgage_delta",
         "by" : "test-partition_1-offset_1"
     },

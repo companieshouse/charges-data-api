@@ -4,6 +4,8 @@ import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.configureFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.moreThan;
+import static com.github.tomakehurst.wiremock.client.WireMock.moreThanOrExactly;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
@@ -15,6 +17,7 @@ import static com.github.tomakehurst.wiremock.common.Metadata.metadata;
 import static org.assertj.core.api.Assertions.assertThat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.google.gson.Gson;
 import io.cucumber.java.AfterAll;
 import io.cucumber.java.BeforeAll;
 import io.cucumber.java.en.Given;
@@ -42,6 +45,7 @@ import uk.gov.companieshouse.api.charges.ChargeApi;
 import uk.gov.companieshouse.api.charges.ChargesApi;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
 
+import uk.gov.companieshouse.charges.data.CucumberFeaturesRunnerITest;
 import uk.gov.companieshouse.charges.data.config.CucumberContext;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.repository.ChargesRepository;
@@ -70,12 +74,12 @@ public class ChargesApiSteps {
     @BeforeAll
     public static void before_all() {
         setupWiremock();
-        stubChargeDataApi();
     }
 
     @AfterAll
     public static void after_all() {
         wireMockServer.stop();
+        CucumberFeaturesRunnerITest.mongoDBContainer.stop();
     }
 
     @Given("Charges data api service is running")
@@ -130,8 +134,8 @@ public class ChargesApiSteps {
     }
 
     @Then("verify the data stored in db matches to {string} file")
-    public void the_expected_result_should_match(String string) throws IOException {
-        FileSystemResource file = new FileSystemResource("src/itest/resources/payload/output/" + string + ".json");
+    public void the_expected_result_should_match(String fileName) throws IOException {
+        FileSystemResource file = new FileSystemResource("src/itest/resources/payload/output/" + fileName + ".json");
 
         List<ChargesDocument> chargesDocuments = chargesRepository.findAll();
 
@@ -150,7 +154,7 @@ public class ChargesApiSteps {
         assertThat(actual.getId()).isEqualTo(chargeId);
         assertThat(actual.getCompanyNumber()).isEqualTo(companyNumber);
         assertThat(actual.getData()).isEqualTo(expected.getData());
-        verify(1, postRequestedFor(urlEqualTo("/resource-changed")));
+        verify(moreThanOrExactly(1), postRequestedFor(urlEqualTo("/resource-changed")));
     }
 
     @Then("I should receive {int} status code")
@@ -174,14 +178,14 @@ public class ChargesApiSteps {
 
     @Then("the Get charges call response body should match {string} file")
     public void the_get_charges_call_response_body_should_match(String dataFile) throws IOException {
-       /* FileSystemResource file = new FileSystemResource("src/itest/resources/payload/output/"+dataFile+".json");
-        Document document = readData(file);
-        ChargesDocument expectedDocument =
-                mongoCustomConversions.convertValue(document, ChargesDocument.class);
-
-        ChargesApi expected = expectedDocument.getData();
+        FileSystemResource file = new FileSystemResource("src/itest/resources/payload/output/"+dataFile+".json");
+        ChargesApi expectedDocument =
+                mongoCustomConversions.readValue(file.getFile(), ChargesApi.class);
         ChargesApi actual = CucumberContext.CONTEXT.get("getChargesResponseBody");
-        assertThat(actual).isEqualTo(expected);*/
+        assertThat(actual.getTotalCount()).isEqualTo(expectedDocument.getTotalCount());
+        assertThat(actual.getUnfilteredCount()).isEqualTo(expectedDocument.getUnfilteredCount());
+        assertThat(actual.getPartSatisfiedCount()).isEqualTo(expectedDocument.getPartSatisfiedCount());
+        assertThat(actual.getEtag()).isEqualTo(expectedDocument.getEtag());
     }
 
     private Document readData(Resource resource) throws IOException {
@@ -203,16 +207,17 @@ public class ChargesApiSteps {
                 post(urlPathMatching("/resource-changed"))
                         .willReturn(aResponse()
                                 .withStatus(200)
-                                .withHeader("Content-Type", "application/json")));
+                                .withHeader("Content-Type", "application/json"))
+            );
     }
 
     private void stubCompanyMetricsApi() {
         stubFor(
-                get(urlPathMatching("^/company/([A-Za-z0-9]{8})/metrics$"))
+                get(urlPathMatching("/company/08124207/metrics"))
                         .willReturn(aResponse()
                                 .withStatus(200)
-                                //.withHeader("Content-Type", "application/json")
-                                //.withBody("{\"etag\":\"0dbf16c34be9d2d10ad374d206f598563bc20eb7\",\"counts\":{\"persons-with-significant-control\":null,\"appointments\":{\"active_directors_count\":null,\"active_secretaries_count\":null,\"active_count\":null,\"resigned_count\":null,\"total_count\":null,\"active_llp_members_count\":null}},\"mortgage\":{\"satisfied_count\":0,\"part_satisfied_count\":0,\"total_count\":14}}")
+                                .withHeader("Content-Type", "application/json")
+                                .withBody("{\"etag\":\"0dbf16c34be9d2d10ad374d206f598563bc20eb7\",\"counts\":{\"persons-with-significant-control\":null,\"appointments\":{\"active_directors_count\":null,\"active_secretaries_count\":null,\"active_count\":null,\"resigned_count\":null,\"total_count\":null,\"active_llp_members_count\":null}},\"mortgage\":{\"satisfied_count\":0,\"part_satisfied_count\":0,\"total_count\":14}}")
 
                         ) .withMetadata(metadata()
                                 .list("tags", "getMetrics")));

@@ -1,102 +1,89 @@
 {
-  "external_data": {
-    "persons_entitled": [
-      {
-        "name": "LYELL TRADING LIMITED GIANMARIO ZAHID ATILA"
-      }
-    ],
-    "id":"AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==",
-    "charge_number": 49,
-    "particulars": {
-      "floating_charge_covers_all": true,
-      "type": "brief-description",
-      "contains_floating_charge": true,
-      "description": "THE FREEHOLD LAND KNOWN AS MILLENNIUM HOUSE, 60 VICTORIA STREET, LIVERPOOL AND REGISTERED WITH HM LAND REGISTRY UNDER TITLE NUMBER MS303172\\n",
-      "contains_fixed_charge": true,
-      "contains_negative_pledge": true,
-      "chargor_acting_as_bare_trustee": false
-    },
-    "secured_details": {
-      "type": null,
-      "description": null
-    },
-    "scottish_alterations": {
-      "type": null,
-      "description": null,
-      "has_alterations_to_order": null,
-      "has_alterations_to_prohibitions": null
-    },
-    "charge_code": "081242070049",
-    "insolvency_cases": [
-      {
-        "case_number": null,
-        "transaction_id": null,
-        "links": null
-      }
-    ],
-    "links": {
-      "self": "/company/88124207/charges/AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng=="
-    },
-    "created_on": "2019-10-11",
-    "transactions": [
-      {
-        "filing_type": "charge-part-both",
-        "transaction_id": null,
-        "delivered_on": "2019-10-22",
-        "insolvency_case_number": null,
+    "external_data": {
+        "persons_entitled": [
+            {
+                "name": "LYELL TRADING LIMITED GIANMARIO ZAHID ATILA"
+            }
+        ],
+        "id": "AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==",
+        "charge_number": 49,
+        "particulars": {
+            "floating_charge_covers_all": true,
+            "type": "brief-description",
+            "contains_floating_charge": true,
+            "description": "THE FREEHOLD LAND KNOWN AS MILLENNIUM HOUSE, 60 VICTORIA STREET, LIVERPOOL AND REGISTERED WITH HM LAND REGISTRY UNDER TITLE NUMBER MS303172\\n",
+            "contains_fixed_charge": true,
+            "contains_negative_pledge": true,
+            "chargor_acting_as_bare_trustee": false
+        },
+        "scottish_alterations": {
+            "type": null,
+            "description": null,
+            "has_alterations_to_order": false,
+            "has_alterations_to_prohibitions": false
+        },
+        "charge_code": "081242070049",
         "links": {
-          "filing": "/company/08124207/filing-history/MzI0NzMyMzEzM2FkaXF6a2N4",
-          "insolvency_case": null
-        }
-      },
-      {
-        "filing_type": "charge-part-satisfaction",
-        "transaction_id": null,
+            "self": "/company/881242070049/charges/AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng=="
+        },
+        "created_on": "2019-10-11",
+        "transactions": [
+            {
+                "filing_type": "charge-part-both",
+                "transaction_id": 3247323133,
+                "delivered_on": "2019-10-22",
+                "insolvency_case_number": null,
+                "links": {
+                    "filing": "/company/08124207/filing-history/MzI0NzMyMzEzM2FkaXF6a2N4",
+                    "insolvency_case": null
+                }
+            },
+            {
+                "filing_type": "charge-part-satisfaction",
+                "transaction_id": 3247323133,
+                "delivered_on": "2019-10-17",
+                "insolvency_case_number": null,
+                "links": {
+                    "filing": "/company/08124207/filing-history/MzI0Nzk3OTM0NmFkaXF6a2N4",
+                    "insolvency_case": null
+                }
+            },
+            {
+                "filing_type": "charge-part-release",
+                "transaction_id": 3247323133,
+                "delivered_on": "2019-11-01",
+                "insolvency_case_number": null,
+                "links": {
+                    "filing": "/company/08124207/filing-history/MzI0ODI5MjUyMWFkaXF6a2N4",
+                    "insolvency_case": null
+                }
+            },
+            {
+                "filing_type": "create-charge-with-deed-with-court-order",
+                "transaction_id": null,
+                "delivered_on": "2019-10-17",
+                "insolvency_case_number": null,
+                "links": {
+                    "filing": "/company/08124207/filing-history/MzI0NzA2NDA2M2FkaXF6a2N4",
+                    "insolvency_case": null
+                }
+            }
+        ],
+        "status": "part-satisfied",
+        "classification": {
+            "description": "A REGISTERED CHARGE",
+            "type": "charge-description"
+        },
         "delivered_on": "2019-10-17",
-        "insolvency_case_number": null,
-        "links": {
-          "filing": "/company/08124207/filing-history/MzI0Nzk3OTM0NmFkaXF6a2N4",
-          "insolvency_case": null
-        }
-      },
-      {
-        "filing_type": "charge-part-release",
-        "transaction_id": null,
-        "delivered_on": "2019-11-01",
-        "insolvency_case_number": null,
-        "links": {
-          "filing": "/company/08124207/filing-history/MzI0ODI5MjUyMWFkaXF6a2N4",
-          "insolvency_case": null
-        }
-      },
-      {
-        "filing_type": "create-charge-with-deed-with-court-order",
-        "transaction_id": null,
-        "delivered_on": "2019-10-17",
-        "insolvency_case_number": null,
-        "links": {
-          "filing": "/company/08124207/filing-history/MzI0NzA2NDA2M2FkaXF6a2N4",
-          "insolvency_case": null
-        }
-      }
-    ],
-    "status": "part-satisfied",
-    "classification": {
-      "description": "A REGISTERED CHARGE",
-      "type": "charge-description"
+        "assets_ceased_released": "multiple-filings",
+        "acquired_on": null,
+        "resolved_on": null,
+        "covering_instrument_date": null,
+        "more_than_four_persons_entitled": false,
+        "satisfied_on": null
     },
-   
-    "delivered_on": "2019-10-17",
-    "assets_ceased_released": "multiple-filings",
-    "acquired_on": null,
-    "delivered_on": null,
-    "resolved_on": null,
-    "covering_instrument_date": null,
-    "more_than_four_persons_entitled": false,
-    "satisfied_on": null
-  },
-  "internal_data": {
-    "updated_by": "test-partition_1-offset_1",
-    "delta_at": "2015-06-23T22:00:00.000Z"
-  }
+    "internal_data": {
+        "updated_by": "test-partition_1-offset_1",
+        "delta_at": "2015-06-23T22:00:00.000Z"
+    }
 }

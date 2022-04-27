@@ -33,5 +33,5 @@ charges:
 api:
   company:
     metrics:
-        endpoint: ${COMPANY_METRICS_API_URL:http://localhost}
+        endpoint: ${COMPANY_METRICS_API_URL:http://localhost:8888}
         key: ${COMPANY_METRICS_API_KEY:apiKey}

@@ -45,4 +45,4 @@ Feature: Process company charges
 
     Examples:
       | data                              | company_number  |   charge_id                                                       |  result                                    |
-      | Insolvency_cases_Happy_Path_input | 08124207        |   OzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng          |  Insolvency_cases_Happy_Path_output        |
+      | Insolvency_cases_Happy_Path_input | 08124207        |   OzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng          |  Insolvency_Company_Metrics_output         |

@@ -41,7 +41,7 @@ public class CucumberFeaturesRunnerITest {
 
     @AfterEach
     void cleanUp() {
-        //this.chargesRepository.deleteAll();
+        this.chargesRepository.deleteAll();
     }
 
 }

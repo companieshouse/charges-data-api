@@ -2,31 +2,74 @@
     "_id" : "MkNCRDZFODY1OTQ2MjcxNTgxREUzNjZCM0RCQTQ5MDkzNzFDRTgxRQ==",
     "company_number" : "03674789",
     "data" : {
-        "etag" : "61f5591de1a2d7eaebffc0780ad3cfb68b50a62d",
-        "id" : null,
+        "etag" : "77cf1753686e2d888e40386c2fe23d1568a04705",
+        "id" : "MkNCRDZFODY1OTQ2MjcxNTgxREUzNjZCM0RCQTQ5MDkzNzFDRTgxRQ==",
         "charge_code" : null,
-        "classification" : null,
-        "charge_number" : null,
-        "status" : null,
-        "assets_ceased_released" : null,
+        "classification" : {
+            "type" : "charge-description",
+            "description" : "MORTGAGE"
+        },
+        "charge_number" : 6,
+        "status" : "outstanding",
+        "assets_ceased_released" : "whole-property-released",
         "acquired_on" : null,
-        "delivered_on" : null,
+        "delivered_on" : "2003-08-11T00:00:00.000Z",
         "resolved_on" : null,
         "covering_instrument_date" : null,
-        "created_on" : null,
+        "created_on" : "2003-08-04T00:00:00.000Z",
         "satisfied_on" : null,
-        "particulars" : null,
-        "secured_details" : null,
-        "scottish_alterations" : null,
+        "particulars" : {
+            "type" : "short-particulars",
+            "description" : "L/H PROPERTY AT LAKESIDE 5400, CHEADLE ROYAL BUSINESS PARK, WILMSLOW ROAD, CHEADLE, CHESHIRE T/N GM839134               ",
+            "contains_floating_charge" : false,
+            "contains_fixed_charge" : false,
+            "floating_charge_covers_all" : false,
+            "contains_negative_pledge" : false,
+            "chargor_acting_as_bare_trustee" : false
+        },
+        "secured_details" : {
+            "type" : "amount-secured",
+            "description" : "ALL MONIES DUE OR TO BECOME DUE FROM UMBRO INTERNATIONAL LIMITED TO THE TRUSTEE OR ANY OF THE OTHER BENEFICIARIES        UNDER THE TERMS OF THE AFOREMENTIONED INSTRUMENT CREATING OR EVIDENCING THE CHARGE"
+        },
+        "scottish_alterations" : {
+            "type" : null,
+            "description" : null,
+            "has_alterations_to_order" : false,
+            "has_alterations_to_prohibitions" : false,
+            "has_restricting_provisions" : false
+        },
         "more_than_four_persons_entitled" : null,
         "persons_entitled" : [ 
             {
                 "name" : "GMAC COMMERCIAL FINANCE PLC AS SECURITY TRUSTEE FOR THE BENEFICIARIES"
             }
         ],
-        "transactions" : null,
+        "transactions" : [ 
+            {
+                "filing_type" : "charge-whole-release\"",
+                "transaction_id" : 3118956563,
+                "delivered_on" : "2015-03-02T00:00:00.000Z",
+                "insolvency_case_number" : null,
+                "links" : {
+                    "filing" : "/company/03674789/filing-history/MzExODk1NjU2M2FkaXF6a2N4",
+                    "insolvency_case" : null
+                }
+            }, 
+            {
+                "filing_type" : "create-charge-pre-2006-companies-act",
+                "transaction_id" : null,
+                "delivered_on" : null,
+                "insolvency_case_number" : null,
+                "links" : {
+                    "filing" : "/company/03674789/filing-history/MDAyNjgxOTI1NGFkaXF6a2N4",
+                    "insolvency_case" : null
+                }
+            }
+        ],
         "insolvency_cases" : null,
-        "links" : null
+        "links" : {
+            "self" : "/company/03674789/charges/--O3e3v3NGeFlgMZukNX2aLdcZs="
+        }
     },
     "updated" : {
         "at" : "2015-06-24T23:00:00.000Z",

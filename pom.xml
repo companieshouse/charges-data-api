@@ -40,6 +40,7 @@
 		<private-api-sdk-java.version>2.0.147</private-api-sdk-java.version>
 		<io-cucumber.version>7.2.3</io-cucumber.version>
 		<wiremock.standalone.version>2.32.0</wiremock.standalone.version>
+		<maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
 
 		<!--sonar configuration-->
 		<sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
