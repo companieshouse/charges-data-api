@@ -4,20 +4,17 @@ import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.configureFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.moreThan;
 import static com.github.tomakehurst.wiremock.client.WireMock.moreThanOrExactly;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.github.tomakehurst.wiremock.common.Metadata.metadata;
 import static org.assertj.core.api.Assertions.assertThat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
-import com.google.gson.Gson;
 import io.cucumber.java.AfterAll;
 import io.cucumber.java.BeforeAll;
 import io.cucumber.java.en.Given;
@@ -44,7 +41,6 @@ import org.springframework.util.FileCopyUtils;
 import uk.gov.companieshouse.api.charges.ChargeApi;
 import uk.gov.companieshouse.api.charges.ChargesApi;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
-
 import uk.gov.companieshouse.charges.data.CucumberFeaturesRunnerITest;
 import uk.gov.companieshouse.charges.data.config.CucumberContext;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
@@ -66,8 +62,6 @@ public class ChargesApiSteps {
     @Autowired
     private ChargesRepository chargesRepository;
 
-    private ResponseEntity<String> lastResponse;
-
     private static WireMockServer wireMockServer;
 
 
@@ -87,7 +81,6 @@ public class ChargesApiSteps {
         assertThat(restTemplate).isNotNull();
         stubChargeDataApi();
         stubCompanyMetricsApi();
-        lastResponse = null;
     }
 
     @Given("the company charges with {string} and {string} exists with data {string}")
@@ -186,6 +179,7 @@ public class ChargesApiSteps {
         assertThat(actual.getUnfilteredCount()).isEqualTo(expectedDocument.getUnfilteredCount());
         assertThat(actual.getPartSatisfiedCount()).isEqualTo(expectedDocument.getPartSatisfiedCount());
         assertThat(actual.getEtag()).isEqualTo(expectedDocument.getEtag());
+        verify(moreThanOrExactly(1), getRequestedFor(urlEqualTo("/company/08124207/metrics")));
     }
 
     private Document readData(Resource resource) throws IOException {
