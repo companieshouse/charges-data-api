@@ -3,10 +3,12 @@ package uk.gov.companieshouse.charges.data.steps;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.configureFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.github.tomakehurst.wiremock.common.Metadata.metadata;
@@ -69,7 +71,6 @@ public class ChargesApiSteps {
     public static void before_all() {
         setupWiremock();
         stubChargeDataApi();
-        stubCompanyMetricsApi();
     }
 
     @AfterAll
@@ -205,12 +206,16 @@ public class ChargesApiSteps {
                                 .withHeader("Content-Type", "application/json")));
     }
 
-    private static void stubCompanyMetricsApi() {
+    private void stubCompanyMetricsApi() {
         stubFor(
-                get(urlPathMatching("/company/08124207/metrics"))
+                get(urlPathMatching("^/company/([A-Za-z0-9]{8})/metrics$"))
                         .willReturn(aResponse()
                                 .withStatus(200)
-                                .withHeader("Content-Type", "application/json")));
+                                //.withHeader("Content-Type", "application/json")
+                                //.withBody("{\"etag\":\"0dbf16c34be9d2d10ad374d206f598563bc20eb7\",\"counts\":{\"persons-with-significant-control\":null,\"appointments\":{\"active_directors_count\":null,\"active_secretaries_count\":null,\"active_count\":null,\"resigned_count\":null,\"total_count\":null,\"active_llp_members_count\":null}},\"mortgage\":{\"satisfied_count\":0,\"part_satisfied_count\":0,\"total_count\":14}}")
+
+                        ) .withMetadata(metadata()
+                                .list("tags", "getMetrics")));
     }
 
 }

@@ -1,9 +1,9 @@
 {
-    "_id" : "OzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==",
-    "company_number" : "071242070043",
+    "_id" : "AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==",
+    "company_number" : "88124207",
     "data" : {
-        "etag" : "0a9ab0be9bb2efbb32b57791259314a910c362b2",
-        "id" : "OzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==",
+        "etag" : "0e485b158f23b11f0b32dd7536c4a705db5ecd87",
+        "id" : "AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==",
         "charge_code" : null,
         "classification" : {
             "type" : "charge-description",
@@ -39,12 +39,12 @@
             "has_restricting_provisions" : null
         },
         "more_than_four_persons_entitled" : false,
-        "persons_entitled" : [ 
+        "persons_entitled" : [
             {
                 "name" : "CLYDESDALE BANK PLC"
             }
         ],
-        "transactions" : [ 
+        "transactions" : [
             {
                 "filing_type" : "create-charge-pre-2006-companies-act",
                 "transaction_id" : 3129317274,
@@ -54,7 +54,7 @@
                     "filing" : "/company/04796390/filing-history/MjAwNTQ2ODczNmFkaXF6a2N4",
                     "insolvency_case" : null
                 }
-            }, 
+            },
             {
                 "filing_type" : "liquidation-appointment-of-receiver",
                 "transaction_id" : 3129317274,
@@ -64,7 +64,7 @@
                     "filing" : "/company/04796390/filing-history/MzEyOTMxNzI3NGFkaXF6a2N4",
                     "insolvency_case" : null
                 }
-            }, 
+            },
             {
                 "filing_type" : "liquidation-cease-to-act-receiver",
                 "transaction_id" : 3129317274,
@@ -74,7 +74,7 @@
                     "filing" : "/company/04796390/filing-history/MzE2NzIzODEzM2FkaXF6a2N4",
                     "insolvency_case" : null
                 }
-            }, 
+            },
             {
                 "filing_type" : "liquidation-cease-to-act-receiver",
                 "transaction_id" : 3129317274,
@@ -86,7 +86,7 @@
                 }
             }
         ],
-        "insolvency_cases" : [ 
+        "insolvency_cases" : [
             {
                 "case_number" : 1,
                 "transaction_id" : 3129317274,
@@ -96,7 +96,7 @@
             }
         ],
         "links" : {
-            "self" : "/company/071242070043/charges/OzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng=="
+            "self" : "/company/88124207/charges/AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng=="
         }
     },
     "updated" : {

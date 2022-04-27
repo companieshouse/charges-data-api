@@ -9,17 +9,16 @@ Feature: Process company charges
 
     Examples:
       | input                                                             | output                                                      |
-     # | Insolvency_cases_Happy_Path_input                                 | Insolvency_cases_Happy_Path_output                          |
+      | Insolvency_cases_Happy_Path_input                                 | Insolvency_cases_Happy_Path_output                          |
       | Additional_notices_Happy_Path_input                               | Additional_notices_Happy_Path_output                        |
-     # | Insolvency_cases_Happy_Path_input                                 | Insolvency_cases_Happy_Path_output                          |
-     # | Scott_alterations_input                                           | Scott_alterations_output                                    |
-     # | alterations_to_order_input                                        | alterations_to_order_output                                 |
-     # | assets_ceased_released_Input                                      | assets_ceased_released_output                               |
-     # | created_on_input                                                  | created_on_output                                           |
-     # | floating_charge_input                                             | floating_charge_output                                      |
-     # | more_than_4_persons_input                                         | more_than_4_persons_output                                  |
-     # | obligation_secured_&_nature_of_charge_Happy_Path_input            | obligation_secured_&_nature_of_charge_Happy_Path_output     |
-     # | satisfied_on_Happy_Path_input                                     | satisfied_on_Happy_Path_output                              |
+      | Scott_alterations_input                                           | Scott_alterations_output                                    |
+      | alterations_to_order_input                                        | alterations_to_order_output                                 |
+      | assets_ceased_released_Input                                      | assets_ceased_released_output                               |
+      | created_on_input                                                  | created_on_output                                           |
+      | floating_charge_input                                             | floating_charge_output                                      |
+      | more_than_4_persons_input                                         | more_than_4_persons_output                                  |
+      | obligation_secured_&_nature_of_charge_Happy_Path_input            | obligation_secured_&_nature_of_charge_Happy_Path_output     |
+      | satisfied_on_Happy_Path_input                                     | satisfied_on_Happy_Path_output                              |
 
 
   Scenario Outline: Retrieve charge details successfully

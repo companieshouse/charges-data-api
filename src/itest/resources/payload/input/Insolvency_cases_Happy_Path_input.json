@@ -5,7 +5,7 @@
         "name": "CLYDESDALE BANK PLC"
       }
     ],
-    "id":"OzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==",
+    "id":"AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==",
     "charge_number": 17,
     "particulars": {
       "floating_charge_covers_all": false,
@@ -36,7 +36,7 @@
       } 
     ],
     "links": {
-      "self": "/company/071242070043/charges/OzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng=="
+      "self": "/company/88124207/charges/AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng=="
     },                                    
     "created_on": "2008-05-07",
     "transactions": [

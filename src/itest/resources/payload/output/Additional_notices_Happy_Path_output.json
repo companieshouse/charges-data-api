@@ -2,66 +2,96 @@
     "_id" : "AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==",
     "company_number" : "88124207",
     "data" : {
-        "_id" : "AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==",
-        "etag" : "acee579c81848890b15cc0b9d4442913a2edc9c6",
-        "chargeCode" : "081242070049",
+        "etag" : "4e56a0bfb71dc05e1ff770aee56be0955c308df3",
+        "id" : "AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==",
+        "charge_code" : "081242070049",
         "classification" : {
-            "type" : "CHARGE_DESCRIPTION",
+            "type" : "charge-description",
             "description" : "A REGISTERED CHARGE"
         },
-        "chargeNumber" : 49,
-        "status" : "PART_SATISFIED",
-        "assetsCeasedReleased" : "MULTIPLE_FILINGS",
-        "createdOn" : "2019-10-10T23:00:00.000Z",
+        "charge_number" : 49,
+        "status" : "part-satisfied",
+        "assets_ceased_released" : "multiple-filings",
+        "acquired_on" : null,
+        "delivered_on" : null,
+        "resolved_on" : null,
+        "covering_instrument_date" : null,
+        "created_on" : "2019-10-11T00:00:00.000Z",
+        "satisfied_on" : null,
         "particulars" : {
-            "type" : "BRIEF_DESCRIPTION",
+            "type" : "brief-description",
             "description" : "THE FREEHOLD LAND KNOWN AS MILLENNIUM HOUSE, 60 VICTORIA STREET, LIVERPOOL AND REGISTERED WITH HM LAND REGISTRY UNDER TITLE NUMBER MS303172\\n",
-            "containsFloatingCharge" : true,
-            "containsFixedCharge" : true,
-            "floatingChargeCoversAll" : true,
-            "containsNegativePledge" : true,
-            "chargorActingAsBareTrustee" : false
+            "contains_floating_charge" : true,
+            "contains_fixed_charge" : true,
+            "floating_charge_covers_all" : true,
+            "contains_negative_pledge" : true,
+            "chargor_acting_as_bare_trustee" : false
         },
-        "securedDetails" : {},
-        "scottishAlterations" : {},
-        "moreThanFourPersonsEntitled" : false,
-        "personsEntitled" : [
+        "secured_details" : {
+            "type" : null,
+            "description" : null
+        },
+        "scottish_alterations" : {
+            "type" : null,
+            "description" : null,
+            "has_alterations_to_order" : null,
+            "has_alterations_to_prohibitions" : null,
+            "has_restricting_provisions" : null
+        },
+        "more_than_four_persons_entitled" : false,
+        "persons_entitled" : [
             {
                 "name" : "LYELL TRADING LIMITED GIANMARIO ZAHID ATILA"
             }
         ],
         "transactions" : [
             {
-                "filingType" : "charge-part-both",
-                "deliveredOn" : "2019-10-21T23:00:00.000Z",
+                "filing_type" : "charge-part-both",
+                "transaction_id" : null,
+                "delivered_on" : "2019-10-22T00:00:00.000Z",
+                "insolvency_case_number" : null,
                 "links" : {
-                    "filing" : "/company/08124207/filing-history/MzI0NzMyMzEzM2FkaXF6a2N4"
+                    "filing" : "/company/08124207/filing-history/MzI0NzMyMzEzM2FkaXF6a2N4",
+                    "insolvency_case" : null
                 }
             },
             {
-                "filingType" : "charge-part-satisfaction",
-                "deliveredOn" : "2019-10-16T23:00:00.000Z",
+                "filing_type" : "charge-part-satisfaction",
+                "transaction_id" : null,
+                "delivered_on" : "2019-10-17T00:00:00.000Z",
+                "insolvency_case_number" : null,
                 "links" : {
-                    "filing" : "/company/08124207/filing-history/MzI0Nzk3OTM0NmFkaXF6a2N4"
+                    "filing" : "/company/08124207/filing-history/MzI0Nzk3OTM0NmFkaXF6a2N4",
+                    "insolvency_case" : null
                 }
             },
             {
-                "filingType" : "charge-part-release",
-                "deliveredOn" : "2019-11-01T00:00:00.000Z",
+                "filing_type" : "charge-part-release",
+                "transaction_id" : null,
+                "delivered_on" : "2019-11-01T00:00:00.000Z",
+                "insolvency_case_number" : null,
                 "links" : {
-                    "filing" : "/company/08124207/filing-history/MzI0ODI5MjUyMWFkaXF6a2N4"
+                    "filing" : "/company/08124207/filing-history/MzI0ODI5MjUyMWFkaXF6a2N4",
+                    "insolvency_case" : null
                 }
             },
             {
-                "filingType" : "create-charge-with-deed-with-court-order",
-                "deliveredOn" : "2019-10-16T23:00:00.000Z",
+                "filing_type" : "create-charge-with-deed-with-court-order",
+                "transaction_id" : null,
+                "delivered_on" : "2019-10-17T00:00:00.000Z",
+                "insolvency_case_number" : null,
                 "links" : {
-                    "filing" : "/company/08124207/filing-history/MzI0NzA2NDA2M2FkaXF6a2N4"
+                    "filing" : "/company/08124207/filing-history/MzI0NzA2NDA2M2FkaXF6a2N4",
+                    "insolvency_case" : null
                 }
             }
         ],
-        "insolvencyCases" : [
-            {}
+        "insolvency_cases" : [
+            {
+                "case_number" : null,
+                "transaction_id" : null,
+                "links" : null
+            }
         ],
         "links" : {
             "self" : "/company/88124207/charges/AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng=="
