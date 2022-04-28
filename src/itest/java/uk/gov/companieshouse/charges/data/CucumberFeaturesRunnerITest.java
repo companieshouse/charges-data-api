@@ -20,7 +20,7 @@ import uk.gov.companieshouse.charges.data.repository.ChargesRepository;
 @DirtiesContext
 @ActiveProfiles({"test"})
 @RunWith(Cucumber.class)
-@CucumberOptions(features = "src/itest/resources/features/charges-api.feature",
+@CucumberOptions(features = "src/itest/resources/features",
         plugin = {"pretty", "json:target/cucumber-report.json"})
 @CucumberContextConfiguration
 public class CucumberFeaturesRunnerITest {
@@ -35,8 +35,6 @@ public class CucumberFeaturesRunnerITest {
     public static void setProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
         mongoDBContainer.start();
-        System.out.println(mongoDBContainer.getReplicaSetUrl());
-        System.out.println(mongoDBContainer.getHost());
     }
 
     @AfterEach
