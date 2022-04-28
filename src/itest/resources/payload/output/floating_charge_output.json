@@ -1,0 +1,70 @@
+{
+    "_id" : "NUFERkZEQUU4MTU5MDQ4NUFCMEFDNDIzQjQ5QURBRDcxMzA2NjgwNg==",
+    "company_number" : "01203396",
+    "data" : {
+        "etag" : "ee95d57073f3e2c0a2ac41f058d1975f19f74192",
+        "id" : "NUFERkZEQUU4MTU5MDQ4NUFCMEFDNDIzQjQ5QURBRDcxMzA2NjgwNg==",
+        "charge_code" : "012033960817",
+        "classification" : {
+            "type" : "charge-description",
+            "description" : "A REGISTERED CHARGE"
+        },
+        "charge_number" : 816,
+        "status" : "outstanding",
+        "assets_ceased_released" : null,
+        "acquired_on" : "2016-07-29T00:00:00.000Z",
+        "delivered_on" : "2017-02-25T00:00:00.000Z",
+        "resolved_on" : null,
+        "covering_instrument_date" : null,
+        "created_on" : "2016-07-29T00:00:00.000Z",
+        "satisfied_on" : null,
+        "particulars" : {
+            "type" : "brief-description",
+            "description" : "Land at Coopers Lane Northaw Potters Bar Hertfordshire\\nsdcsdscscsc",
+            "contains_floating_charge" : false,
+            "contains_fixed_charge" : true,
+            "floating_charge_covers_all" : false,
+            "contains_negative_pledge" : true,
+            "chargor_acting_as_bare_trustee" : true
+        },
+        "secured_details" : {
+            "type" : "obligations-secured",
+            "description" : "A REGISTERED CHARGE"
+        },
+        "scottish_alterations" : {
+            "type" : null,
+            "description" : null,
+            "has_alterations_to_order" : false,
+            "has_alterations_to_prohibitions" : false,
+            "has_restricting_provisions" : false
+        },
+        "more_than_four_persons_entitled" : false,
+        "persons_entitled" : [ 
+            {
+                "name" : "NATIONAL WESTMINSTER BANK PLC"
+            }
+        ],
+        "transactions" : [ 
+            {
+                "filing_type" : "acquire-charge-with-deed-with-court-order",
+                "transaction_id" : null,
+                "delivered_on" : null,
+                "insolvency_case_number" : null,
+                "links" : {
+                    "filing" : "/company/01203396/filing-history/MzE3MDMxOTQzMGFkaXF6a2N4",
+                    "insolvency_case" : null
+                }
+            }
+        ],
+        "insolvency_cases" : null,
+        "links" : {
+            "self" : "/company/01203396/charges/Gn8EhnT4vqbZ7dEpVtye67uIuRo="
+        }
+    },
+    "updated" : {
+        "at" : "2015-06-24T23:00:00.000Z",
+        "type" : "mortgage_delta",
+        "by" : "test-partition_1-offset_1"
+    },
+    "_class" : "uk.gov.companieshouse.charges.data.model.ChargesDocument"
+}

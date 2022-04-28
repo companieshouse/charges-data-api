@@ -1,0 +1,78 @@
+{
+    "external_data": {
+        "persons_entitled": [
+            {
+                "name": "H I D B"
+            }
+        ],
+        "id": "AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==",
+        "charge_number": 2,
+        "particulars": {
+            "type": "short-particulars",
+            "description": "UNDERTAKING AND ALL PROPERTY AND ASSETS PRESENT AND FUTURE OF THE COMPANY INCLUDING UNCALLED CAPITAL",
+            "contains_floating_charge": true,
+            "contains_fixed_charge": false,
+            "floating_charge_covers_all": false,
+            "contains_negative_pledge": false,
+            "chargor_acting_as_bare_trustee": false
+        },
+        "links": {
+            "self": "/company/SC109614/charges/REU4N0IyMTI5MUQ0NDFGODVDQzdDNzQ3MjFBMzg5N0EyNjIzQ0YxMw=="
+        },
+        "charge_code": null,
+        "transactions": [
+            {
+                "filing_type": "",
+                "transaction_id": null,
+                "delivered_on": "1998-03-24",
+                "insolvency_case_number": null,
+                "links": {
+                    "filing": "/company/SC109614/filing-history/MDEyNzEyNjI4NWFkaXF6a2N4",
+                    "insolvency_case": null
+                }
+            },
+            {
+                "filing_type": "create-charge",
+                "transaction_id": null,
+                "delivered_on": null,
+                "insolvency_case_number": null,
+                "links": {
+                    "filing": null,
+                    "insolvency_case": null
+                }
+            }
+        ],
+        "insolvency_cases": null,
+        "links": {
+            "self": "/company/88124207/charges/AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng=="
+        },
+        "status": "fully-satisfied",
+        "assets_ceased_released": null,
+        "acquired_on": null,
+        "delivered_on": "1989-03-15",
+        "resolved_on": null,
+        "covering_instrument_date": null,
+        "created_on": "1989-03-01",
+        "satisfied_on": "1998-03-24",
+        "classification": {
+            "type": "charge-description",
+            "description": "FLOATING CHARGE"
+        },
+        "secured_details": {
+            "type": "obligations-secured",
+            "description": "FLOATING CHARGE"
+        },
+        "scottish_alterations": {
+            "type": null,
+            "description": null,
+            "has_alterations_to_order": false,
+            "has_alterations_to_prohibitions": false,
+            "has_restricting_provisions": true
+        },
+        "more_than_four_persons_entitled": false
+    },
+    "internal_data": {
+        "delta_at": "2015-06-25T22:00:00.000Z",
+        "updated_by": "test-partition_1-offset_1"
+    }
+}

@@ -1,0 +1,76 @@
+{
+    "_id" : "BzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==",
+    "company_number" : "131242070042",
+    "data" : {
+        "etag" : "43ae7629e84b872ae94f3d10a53703e69ed903e6",
+        "id" : "BzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==",
+        "charge_code" : "102862370001",
+        "classification" : {
+            "type" : "nature-of-charge",
+            "description" : "Floating Charge"
+        },
+        "charge_number" : 1,
+        "status" : "outstanding",
+        "assets_ceased_released" : null,
+        "acquired_on" : null,
+        "delivered_on" : null,
+        "resolved_on" : null,
+        "covering_instrument_date" : null,
+        "created_on" : null,
+        "satisfied_on" : null,
+        "particulars" : {
+            "type" : "charged-property-or-undertaking-description",
+            "description" : "OVER USED CAR STOCK",
+            "contains_floating_charge" : false,
+            "contains_fixed_charge" : false,
+            "floating_charge_covers_all" : false,
+            "contains_negative_pledge" : false,
+            "chargor_acting_as_bare_trustee" : false
+        },
+        "secured_details" : {
+            "type" : "obligations-secured",
+            "description" : "£225,000 DUE OR TO BECOME DUE"
+        },
+        "scottish_alterations" : {
+            "type" : null,
+            "description" : null,
+            "has_alterations_to_order" : null,
+            "has_alterations_to_prohibitions" : null,
+            "has_restricting_provisions" : null
+        },
+        "more_than_four_persons_entitled" : false,
+        "persons_entitled" : [ 
+            {
+                "name" : "WENDY KERR"
+            }
+        ],
+        "transactions" : [ 
+            {
+                "filing_type" : "create-charge-without-deed-with-court-order",
+                "transaction_id" : null,
+                "delivered_on" : "2019-03-18T00:00:00.000Z",
+                "insolvency_case_number" : null,
+                "links" : {
+                    "filing" : "/company/10286237/filing-history/MzIyOTk0NzQyMmFkaXF6a2N4",
+                    "insolvency_case" : null
+                }
+            }
+        ],
+        "insolvency_cases" : [ 
+            {
+                "case_number" : null,
+                "transaction_id" : null,
+                "links" : null
+            }
+        ],
+        "links" : {
+            "self" : "/company/131242070042/charges/BzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng=="
+        }
+    },
+    "updated" : {
+        "at" : "2015-06-24T23:00:00.000Z",
+        "type" : "mortgage_delta",
+        "by" : "test-partition_1-offset_1"
+    },
+    "_class" : "uk.gov.companieshouse.charges.data.model.ChargesDocument"
+}

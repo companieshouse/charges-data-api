@@ -1,0 +1,82 @@
+{
+  "external_data": {
+    "persons_entitled": [
+      {
+        "name": "BRIDGING FINANCE LIMITED"
+      }
+    ],
+    "id":"GWQwYTVlOWVmMGEyMGY1MDEyMzY4ZWYzNzkxMWY5NmMwNWI1MDMzMw==",
+    "charge_number": 3,
+    "particulars": {
+      "floating_charge_covers_all": true,
+      "type": "brief-description",
+      "contains_floating_charge": true,
+      "description": "SUNNYHILL ROSE LANE MYNYDD ISA MOLD T/NO CYM343806\\n",
+      "contains_fixed_charge": true,
+      "contains_negative_pledge": true,
+      "chargor_acting_as_bare_trustee": false
+    },
+    "secured_details": {
+      "type": null,
+      "description": null
+    },
+    "scottish_alterations": {
+      "type": null,
+      "description": null,
+      "has_alterations_to_order": null,
+      "has_alterations_to_prohibitions": null,
+      "has_restricting_provisions": null
+    },
+    "charge_code": "OC3420230003",
+    "insolvency_cases": [
+      {
+        "case_number": null,
+        "transaction_id": null,
+        "links": null
+      }
+    ],
+    "links": {
+      "self": "/company/261242070042/charges/GWQwYTVlOWVmMGEyMGY1MDEyMzY4ZWYzNzkxMWY5NmMwNWI1MDMzMw=="
+    },
+    "created_on": "2015-12-18",
+    "transactions": [
+      {
+        "filing_type": "create-charge-with-deed-with-court-order-limited-liability-partnership",
+        "transaction_id": null,
+        "delivered_on": "2016-03-18",
+        "insolvency_case_number": null,
+        "links": {
+          "filing": "/company/OC342023/filing-history/MzE0NTE4NjY3N2FkaXF6a2N4",
+          "insolvency_case": null
+        }
+      },
+      {
+        "filing_type": "charge-part-satisfaction-limited-liability-partnership",
+        "transaction_id": null,
+        "delivered_on": "2017-12-15",
+        "insolvency_case_number": null,
+        "links": {
+          "filing": "/company/OC342023/filing-history/MzE5Mjk3NjYyNGFkaXF6a2N4",
+          "insolvency_case": null
+        }
+      }
+    ],
+    "status": "fully-satisfied",
+    "classification": {
+      "description": "A REGISTERED CHARGE",
+      "type": "charge-description"
+    },
+   
+    "delivered_on": "2016-03-18",
+    "assets_ceased_released": null,
+    "acquired_on": null,
+    "resolved_on": null,
+    "covering_instrument_date": null,
+    "more_than_four_persons_entitled": false,
+    "satisfied_on": "2017-12-15"
+  },
+  "internal_data": {
+    "updated_by": "test-partition_1-offset_1",
+    "delta_at": "2015-06-25T22:00:00.000Z"
+  }
+}

@@ -39,6 +39,8 @@
 		<skip.unit.tests>false</skip.unit.tests>
 		<private-api-sdk-java.version>2.0.147</private-api-sdk-java.version>
 		<io-cucumber.version>7.2.3</io-cucumber.version>
+		<wiremock.standalone.version>2.32.0</wiremock.standalone.version>
+		<maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
 
 		<!--sonar configuration-->
 		<sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
@@ -177,6 +179,30 @@
 			<groupId>uk.gov.companieshouse</groupId>
 			<artifactId>api-helper-java</artifactId>
 			<version>${api-helper-java-library.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.tomakehurst</groupId>
+			<artifactId>wiremock-jre8</artifactId>
+			<version>${wiremock.standalone.version}</version>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.conscrypt</groupId>
+					<artifactId>conscrypt-openjdk-uber</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>net.javacrumbs.json-unit</groupId>
+					<artifactId>json-unit-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.github.jknack</groupId>
+					<artifactId>handlebars</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.github.jknack</groupId>
+					<artifactId>handlebars-helpers</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 
@@ -380,6 +406,31 @@
 						<expandClasspathDependencies>true</expandClasspathDependencies>
 					</container>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>${maven-resources-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/test-classes</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/src/itest/resources</directory>
+									<includes>
+										<include>**/*.*</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

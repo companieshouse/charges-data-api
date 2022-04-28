@@ -21,6 +21,28 @@ public class ChargesDocument {
 
     private Updated updated;
 
+    /**
+     * default constructor.
+     */
+    public ChargesDocument() {
+
+    }
+
+    /**
+     * Argument constructor.
+     * @param id id.
+     * @param companyNumber company number.
+     * @param data data.
+     * @param updated updated.
+     */
+    public ChargesDocument(String id, String companyNumber,
+            ChargeApi data, Updated updated) {
+        this.id = id;
+        this.companyNumber = companyNumber;
+        this.data = data;
+        this.updated = updated;
+    }
+
     public String getId() {
         return id;
     }
