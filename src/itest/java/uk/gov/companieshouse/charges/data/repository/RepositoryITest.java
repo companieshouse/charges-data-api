@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -75,6 +76,7 @@ public class RepositoryITest {
     assertThat(documents).hasSize(1);
     assertThat(documents.get(0).getData().getId()).isEqualTo(chargesDocument.getData().getId());
     assertThat(documents.get(0).getCompanyNumber()).isEqualTo(chargesDocument.getCompanyNumber());
+    assertThat(documents.get(0).getDeltaAt()).isEqualTo(chargesDocument.getDeltaAt());
     assertThat(documents.get(0).getUpdated().getAt()).isEqualTo(chargesDocument.getUpdated().getAt());
   }
 
@@ -101,13 +103,17 @@ public class RepositoryITest {
 
   public ChargesDocument transform(String companyNumber, String chargeId,
           InternalChargeApi requestBody) {
+    OffsetDateTime deltaAt = requestBody.getInternalData().getDeltaAt();
+    String type = "mortgage_delta";
 
     OffsetDateTime at = requestBody.getInternalData().getDeltaAt();
 
     String by = requestBody.getInternalData().getUpdatedBy();
-    final Updated updated = new Updated().setAt(at.toLocalDate()).setType("mortgage_delta").setBy(by);
+    final Updated updated =
+            new Updated().setAt(at.toLocalDate()).setType(type).setBy(by);
     var chargesDocument = new ChargesDocument().setId(chargeId)
             .setCompanyNumber(companyNumber).setData(requestBody.getExternalData())
+            .setDeltaAt(deltaAt.toLocalDateTime())
             .setUpdated(updated);
 
     return chargesDocument;

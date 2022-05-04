@@ -1,8 +1,10 @@
 package uk.gov.companieshouse.charges.data.service;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -21,8 +23,7 @@ import uk.gov.companieshouse.charges.data.api.ChargesApiService;
 import uk.gov.companieshouse.charges.data.api.CompanyMetricsApiService;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.repository.ChargesRepository;
-import uk.gov.companieshouse.charges.data.tranform.ChargesTransformer;
-import uk.gov.companieshouse.charges.data.util.DateFormatter;
+import uk.gov.companieshouse.charges.data.transform.ChargesTransformer;
 import uk.gov.companieshouse.logging.Logger;
 
 @Service
@@ -66,9 +67,43 @@ public class ChargesService {
         logger.debug(String.format("Started :upsertCharges for chargeId %s company number %s ",
                 chargeId,
                 companyNumber));
-        boolean latestRecord = isLatestRecord(companyNumber, chargeId, requestBody);
-        if (latestRecord) {
+        boolean savedToDb = false;
 
+        Optional<ChargesDocument> chargesDocumentFromDbOptional =
+                chargesRepository.findById(companyNumber);
+
+        if (chargesDocumentFromDbOptional.isPresent()) {
+            OffsetDateTime dateFromBodyRequest = requestBody
+                    .getInternalData()
+                    .getDeltaAt();
+
+            ChargesDocument chargesDocumentFromDb = chargesDocumentFromDbOptional
+                    .get();
+
+            LocalDateTime deltaAtFromDbLocalDateTime = chargesDocumentFromDb
+                    .getDeltaAt();
+
+            OffsetDateTime deltaAtFromDb =
+                    OffsetDateTime.of(LocalDateTime.from(deltaAtFromDbLocalDateTime),
+                            ZoneOffset.UTC);
+
+            if (dateFromBodyRequest.isAfter(deltaAtFromDb)) {
+                savedToDb = true;
+                ChargesDocument charges =
+                        this.chargesTransformer.transform(companyNumber, chargeId, requestBody);
+                logger.debug(String.format("Started : Saving charges in DB "));
+                this.chargesRepository.save(charges);
+                logger.debug(
+                        String.format("Finished : upsertCharges for chargeId %s company number %s ",
+                                chargeId,
+                                companyNumber));
+            } else {
+                logger.debug(
+                        "Finished : upsertCharges, charge not saved "
+                                + "as record provided is older than the one already stored.");
+            }
+        } else {
+            savedToDb = true;
             ChargesDocument charges =
                     this.chargesTransformer.transform(companyNumber, chargeId, requestBody);
             logger.debug("Started : Saving charges in DB ");
@@ -84,24 +119,15 @@ public class ChargesService {
                 throw new ResponseStatusException(HttpStatus.resolve(res.getStatusCode()),
                     "invokeChsKafkaApi");
             }
+        }
+
+        if (savedToDb) {
+            chargesApiService.invokeChsKafkaApi(contextId, companyNumber);
             logger.info(
                     String.format("DSND-542: ChsKafka api invoked successfully for company number"
                             + " %s", companyNumber));
-        } else {
-            logger.debug(
-                    "Finished : upsertCharges, charge not saved "
-                            + "as record provided is not a latest record.");
         }
-    }
 
-    private boolean isLatestRecord(String companyNumber, String chargeId,
-            InternalChargeApi requestBody) {
-        OffsetDateTime localDate = requestBody.getInternalData().getDeltaAt();
-        String format = DateFormatter.format(localDate.toLocalDate());
-        Optional<ChargesDocument> chargesDelta =
-                this.chargesRepository.findCharge(companyNumber, chargeId,
-                        format);
-        return chargesDelta.isEmpty();
     }
 
     /**
@@ -187,4 +213,5 @@ public class ChargesService {
         ));
         return result;
     }
+
 }

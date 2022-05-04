@@ -3,14 +3,18 @@ package uk.gov.companieshouse.charges.data.transform;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import uk.gov.companieshouse.api.charges.ChargeApi;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
 import uk.gov.companieshouse.api.charges.InternalData;
-import uk.gov.companieshouse.charges.data.tranform.ChargesTransformer;
 import uk.gov.companieshouse.logging.Logger;
 
 public class ChargesTransformerTest {
@@ -30,7 +34,7 @@ public class ChargesTransformerTest {
         String chargeId = "MzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==";
         InternalChargeApi requestBody = new InternalChargeApi();
         var internalData = new InternalData();
-        internalData.setDeltaAt(OffsetDateTime.now());
+        internalData.setDeltaAt(OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS));
         var externalData = new ChargeApi();
         requestBody.setInternalData(internalData);
         requestBody.setExternalData(externalData);
@@ -42,6 +46,8 @@ public class ChargesTransformerTest {
         assertEquals(result.getCompanyNumber(), companyNumber);
         assertNotNull(result.getData());
         assertEquals(result.getData(), externalData);
+        assertNotNull(result.getDeltaAt());
+        assertEquals(result.getDeltaAt().toInstant(ZoneOffset.UTC), internalData.getDeltaAt().toInstant());
         assertNotNull(result.getUpdated());
         assertEquals(result.getUpdated().getBy(), internalData.getUpdatedBy());
     }

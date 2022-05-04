@@ -1,11 +1,17 @@
-package uk.gov.companieshouse.charges.data.tranform;
+package uk.gov.companieshouse.charges.data.transform;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.GenerateEtagUtil;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.model.Updated;
+import uk.gov.companieshouse.charges.data.util.DateFormatter;
 import uk.gov.companieshouse.logging.Logger;
 
 @Component
@@ -31,15 +37,18 @@ public class ChargesTransformer {
         logger.debug(String.format(
                 "Started: transforming incoming request body to model used by database", chargeId,
                 companyNumber));
-        OffsetDateTime at = requestBody.getInternalData().getDeltaAt();
 
+        OffsetDateTime at = requestBody.getInternalData().getDeltaAt();
         String by = requestBody.getInternalData().getUpdatedBy();
+        OffsetDateTime deltaAt = requestBody.getInternalData().getDeltaAt();
         var externalData = requestBody.getExternalData();
         externalData.setEtag(GenerateEtagUtil.generateEtag());
         final Updated updated =
                 new Updated().setAt(at.toLocalDate()).setType(type).setBy(by);
         var chargesDocument = new ChargesDocument().setId(chargeId)
-                .setCompanyNumber(companyNumber).setData(externalData)
+                .setCompanyNumber(companyNumber)
+                .setData(externalData)
+                .setDeltaAt(deltaAt.toLocalDateTime())
                 .setUpdated(updated);
         logger.debug(String.format("Finished: Transformation complete successfully", chargeId,
                 companyNumber));

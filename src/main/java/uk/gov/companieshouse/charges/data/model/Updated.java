@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.charges.data.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Updated {
@@ -10,7 +11,6 @@ public class Updated {
     private String type;
 
     private String by;
-
 
     public LocalDate getAt() {
         return at;

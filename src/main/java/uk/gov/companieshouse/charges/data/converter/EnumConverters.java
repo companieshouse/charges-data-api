@@ -40,7 +40,7 @@ public class EnumConverters {
         @Override
         public Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
             try {
-                return sourceType.getType().getDeclaredMethod("getValue", null)
+                return sourceType.getType().getDeclaredMethod("getValue",null)
                         .invoke(source, null);
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException
                     exception) {

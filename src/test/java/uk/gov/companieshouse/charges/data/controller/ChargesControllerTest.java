@@ -15,6 +15,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.Optional;
@@ -34,7 +35,7 @@ import uk.gov.companieshouse.api.charges.InternalChargeApi;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.model.Updated;
 import uk.gov.companieshouse.charges.data.service.ChargesService;
-import uk.gov.companieshouse.charges.data.tranform.ChargesTransformer;
+import uk.gov.companieshouse.charges.data.transform.ChargesTransformer;
 import uk.gov.companieshouse.logging.Logger;
 
 @SpringBootTest
@@ -125,14 +126,20 @@ public class ChargesControllerTest {
         return mapper.readValue(incomingData, InternalChargeApi.class);
     }
 
-    private ChargesDocument transform(String companyNumber, String chargeId, InternalChargeApi requestBody) {
+    public ChargesDocument transform(String companyNumber, String chargeId,
+            InternalChargeApi requestBody) {
+
+        String type = "mortgage_delta";
+
         OffsetDateTime at = requestBody.getInternalData().getDeltaAt();
 
         String by = requestBody.getInternalData().getUpdatedBy();
-        final Updated updated = new Updated().setAt(at.toLocalDate()).setType("mortgage_delta").setBy(by);
-
-        return new ChargesDocument().setId(chargeId)
+        OffsetDateTime deltaAt = requestBody.getInternalData().getDeltaAt();
+        final Updated updated =
+                new Updated().setAt(at.toLocalDate()).setType(type).setBy(by);
+        var chargesDocument = new ChargesDocument().setId(chargeId)
                 .setCompanyNumber(companyNumber).setData(requestBody.getExternalData())
+                .setDeltaAt(deltaAt.toLocalDateTime())
                 .setUpdated(updated);
     }
 

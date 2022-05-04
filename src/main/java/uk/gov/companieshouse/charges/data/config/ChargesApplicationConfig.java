@@ -1,12 +1,15 @@
 package uk.gov.companieshouse.charges.data.config;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
+
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +22,11 @@ import uk.gov.companieshouse.charges.data.converter.ChargeApiWriteConverter;
 import uk.gov.companieshouse.charges.data.converter.EnumConverters;
 import uk.gov.companieshouse.charges.data.serialization.LocalDateDeSerializer;
 import uk.gov.companieshouse.charges.data.serialization.LocalDateSerializer;
+import uk.gov.companieshouse.charges.data.serialization.LocalDateTimeDeSerializer;
+import uk.gov.companieshouse.charges.data.serialization.LocalDateTimeSerializer;
+import uk.gov.companieshouse.charges.data.serialization.OffsetDateTimeDeSerializer;
+import uk.gov.companieshouse.charges.data.serialization.OffsetDateTimeSerializer;
+
 import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.environment.impl.EnvironmentReaderImpl;
 import uk.gov.companieshouse.sdk.manager.ApiSdkManager;
@@ -59,11 +67,19 @@ public class ChargesApplicationConfig implements WebMvcConfigurer {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         SimpleModule module = new SimpleModule();
         module.addSerializer(LocalDate.class, new LocalDateSerializer());
         module.addDeserializer(LocalDate.class, new LocalDateDeSerializer());
+        module.addSerializer(OffsetDateTime.class, new OffsetDateTimeSerializer());
+        module.addDeserializer(OffsetDateTime.class, new OffsetDateTimeDeSerializer());
+        module.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer());
+        module.addDeserializer(LocalDateTime.class, new LocalDateTimeDeSerializer());
+
         objectMapper.registerModule(module);
+
+        objectMapper.registerModule(new JavaTimeModule());
+
         return objectMapper;
     }
 }
