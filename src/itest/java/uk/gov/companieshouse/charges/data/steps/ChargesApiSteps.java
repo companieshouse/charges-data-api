@@ -1,21 +1,15 @@
 package uk.gov.companieshouse.charges.data.steps;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.configureFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.lessThanOrExactly;
 import static com.github.tomakehurst.wiremock.client.WireMock.moreThanOrExactly;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.assertj.core.api.Assertions.assertThat;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.tomakehurst.wiremock.WireMockServer;
-import io.cucumber.java.AfterAll;
-import io.cucumber.java.BeforeAll;
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -34,6 +28,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
@@ -42,15 +37,11 @@ import uk.gov.companieshouse.api.charges.ChargesApi;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
 import uk.gov.companieshouse.charges.data.CucumberFeaturesRunnerITest;
 import uk.gov.companieshouse.charges.data.config.CucumberContext;
+import uk.gov.companieshouse.charges.data.config.WiremockTestConfig;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.repository.ChargesRepository;
 
 public class ChargesApiSteps {
-
-    private static String port = "8888";
-
-    private String companyNumber;
-    private String chargeId;
 
     @Autowired
     private ObjectMapper mongoCustomConversions;
@@ -61,31 +52,38 @@ public class ChargesApiSteps {
     @Autowired
     private ChargesRepository chargesRepository;
 
-    private static WireMockServer wireMockServer;
+    String companyNumber = "08124207";
+    String chargeId = "AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==";
+    String insolvency_cases_happy_path_input = "Insolvency_cases_Happy_Path_input";
+    String invalid_payload = "Invalid_payload";
+    String x_request_value = "5234234234";
+    String x_request_id = "x-request-id";
 
-
-    @BeforeAll
-    public static void before_all() {
-        setupWiremock();
+    @Before
+    public static void before_each() {
+        WiremockTestConfig.setupWiremock();
+        CucumberFeaturesRunnerITest.start();
     }
 
-    @AfterAll
-    public static void after_all() {
-        wireMockServer.stop();
-        CucumberFeaturesRunnerITest.mongoDBContainer.stop();
+    @After
+    public static void after_each() {
+        CucumberFeaturesRunnerITest.stop();
+        WiremockTestConfig.stop();
     }
 
     @Given("Charges data api service is running")
     public void theApplicationRunning() {
         assertThat(restTemplate).isNotNull();
-        stubChargeDataApi();
-        stubCompanyMetricsApi();
+        WiremockTestConfig.stubKafkaApi(HttpStatus.OK.value());
+        WiremockTestConfig.stubCompanyMetricsApi();
     }
 
     @Given("the company charges with {string} and {string} exists with data {string}")
     public void the_company_charges_with_and_exists_with_data(String inCompanyNumber, String inChargeId, String dataFile) throws IOException {
         this.i_send_put_request_for_company_number_and_charge_id_with_payload(inCompanyNumber, inChargeId, dataFile);
     }
+
+
 
     @When("I send PUT request for company number {string} and chargeId {string} with payload {string}")
     public void i_send_put_request_for_company_number_and_charge_id_with_payload(String inCompanyNumber, String inChargeId, String fileName) throws IOException {
@@ -96,16 +94,11 @@ public class ChargesApiSteps {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        headers.set("x-request-id", "5234234234");
+        headers.set(x_request_id, x_request_value);
 
         HttpEntity request = new HttpEntity(companyCharge, headers);
         String uri = "/company/{company_number}/charge/{charge_id}/internal";
-        this.companyNumber = inCompanyNumber;
-        this.chargeId = inChargeId;
-        ResponseEntity<Void> response = restTemplate.exchange(uri, HttpMethod.PUT, request, Void.class, companyNumber, chargeId);
-
-        this.companyNumber = companyNumber;
-        this.chargeId = chargeId;
+        ResponseEntity<Void> response = restTemplate.exchange(uri, HttpMethod.PUT, request, Void.class, inCompanyNumber, inChargeId);
         CucumberContext.CONTEXT.set("statusCode", response.getStatusCodeValue());
     }
 
@@ -181,38 +174,77 @@ public class ChargesApiSteps {
         verify(moreThanOrExactly(1), getRequestedFor(urlEqualTo("/company/08124207/metrics")));
     }
 
+    @Given("Charges Data API component is successfully running")
+    public void charges_data_api_component_is_successfully_running() {
+        assertThat(restTemplate).isNotNull();
+    }
+    @Given("Stubbed CHS Kafka API endpoint will return {int} http response code")
+    public void stubbed_chs_kafka_api_endpoint_will_return_http_response_code(Integer responseCode) {
+        WiremockTestConfig.stubKafkaApi(responseCode);
+    }
+    @Given("MongoDB is not reachable")
+    public void mongo_db_is_not_reachable() {
+        CucumberFeaturesRunnerITest.stop();
+    }
+    @When("PUT Rest endpoint is invoked with a valid json payload but Repository throws an error")
+    public void put_rest_endpoint_is_invoked_with_a_valid_json_payload_but_repository_throws_an_error()
+            throws IOException {
+
+        this.i_send_put_request_for_company_number_and_charge_id_with_payload(companyNumber,
+                chargeId, insolvency_cases_happy_path_input);
+    }
+    @Then("Rest endpoint returns http response code {int} to the client")
+    public void rest_endpoint_returns_http_response_code_to_the_client(Integer expectedResponseCode) {
+        var actualStatusCode = CucumberContext.CONTEXT.get("statusCode");
+        assertThat(actualStatusCode).isEqualTo(expectedResponseCode);
+    }
+    @Then("CHS Kafka API is never invoked")
+    public void chs_kafka_api_is_never_invoked() {
+        verify(lessThanOrExactly(0), postRequestedFor(urlEqualTo("/resource-changed")));
+    }
+
+    @When("PUT Rest endpoint is invoked with a random invalid payload that fails to de-serialised into Request object")
+    public void put_rest_endpoint_is_invoked_with_a_random_invalid_payload_that_fails_to_de_serialised_into_request_object()
+            throws IOException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.set(x_request_id, x_request_value);
+
+        HttpEntity request = new HttpEntity(chargeId, headers);
+        String uri = "/company/{company_number}/charge/{charge_id}/internal";
+        ResponseEntity<Void> response = restTemplate.exchange(uri, HttpMethod.PUT, request, Void.class, companyNumber, chargeId);
+        CucumberContext.CONTEXT.set("statusCode", response.getStatusCodeValue());
+    }
+
+    @When("PUT Rest endpoint is invoked with a valid json payload that causes a NPE")
+    public void put_rest_endpoint_is_invoked_with_a_valid_json_payload_that_causes_a_npe()
+            throws IOException {
+        this.i_send_put_request_for_company_number_and_charge_id_with_payload(companyNumber,
+                chargeId, invalid_payload);
+    }
+
+    @When("PUT Rest endpoint is invoked with a valid json payload")
+    public void put_rest_endpoint_is_invoked_with_a_valid_json_payload() throws IOException {
+
+        this.i_send_put_request_for_company_number_and_charge_id_with_payload(companyNumber,
+                chargeId, insolvency_cases_happy_path_input);
+    }
+    @Then("MongoDB is successfully updated")
+    public void mongo_db_is_successfully_updated() throws IOException {
+       this.the_expected_result_should_match("Insolvency_cases_Happy_Path_output");
+    }
+
+    @Then("Data is not updated into Mongo DB")
+    public void data_is_not_updated_into_mongo_db() {
+        List<ChargesDocument> chargesDocuments = chargesRepository.findAll();
+        Assertions.assertThat(chargesDocuments).hasSize(0);
+    }
+
     private Document readData(Resource resource) throws IOException {
         var data= FileCopyUtils.copyToString(new InputStreamReader(Objects.requireNonNull(
                 resource.getInputStream())));
         Document document = Document.parse(data);
-
         return document;
     }
-
-    private static void setupWiremock() {
-        wireMockServer = new WireMockServer(Integer.parseInt(port));
-        wireMockServer.start();
-        configureFor("localhost", Integer.parseInt(port));
-    }
-
-    private static void stubChargeDataApi() {
-            stubFor(
-                post(urlPathMatching("/resource-changed"))
-                        .willReturn(aResponse()
-                                .withStatus(200)
-                                .withHeader("Content-Type", "application/json"))
-            );
-    }
-
-    private void stubCompanyMetricsApi() {
-        stubFor(
-                get(urlPathMatching("/company/08124207/metrics"))
-                        .willReturn(aResponse()
-                                .withStatus(200)
-                                .withHeader("Content-Type", "application/json")
-                                .withBody("{\"etag\":\"0dbf16c34be9d2d10ad374d206f598563bc20eb7\",\"counts\":{\"persons-with-significant-control\":null,\"appointments\":{\"active_directors_count\":null,\"active_secretaries_count\":null,\"active_count\":null,\"resigned_count\":null,\"total_count\":null,\"active_llp_members_count\":null}},\"mortgage\":{\"satisfied_count\":0,\"part_satisfied_count\":0,\"total_count\":14}}")
-
-                        ));
-    }
-
 }

@@ -88,6 +88,10 @@ public class ExceptionHandlerConfig {
         if ("invokeChsKafkaApi".equals(ex.getReason())) {
             return new ResponseEntity(responseBody, HttpStatus.NOT_EXTENDED);
         }
+
+        if (HttpStatus.SERVICE_UNAVAILABLE.equals(ex.getStatus())) {
+            return new ResponseEntity(responseBody, HttpStatus.SERVICE_UNAVAILABLE);
+        }
         return new ResponseEntity(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

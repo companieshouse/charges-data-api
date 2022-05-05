@@ -37,6 +37,14 @@ public class CucumberFeaturesRunnerITest {
         mongoDBContainer.start();
     }
 
+    public static void start() {
+        mongoDBContainer.start();
+    }
+
+    public static void stop() {
+        mongoDBContainer.stop();
+    }
+
     @AfterEach
     void cleanUp() {
         this.chargesRepository.deleteAll();
