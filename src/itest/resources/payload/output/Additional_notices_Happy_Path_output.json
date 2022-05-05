@@ -4,99 +4,87 @@
     "data" : {
         "etag" : "f15c1fb0b1804470ed2a0f3512f6049acd9e367f",
         "id" : "AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==",
-        "charge_code" : null,
+        "charge_code" : "081242070049",
         "classification" : {
             "type" : "charge-description",
-            "description" : "Legal mortgage"
+            "description" : "A REGISTERED CHARGE"
         },
-        "charge_number" : 17,
-        "status" : "outstanding",
-        "assets_ceased_released" : null,
+        "charge_number" : 49,
+        "status": "part-satisfied",
+        "assets_ceased_released": "multiple-filings",
         "acquired_on" : null,
-        "delivered_on" : "2008-05-13T00:00:00.000Z",
+        "delivered_on": "2019-10-17",
         "resolved_on" : null,
         "covering_instrument_date" : null,
-        "created_on" : "2008-05-07T00:00:00.000Z",
+        "created_on": "2019-10-11",
         "satisfied_on" : null,
         "particulars" : {
-            "type" : null,
-            "description" : null,
-            "contains_floating_charge" : false,
-            "contains_fixed_charge" : false,
-            "floating_charge_covers_all" : false,
-            "contains_negative_pledge" : false,
-            "chargor_acting_as_bare_trustee" : false
+            "floating_charge_covers_all": true,
+            "type": "brief-description",
+            "contains_floating_charge": true,
+            "description": "THE FREEHOLD LAND KNOWN AS MILLENNIUM HOUSE, 60 VICTORIA STREET, LIVERPOOL AND REGISTERED WITH HM LAND REGISTRY UNDER TITLE NUMBER MS303172\\n",
+            "contains_fixed_charge": true,
+            "contains_negative_pledge": true,
+            "chargor_acting_as_bare_trustee": false
         },
-        "secured_details" : {
-            "type" : "amount-secured",
-            "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
-        },
+        "secured_details" : null,
         "scottish_alterations" : {
-            "type" : null,
-            "description" : null,
-            "has_alterations_to_order" : null,
-            "has_alterations_to_prohibitions" : null,
-            "has_restricting_provisions" : null
+            "type": null,
+            "description": null,
+            "has_alterations_to_order": false,
+            "has_alterations_to_prohibitions": false
         },
         "more_than_four_persons_entitled" : false,
-        "persons_entitled" : [ 
+        "persons_entitled" : [
             {
-                "name" : "CLYDESDALE BANK PLC"
+                "name" : "LYELL TRADING LIMITED GIANMARIO ZAHID ATILA"
             }
         ],
-        "transactions" : [ 
+        "transactions" : [
             {
-                "filing_type" : "create-charge-pre-2006-companies-act",
-                "transaction_id" : 3129317274,
-                "delivered_on" : "2008-05-13T00:00:00.000Z",
-                "insolvency_case_number" : 1,
-                "links" : {
-                    "filing" : "/company/04796390/filing-history/MjAwNTQ2ODczNmFkaXF6a2N4",
-                    "insolvency_case" : null
+                "filing_type": "charge-part-both",
+                "transaction_id": 3247323133,
+                "delivered_on": "2019-10-22",
+                "insolvency_case_number": null,
+                "links": {
+                    "filing": "/company/08124207/filing-history/MzI0NzMyMzEzM2FkaXF6a2N4",
+                    "insolvency_case": null
                 }
-            }, 
+            },
             {
-                "filing_type" : "liquidation-appointment-of-receiver",
-                "transaction_id" : 3129317274,
-                "delivered_on" : "2015-08-12T00:00:00.000Z",
-                "insolvency_case_number" : 1,
-                "links" : {
-                    "filing" : "/company/04796390/filing-history/MzEyOTMxNzI3NGFkaXF6a2N4",
-                    "insolvency_case" : null
+                "filing_type": "charge-part-satisfaction",
+                "transaction_id": 3247323133,
+                "delivered_on": "2019-10-17",
+                "insolvency_case_number": null,
+                "links": {
+                    "filing": "/company/08124207/filing-history/MzI0Nzk3OTM0NmFkaXF6a2N4",
+                    "insolvency_case": null
                 }
-            }, 
+            },
             {
-                "filing_type" : "liquidation-cease-to-act-receiver",
-                "transaction_id" : 3129317274,
-                "delivered_on" : "2017-01-14T00:00:00.000Z",
-                "insolvency_case_number" : 1,
-                "links" : {
-                    "filing" : "/company/04796390/filing-history/MzE2NzIzODEzM2FkaXF6a2N4",
-                    "insolvency_case" : null
+                "filing_type": "charge-part-release",
+                "transaction_id": 3247323133,
+                "delivered_on": "2019-11-01",
+                "insolvency_case_number": null,
+                "links": {
+                    "filing": "/company/08124207/filing-history/MzI0ODI5MjUyMWFkaXF6a2N4",
+                    "insolvency_case": null
                 }
-            }, 
+            },
             {
-                "filing_type" : "liquidation-cease-to-act-receiver",
-                "transaction_id" : 3129317274,
-                "delivered_on" : "2017-01-14T00:00:00.000Z",
-                "insolvency_case_number" : 1,
-                "links" : {
-                    "filing" : "/company/04796390/filing-history/MzE2NzIzODI3MmFkaXF6a2N4",
-                    "insolvency_case" : null
-                }
-            }
-        ],
-        "insolvency_cases" : [ 
-            {
-                "case_number" : 1,
-                "transaction_id" : 3129317274,
-                "links" : {
-                    "case" : "/company/04796390/insolvency#case-1"
+                "filing_type": "create-charge-with-deed-with-court-order",
+                "transaction_id": null,
+                "delivered_on": "2019-10-17",
+                "insolvency_case_number": null,
+                "links": {
+                    "filing": "/company/08124207/filing-history/MzI0NzA2NDA2M2FkaXF6a2N4",
+                    "insolvency_case": null
                 }
             }
         ],
+        "insolvency_cases" : null,
         "links" : {
-            "self" : "/company/88124207/charges/AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng=="
+            "self" : "/company/881242070049/charges/AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng=="
         }
     },
     "updated" : {
