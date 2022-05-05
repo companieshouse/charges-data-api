@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 public class ChsKafkaApiClientServiceImpl extends ApiClientServiceImpl {
 
     public ChsKafkaApiClientServiceImpl(@Value("${chs.kafka.api.key}") String chsApiKey,
-            @Value("${chs.kafka.api.endpoint}") String internalApiUrl) {
+                                        @Value("${chs.kafka.api.endpoint}") String internalApiUrl) {
         super(chsApiKey, internalApiUrl);
     }
 

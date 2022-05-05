@@ -98,10 +98,8 @@ public class ChargesController {
             "/company/{company_number}/charges/{items_per_page}/{start_index}"})
     public ResponseEntity<ChargesApi> getCompanyCharges(
             @PathVariable("company_number") final String companyNumber,
-            @PathVariable(value = "items_per_page", required = false)
-            final Integer itemsPerPage,
-            @PathVariable(value = "start_index", required = false)
-            final Integer startIndex) {
+            @PathVariable(value = "items_per_page", required = false) final Integer itemsPerPage,
+            @PathVariable(value = "start_index", required = false) final Integer startIndex) {
         logger.debug(String.format("Started : getCompanyCharges Charges for Company Number %s ",
                 companyNumber
         ));

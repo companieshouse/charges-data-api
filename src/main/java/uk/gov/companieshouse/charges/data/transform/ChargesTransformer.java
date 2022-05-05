@@ -12,9 +12,9 @@ import uk.gov.companieshouse.logging.Logger;
 @Component
 public class ChargesTransformer {
 
-    static String type = "mortgage_delta";
+    static final String type = "mortgage_delta";
 
-    private Logger logger;
+    private final Logger logger;
 
     public ChargesTransformer(final Logger logger) {
         this.logger = logger;
@@ -29,9 +29,8 @@ public class ChargesTransformer {
      */
     public ChargesDocument transform(String companyNumber, String chargeId,
             InternalChargeApi requestBody) {
-        logger.debug(String.format(
-                "Started: transforming incoming request body to model used by database", chargeId,
-                companyNumber));
+        logger.debug(String.format("Started: transforming incoming request body "
+                + "to model for chargeId: %s and companyNumber: %s", chargeId, companyNumber));
 
         OffsetDateTime at = requestBody.getInternalData().getDeltaAt();
         String by = requestBody.getInternalData().getUpdatedBy();
@@ -45,8 +44,8 @@ public class ChargesTransformer {
                 .setData(externalData)
                 .setDeltaAt(deltaAt.toLocalDateTime())
                 .setUpdated(updated);
-        logger.debug(String.format("Finished: Transformation complete successfully", chargeId,
-                companyNumber));
+        logger.debug(String.format("Finished: Transformation complete successfully for chargeId: "
+                       + "%s and companyNumber: %s", chargeId, companyNumber));
         return chargesDocument;
     }
 

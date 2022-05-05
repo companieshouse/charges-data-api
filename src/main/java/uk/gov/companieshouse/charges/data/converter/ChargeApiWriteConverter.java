@@ -17,6 +17,7 @@ public class ChargeApiWriteConverter implements Converter<ChargeApi, BasicDBObje
 
     /**
      * Write convertor.
+     *
      * @param source source Document.
      * @return charge BSON object.
      */

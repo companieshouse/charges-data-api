@@ -77,7 +77,6 @@ public class ChargesApplicationConfig implements WebMvcConfigurer {
         module.addDeserializer(LocalDateTime.class, new LocalDateTimeDeSerializer());
 
         objectMapper.registerModule(module);
-
         objectMapper.registerModule(new JavaTimeModule());
 
         return objectMapper;

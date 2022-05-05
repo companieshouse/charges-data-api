@@ -21,16 +21,14 @@ public class LocalDateTimeDeSerializer extends JsonDeserializer<LocalDateTime> {
     public LocalDateTime deserialize(JsonParser jsonParser, DeserializationContext
             deserializationContext) {
         try {
+            JsonNode jsonNode = jsonParser.readValueAsTree();
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter
                     .ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-            JsonNode jsonNode = jsonParser.readValueAsTree();
             return LocalDateTime.parse(jsonNode.get("$date").textValue(), dateTimeFormatter);
         } catch (Exception exception) {
             LOGGER.error("LocalDateTime Deserialization failed.", exception);
-            throw new RuntimeException(String.format("Failed while deserializing "
-                            + "date value for json node."
-                            + " Error Message: %s" ,
-                    exception.getMessage()));
+            throw new RuntimeException("Failed while deserializing "
+                    + "date value for json node.", exception);
         }
     }
 }

@@ -6,23 +6,23 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
-public class DateFormatterTest {
+public class DateTimeFormatterTest {
 
     @Test
     public void shouldParseAndFormatGivenDateString() {
-        LocalDate parsedValue = DateFormatter.parse("2015-06-26T08:31:35.058Z");
+        LocalDate parsedValue = DateTimeFormatter.parse("2015-06-26T08:31:35.058Z");
         assertThat(parsedValue).isNotNull();
         assertThat(parsedValue.toString()).isEqualTo("2015-06-26");
     }
 
     @Test
     public void throwExceptionWhenGivenWrongDate() {
-        assertThrows(IllegalStateException.class, () -> DateFormatter.parse("2015 08:31:35.058Z"));
+        assertThrows(IllegalStateException.class, () -> DateTimeFormatter.parse("2015 08:31:35.058Z"));
     }
 
     @Test
     public void shouldFormatGivenDateString() {
-        String formattedDate = DateFormatter.format(LocalDate.of(2015, 06, 26));
+        String formattedDate = DateTimeFormatter.format(LocalDate.of(2015, 06, 26));
         assertThat(formattedDate).isNotNull();
         assertThat(formattedDate).isEqualTo("2015-06-26T00:00:00Z");
     }

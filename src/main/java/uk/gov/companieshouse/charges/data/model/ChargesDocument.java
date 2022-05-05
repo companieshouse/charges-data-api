@@ -2,6 +2,7 @@ package uk.gov.companieshouse.charges.data.model;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -38,13 +39,14 @@ public class ChargesDocument {
 
     /**
      * Argument constructor.
-     * @param id id.
+     *
+     * @param id            id.
      * @param companyNumber company number.
-     * @param data data.
-     * @param updated updated.
+     * @param data          data.
+     * @param updated       updated.
      */
     public ChargesDocument(String id, String companyNumber,
-            ChargeApi data, Updated updated) {
+                           ChargeApi data, Updated updated) {
         this.id = id;
         this.companyNumber = companyNumber;
         this.data = data;

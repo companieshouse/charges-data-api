@@ -1,20 +1,19 @@
 package uk.gov.companieshouse.charges.data.util;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class DateFormatter {
+public class DateTimeFormatter {
 
     static final String strPattern = "\\d{4}-\\d{2}-\\d{2}";
     static final Pattern pattern = Pattern.compile(strPattern);
 
-    static DateTimeFormatter WriteDateTimeFormatter =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    static java.time.format.DateTimeFormatter WriteDateTimeFormatter =
+            java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-    static DateTimeFormatter readDateTimeFormatter =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    static java.time.format.DateTimeFormatter readDateTimeFormatter =
+            java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     /**
      * Parse date string to LocalDate.

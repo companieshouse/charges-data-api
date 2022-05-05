@@ -17,6 +17,7 @@ public class ChargeApiReadConverter implements Converter<Document, ChargeApi> {
 
     /**
      * Read convertor.
+     *
      * @param source source Document.
      * @return charge object.
      */
