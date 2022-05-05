@@ -20,13 +20,6 @@ public class OffsetDateTimeSerializer extends JsonSerializer<OffsetDateTime> {
             String format = offsetDateTime.format(dateTimeFormatter);
             jsonGenerator.writeRawValue("ISODate(\"" + format + "\")");
 
-            //jsonGenerator.writeStartObject();
-            //jsonGenerator.writeFieldName("$date");
-            //String isoDate = ISODateTimeFormat.dateTime().print(new DateTime(format));
-            //jsonGenerator.writeString(isoDate);
-            //jsonGenerator.writeEndObject();
-
-
         }
     }
 }

@@ -34,7 +34,7 @@ public class ChargesTransformerTest {
         String chargeId = "MzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==";
         InternalChargeApi requestBody = new InternalChargeApi();
         var internalData = new InternalData();
-        internalData.setDeltaAt(OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS));
+        internalData.setDeltaAt(OffsetDateTime.now(ZoneOffset.UTC));
         var externalData = new ChargeApi();
         requestBody.setInternalData(internalData);
         requestBody.setExternalData(externalData);

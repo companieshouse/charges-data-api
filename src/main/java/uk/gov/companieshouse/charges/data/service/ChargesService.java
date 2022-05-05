@@ -2,9 +2,9 @@ package uk.gov.companieshouse.charges.data.service;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
-import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -67,12 +67,11 @@ public class ChargesService {
         logger.debug(String.format("Started :upsertCharges for chargeId %s company number %s ",
                 chargeId,
                 companyNumber));
-        boolean savedToDb = false;
 
         Optional<ChargesDocument> chargesDocumentFromDbOptional =
-                chargesRepository.findById(companyNumber);
+                chargesRepository.findById(chargeId);
 
-        if (chargesDocumentFromDbOptional.isPresent()) {
+        chargesDocumentFromDbOptional.map(x -> {
             OffsetDateTime dateFromBodyRequest = requestBody
                     .getInternalData()
                     .getDeltaAt();
@@ -88,7 +87,6 @@ public class ChargesService {
                             ZoneOffset.UTC);
 
             if (dateFromBodyRequest.isAfter(deltaAtFromDb)) {
-                savedToDb = true;
                 ChargesDocument charges =
                         this.chargesTransformer.transform(companyNumber, chargeId, requestBody);
                 logger.debug(String.format("Started : Saving charges in DB "));
@@ -102,32 +100,28 @@ public class ChargesService {
                         "Finished : upsertCharges, charge not saved "
                                 + "as record provided is older than the one already stored.");
             }
-        } else {
-            savedToDb = true;
-            ChargesDocument charges =
-                    this.chargesTransformer.transform(companyNumber, chargeId, requestBody);
-            logger.debug("Started : Saving charges in DB ");
-            this.chargesRepository.save(charges);
-            logger.debug(
-                    String.format("Finished : upsertCharges for chargeId %s company number %s ",
-                            chargeId,
-                            companyNumber));
-            ApiResponse<Void> res = chargesApiService.invokeChsKafkaApi(contextId, companyNumber,
-                    chargeId);
-            // Code is not 2xx
-            if (res.getStatusCode() < 200 || res.getStatusCode() > 299) {
-                throw new ResponseStatusException(HttpStatus.resolve(res.getStatusCode()),
-                    "invokeChsKafkaApi");
+            return null;
+        }).orElseGet(() -> {
+            if (chargesDocumentFromDbOptional.isPresent()) {
+                ChargesDocument charges =
+                        this.chargesTransformer.transform(companyNumber, chargeId, requestBody);
+                logger.debug("Started : Saving charges in DB ");
+                this.chargesRepository.save(charges);
+                logger.debug(
+                        String.format("Finished : upsertCharges for chargeId %s company number %s ",
+                                chargeId,
+                                companyNumber));
+                ApiResponse<Void> res = chargesApiService.invokeChsKafkaApi(contextId,
+                        companyNumber,
+                        chargeId);
+                // Code is not 2xx
+                if (res.getStatusCode() < 200 || res.getStatusCode() > 299) {
+                    throw new ResponseStatusException(HttpStatus.resolve(res.getStatusCode()),
+                            "invokeChsKafkaApi");
+                }
             }
-        }
-
-        if (savedToDb) {
-            chargesApiService.invokeChsKafkaApi(contextId, companyNumber);
-            logger.info(
-                    String.format("DSND-542: ChsKafka api invoked successfully for company number"
-                            + " %s", companyNumber));
-        }
-
+            return null;
+        });
     }
 
     /**

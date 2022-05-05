@@ -2,6 +2,7 @@ package uk.gov.companieshouse.charges.data.converter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
+
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.GenericConverter;
 import org.springframework.data.convert.ReadingConverter;
@@ -40,7 +41,7 @@ public class EnumConverters {
         @Override
         public Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
             try {
-                return sourceType.getType().getDeclaredMethod("getValue",null)
+                return sourceType.getType().getDeclaredMethod("getValue", null)
                         .invoke(source, null);
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException
                     exception) {

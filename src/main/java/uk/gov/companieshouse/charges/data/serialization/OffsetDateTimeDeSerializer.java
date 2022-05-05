@@ -8,11 +8,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 
-//import uk.gov.companieshouse.company.profile.exception.BadRequestException;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
-
-
 
 
 public class OffsetDateTimeDeSerializer extends JsonDeserializer<OffsetDateTime> {
@@ -34,8 +31,7 @@ public class OffsetDateTimeDeSerializer extends JsonDeserializer<OffsetDateTime>
             LOGGER.error("OffsetDateTime Deserialization failed.", exception);
             throw new RuntimeException(String.format("Failed while deserializing "
                             + "date value for json node."
-                            + "StackTrace: %s  Error Message: %s" ,
-                    exception.getStackTrace(),
+                            + "Error Message: %s" ,
                     exception.getMessage()));
         }
     }

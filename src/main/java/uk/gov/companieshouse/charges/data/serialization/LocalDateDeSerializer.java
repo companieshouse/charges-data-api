@@ -28,10 +28,8 @@ public class LocalDateDeSerializer extends JsonDeserializer<LocalDate> {
             }
         } catch (Exception ex) {
             throw new RuntimeException(String.format("Failed while deserializing "
-                            + "date value for json node %s "
-                            + "StackTrace: %s  Error Message: %s" ,
-                    jsonNode.toPrettyString(),
-                    ex.getStackTrace(),
+                            + "date value for json node."
+                            +  "Error Message: %s" ,
                     ex.getMessage()));
         }
     }
