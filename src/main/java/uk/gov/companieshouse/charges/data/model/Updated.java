@@ -3,8 +3,13 @@ package uk.gov.companieshouse.charges.data.model;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class Updated {
 
+    @DateTimeFormat(
+            iso = DateTimeFormat.ISO.DATE_TIME
+    )
     private LocalDateTime at;
 
     private String type;
