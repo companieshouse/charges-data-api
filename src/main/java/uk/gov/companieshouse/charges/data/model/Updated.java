@@ -8,7 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class Updated {
 
     @DateTimeFormat(
-            iso = DateTimeFormat.ISO.DATE
+            iso = DateTimeFormat.ISO.DATE_TIME
     )
     private LocalDateTime at;
 
