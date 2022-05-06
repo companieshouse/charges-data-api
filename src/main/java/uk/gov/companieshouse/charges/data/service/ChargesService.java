@@ -1,10 +1,12 @@
 package uk.gov.companieshouse.charges.data.service;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -21,8 +23,7 @@ import uk.gov.companieshouse.charges.data.api.ChargesApiService;
 import uk.gov.companieshouse.charges.data.api.CompanyMetricsApiService;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.repository.ChargesRepository;
-import uk.gov.companieshouse.charges.data.tranform.ChargesTransformer;
-import uk.gov.companieshouse.charges.data.util.DateFormatter;
+import uk.gov.companieshouse.charges.data.transform.ChargesTransformer;
 import uk.gov.companieshouse.logging.Logger;
 
 @Service
@@ -30,8 +31,6 @@ public class ChargesService {
 
     private final Logger logger;
     private final ChargesApiService chargesApiService;
-    private final DateTimeFormatter dateTimeFormatter =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
     private final ChargesTransformer chargesTransformer;
     private final ChargesRepository chargesRepository;
     private final CompanyMetricsApiService companyMetricsApiService;
@@ -44,8 +43,9 @@ public class ChargesService {
      * @param chargesRepository chargesRepository.
      */
     public ChargesService(final Logger logger, final ChargesRepository chargesRepository,
-            final ChargesTransformer chargesTransformer, ChargesApiService chargesApiService,
-            CompanyMetricsApiService companyMetricsApiService) {
+                          final ChargesTransformer chargesTransformer,
+                          ChargesApiService chargesApiService,
+                          CompanyMetricsApiService companyMetricsApiService) {
         this.logger = logger;
         this.chargesRepository = chargesRepository;
         this.chargesTransformer = chargesTransformer;
@@ -62,46 +62,35 @@ public class ChargesService {
      */
     @Transactional
     public void upsertCharges(String contextId, String companyNumber, String chargeId,
-            InternalChargeApi requestBody) {
+                              InternalChargeApi requestBody) {
         logger.debug(String.format("Started :upsertCharges for chargeId %s company number %s ",
-                chargeId,
-                companyNumber));
-        boolean latestRecord = isLatestRecord(companyNumber, chargeId, requestBody);
-        if (latestRecord) {
+                chargeId, companyNumber));
 
+        Optional<ChargesDocument> chargesDocumentOptional = chargesRepository.findById(chargeId);
+
+        chargesDocumentOptional.map(chargesDocument -> {
+            OffsetDateTime dateFromBodyRequest = requestBody.getInternalData().getDeltaAt();
+            LocalDateTime deltaAt = chargesDocument.getDeltaAt();
+            OffsetDateTime deltaAtFromDb = deltaAt != null
+                    ? OffsetDateTime.of(LocalDateTime.from(deltaAt), ZoneOffset.UTC) : null;
+
+            if (dateFromBodyRequest == null
+                    || deltaAtFromDb == null || dateFromBodyRequest.isAfter(deltaAtFromDb)) {
+                ChargesDocument charges =
+                        this.chargesTransformer.transform(companyNumber, chargeId, requestBody);
+
+                saveAndInvokeChsKafkaApi(contextId, companyNumber, chargeId, charges);
+            } else {
+                logger.error("Finished : upsertCharges, charge not saved "
+                                + "as record provided is older than the one already stored.");
+            }
+            return null;
+        }).orElseGet(() -> {
             ChargesDocument charges =
                     this.chargesTransformer.transform(companyNumber, chargeId, requestBody);
-            logger.debug("Started : Saving charges in DB ");
-            this.chargesRepository.save(charges);
-            logger.debug(
-                    String.format("Finished : upsertCharges for chargeId %s company number %s ",
-                            chargeId,
-                            companyNumber));
-            ApiResponse<Void> res = chargesApiService.invokeChsKafkaApi(contextId, companyNumber,
-                    chargeId);
-            // Code is not 2xx
-            if (res.getStatusCode() < 200 || res.getStatusCode() > 299) {
-                throw new ResponseStatusException(HttpStatus.resolve(res.getStatusCode()),
-                    "invokeChsKafkaApi");
-            }
-            logger.info(
-                    String.format("DSND-542: ChsKafka api invoked successfully for company number"
-                            + " %s", companyNumber));
-        } else {
-            logger.debug(
-                    "Finished : upsertCharges, charge not saved "
-                            + "as record provided is not a latest record.");
-        }
-    }
-
-    private boolean isLatestRecord(String companyNumber, String chargeId,
-            InternalChargeApi requestBody) {
-        OffsetDateTime localDate = requestBody.getInternalData().getDeltaAt();
-        String format = DateFormatter.format(localDate.toLocalDate());
-        Optional<ChargesDocument> chargesDelta =
-                this.chargesRepository.findCharge(companyNumber, chargeId,
-                        format);
-        return chargesDelta.isEmpty();
+            saveAndInvokeChsKafkaApi(contextId, companyNumber, chargeId, charges);
+            return null;
+        });
     }
 
     /**
@@ -167,24 +156,43 @@ public class ChargesService {
                             companyNumber));
             return Optional.empty();
         }
-        var result = companyMetrics.map(metrics -> {
-            var chargesApi = new ChargesApi();
-            charges.stream().forEach(charge -> chargesApi.addItemsItem(charge.getData()));
-            MortgageApi mortgage = metrics.getMortgage();
-            int totalCount = chargesApi.getItems().size();
-            int satisfiedCount = mortgage.getSatisfiedCount();
-            int partSatisfiedCount = mortgage.getPartSatisfiedCount();
-            int unfilteredCount = mortgage.getTotalCount();
-            chargesApi.setTotalCount(totalCount);
-            chargesApi.setSatisfiedCount(satisfiedCount);
-            chargesApi.setEtag(metrics.getEtag());
-            chargesApi.setPartSatisfiedCount(partSatisfiedCount);
-            chargesApi.setUnfilteredCount(unfilteredCount);
-            return chargesApi;
-        });
+        var result = companyMetrics.map(metrics -> createChargesApi(charges, metrics));
         logger.debug(String.format("Finished : findCharges charges found for Company Number %s ",
                 companyNumber
         ));
         return result;
+    }
+
+    private ChargesApi createChargesApi(List<ChargesDocument> charges, MetricsApi metrics) {
+        var chargesApi = new ChargesApi();
+        charges.forEach(charge -> chargesApi.addItemsItem(charge.getData()));
+        MortgageApi mortgage = metrics.getMortgage();
+        int totalCount = chargesApi.getItems().size();
+        int satisfiedCount = mortgage.getSatisfiedCount();
+        int partSatisfiedCount = mortgage.getPartSatisfiedCount();
+        int unfilteredCount = mortgage.getTotalCount();
+        chargesApi.setTotalCount(totalCount);
+        chargesApi.setSatisfiedCount(satisfiedCount);
+        chargesApi.setEtag(metrics.getEtag());
+        chargesApi.setPartSatisfiedCount(partSatisfiedCount);
+        chargesApi.setUnfilteredCount(unfilteredCount);
+        return chargesApi;
+    }
+
+    private void saveAndInvokeChsKafkaApi(String contextId, String companyNumber,
+                                          String chargeId, ChargesDocument charges) {
+        this.chargesRepository.save(charges);
+        logger.debug(
+                String.format("Finished : upsertCharges for chargeId %s company number %s ",
+                        chargeId,
+                        companyNumber));
+        ApiResponse<Void> res = chargesApiService.invokeChsKafkaApi(contextId,
+                companyNumber,
+                chargeId);
+        HttpStatus httpStatus = HttpStatus.resolve(res.getStatusCode());
+        if (httpStatus == null || !httpStatus.is2xxSuccessful()) {
+            throw new ResponseStatusException(httpStatus != null
+                    ? httpStatus : HttpStatus.INTERNAL_SERVER_ERROR, "invokeChsKafkaApi");
+        }
     }
 }

@@ -98,7 +98,12 @@ public class ChargesApiSteps {
 
         HttpEntity request = new HttpEntity(companyCharge, headers);
         String uri = "/company/{company_number}/charge/{charge_id}/internal";
-        ResponseEntity<Void> response = restTemplate.exchange(uri, HttpMethod.PUT, request, Void.class, inCompanyNumber, inChargeId);
+        this.companyNumber = inCompanyNumber;
+        this.chargeId = inChargeId;
+        ResponseEntity<Void> response = restTemplate.exchange(uri, HttpMethod.PUT, request, Void.class, companyNumber, chargeId);
+
+        this.companyNumber = companyNumber;
+        this.chargeId = chargeId;
         CucumberContext.CONTEXT.set("statusCode", response.getStatusCodeValue());
     }
 

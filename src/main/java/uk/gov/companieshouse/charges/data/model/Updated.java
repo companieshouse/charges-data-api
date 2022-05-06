@@ -1,22 +1,21 @@
 package uk.gov.companieshouse.charges.data.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Updated {
 
-    private LocalDate at;
+    private LocalDateTime at;
 
     private String type;
 
     private String by;
 
-
-    public LocalDate getAt() {
+    public LocalDateTime getAt() {
         return at;
     }
 
-    public Updated setAt(LocalDate at) {
+    public Updated setAt(LocalDateTime at) {
         this.at = at;
         return this;
     }

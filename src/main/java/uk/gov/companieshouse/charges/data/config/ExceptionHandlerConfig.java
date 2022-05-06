@@ -47,7 +47,7 @@ public class ExceptionHandlerConfig {
         populateResponseBody(responseBody, correlationId);
         request.setAttribute("javax.servlet.error.exception", ex, 0);
         logger.error(String.format("Finished: handleException: %s handleException", correlationId));
-        return new ResponseEntity(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -65,9 +65,8 @@ public class ExceptionHandlerConfig {
                 correlationId), ex);
         Map<String, Object> responseBody = new LinkedHashMap<>();
         populateResponseBody(responseBody, correlationId);
-        Throwable cause = ex.getCause();
 
-        return new ResponseEntity(responseBody, HttpStatus.SERVICE_UNAVAILABLE);
+        return new ResponseEntity<>(responseBody, HttpStatus.SERVICE_UNAVAILABLE);
     }
 
     /**
@@ -86,7 +85,7 @@ public class ExceptionHandlerConfig {
         populateResponseBody(responseBody, correlationId);
 
         if ("invokeChsKafkaApi".equals(ex.getReason())) {
-            return new ResponseEntity(responseBody, HttpStatus.NOT_EXTENDED);
+            return new ResponseEntity<>(responseBody, HttpStatus.NOT_EXTENDED);
         }
 
         if (HttpStatus.SERVICE_UNAVAILABLE.equals(ex.getStatus())) {
@@ -111,7 +110,7 @@ public class ExceptionHandlerConfig {
                 correlationId), ex);
         Map<String, Object> responseBody = new LinkedHashMap<>();
         populateResponseBody(responseBody, correlationId);
-        return new ResponseEntity(responseBody, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
     }
 
     private String generateShortCorrelationId() {

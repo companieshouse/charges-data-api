@@ -1,10 +1,13 @@
 package uk.gov.companieshouse.charges.data.model;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.format.annotation.DateTimeFormat;
 import uk.gov.companieshouse.api.charges.ChargeApi;
 
 @Document(collection = "#{@environment.getProperty('mongodb.charges.collection.name')}")
@@ -19,6 +22,12 @@ public class ChargesDocument {
 
     private ChargeApi data;
 
+    @Field("delta_at")
+    @DateTimeFormat(
+            iso = DateTimeFormat.ISO.DATE
+    )
+    private LocalDateTime deltaAt;
+
     private Updated updated;
 
     /**
@@ -30,13 +39,14 @@ public class ChargesDocument {
 
     /**
      * Argument constructor.
-     * @param id id.
+     *
+     * @param id            id.
      * @param companyNumber company number.
-     * @param data data.
-     * @param updated updated.
+     * @param data          data.
+     * @param updated       updated.
      */
     public ChargesDocument(String id, String companyNumber,
-            ChargeApi data, Updated updated) {
+                           ChargeApi data, Updated updated) {
         this.id = id;
         this.companyNumber = companyNumber;
         this.data = data;
@@ -70,6 +80,15 @@ public class ChargesDocument {
         return this;
     }
 
+    public LocalDateTime getDeltaAt() {
+        return deltaAt;
+    }
+
+    public ChargesDocument setDeltaAt(LocalDateTime deltaAt) {
+        this.deltaAt = deltaAt;
+        return this;
+    }
+
     public Updated getUpdated() {
         return updated;
     }
@@ -85,7 +104,9 @@ public class ChargesDocument {
         sb.append("id=").append(id);
         sb.append(", company_number=").append(companyNumber);
         sb.append(", data=").append(data.toString());
+        sb.append(", delta_at=").append(deltaAt.toString());
         sb.append(", updated=").append(updated.toString());
+
         sb.append('}');
         return sb.toString();
     }
@@ -100,12 +121,11 @@ public class ChargesDocument {
         }
         ChargesDocument that = (ChargesDocument) obj;
         return id.equals(that.id) && companyNumber.equals(that.companyNumber) && data.equals(
-                that.data)
-                && updated.equals(that.updated);
+                that.data) && deltaAt.equals(that.deltaAt) && updated.equals(that.updated);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, companyNumber, data, updated);
+        return Objects.hash(id, companyNumber, data, deltaAt, updated);
     }
 }

@@ -14,10 +14,6 @@ public interface ChargesRepository extends MongoRepository<ChargesDocument, Stri
     @Query("{'company_number': ?0, '_id': ?1 }")
     Optional<ChargesDocument> findChargeDetails(final String companyNumber, final String chargeId);
 
-    @Query("{'company_number': ?0, '_id': ?1, 'updated.at':{$gte : { \"$date\" : ?2 } }}")
-    Optional<ChargesDocument> findCharge(final String companyNumber, final String chargeId,
-            final String at);
-
     @Query("{'company_number': ?0 }")
     Page<ChargesDocument> findCharges(final String companyNumber, final Pageable pageable);
 

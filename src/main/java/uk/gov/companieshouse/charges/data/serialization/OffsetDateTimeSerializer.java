@@ -5,20 +5,22 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
 import java.io.IOException;
-import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 
-import uk.gov.companieshouse.charges.data.util.DateTimeFormatter;
-
-public class LocalDateSerializer extends JsonSerializer<LocalDate> {
+public class OffsetDateTimeSerializer extends JsonSerializer<OffsetDateTime> {
 
     @Override
-    public void serialize(LocalDate localDate, JsonGenerator jsonGenerator,
+    public void serialize(OffsetDateTime offsetDateTime, JsonGenerator jsonGenerator,
                           SerializerProvider serializerProvider) throws IOException {
-        if (localDate == null) {
+        if (offsetDateTime == null) {
             jsonGenerator.writeNull();
         } else {
-            String format = DateTimeFormatter.format(localDate);
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter
+                    .ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            String format = offsetDateTime.format(dateTimeFormatter);
             jsonGenerator.writeRawValue("ISODate(\"" + format + "\")");
+
         }
     }
 }

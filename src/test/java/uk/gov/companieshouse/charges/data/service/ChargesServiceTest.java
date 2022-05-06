@@ -35,7 +35,7 @@ import uk.gov.companieshouse.charges.data.api.ChargesApiService;
 import uk.gov.companieshouse.charges.data.api.CompanyMetricsApiService;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.repository.ChargesRepository;
-import uk.gov.companieshouse.charges.data.tranform.ChargesTransformer;
+import uk.gov.companieshouse.charges.data.transform.ChargesTransformer;
 import uk.gov.companieshouse.logging.Logger;
 
 @SpringBootTest
@@ -63,7 +63,7 @@ public class ChargesServiceTest {
      * Set up mocks and create the chargesService instance.
      * When using injects mocks and the @mock annotation the mock
      * in the service was not the same as the mock in the test so the when
-     * was always returing null because it was a different mock instance.
+     * was always returning null because it was a different mock instance.
      * Suspect this was due to sprint injection, not proven but
      * mock are now the same in test and serice to tests work and pass.
      */
