@@ -20,7 +20,9 @@ public class LocalDateDeSerializer extends JsonDeserializer<LocalDate> {
         JsonNode jsonNode = jsonParser.readValueAsTree();
         try {
             var dateJsonNode = jsonNode.get("$date");
-            if (dateJsonNode.isTextual()) {
+            if (dateJsonNode == null) {
+                return DateTimeFormatter.parse(jsonNode.textValue());
+            } else if (dateJsonNode.isTextual()) {
                 var dateStr = dateJsonNode.textValue();
                 return DateTimeFormatter.parse(dateStr);
             } else {
