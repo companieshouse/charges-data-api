@@ -168,9 +168,12 @@ public class ChargesService {
         charges.forEach(charge -> chargesApi.addItemsItem(charge.getData()));
         MortgageApi mortgage = metrics.getMortgage();
         int totalCount = chargesApi.getItems().size();
-        int satisfiedCount = mortgage.getSatisfiedCount();
-        int partSatisfiedCount = mortgage.getPartSatisfiedCount();
-        int unfilteredCount = mortgage.getTotalCount();
+        int satisfiedCount = mortgage.getSatisfiedCount() != null
+                ? mortgage.getSatisfiedCount() : 0;
+        int partSatisfiedCount = mortgage.getPartSatisfiedCount() != null
+                ? mortgage.getPartSatisfiedCount() : 0;
+        int unfilteredCount = mortgage.getTotalCount() != null
+                ? mortgage.getTotalCount() : 0;
         chargesApi.setTotalCount(totalCount);
         chargesApi.setSatisfiedCount(satisfiedCount);
         chargesApi.setEtag(metrics.getEtag());

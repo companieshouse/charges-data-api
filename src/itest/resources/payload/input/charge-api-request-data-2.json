@@ -1,0 +1,82 @@
+{
+  "external_data": {
+    "persons_entitled": [
+      {
+        "name": "THE GOVERNOR AND COMPANY OF THE BANK OF IRELAND"
+      }
+    ],
+    "charge_number": 1,
+    "particulars": {
+      "floating_charge_covers_all": true,
+      "type": "brief-description",
+      "contains_floating_charge": true,
+      "description": "LAND KNOWN AS UNIT 3 MARSHES TRADE CENTRE,GREENBANK INDUSTRIAL ESTATE, NEWRY BEING ALL OF THE LANDS COMPRISED IN FOLIO DN198519L COUNTY DOWN.",
+      "contains_fixed_charge": true,
+      "contains_negative_pledge": true
+    },
+    "secured_details": {
+      "type": "obligations-secured",
+      "description": "A REGISTERED CHARGE"
+    },
+    "scottish_alterations": {
+      "type": null,
+      "description": null,
+      "has_alterations_to_order": true,
+      "has_alterations_to_prohibitions": false,
+      "has_restricting_provisions": true
+    },
+    "charge_code": "NI6224000001",
+    "insolvency_cases": [
+      {
+        "case_number": 2,
+        "transaction_id": 22222,
+        "links": null
+      }
+    ],
+    "links": {
+      "self": "/company/00006400/charges/6Bbb9VQpwyDbMSPSPkjRYrqYeGM"
+    },
+    "created_on": "2014-08-04",
+    "transactions": [
+      {
+        "filing_type": "403a",
+        "transaction_id": null,
+        "delivered_on": "2016-12-16",
+        "insolvency_case_number": 1,
+        "links": {
+          "filing": "/company/00006400/filing-history/6Bbb9VQpwyDbMSPSPkjRYrqYeGM",
+          "insolvency_case": null
+        }
+      },
+      {
+        "filing_type": "MR01",
+        "transaction_id": null,
+        "delivered_on": null,
+        "insolvency_case_number": null,
+        "links": {
+          "filing": "/company/00006400/filing-history/6Bbb9VQpwyDbMSPSPkjRYrqYeGM",
+          "insolvency_case": null
+        }
+      }
+    ],
+    "status": "outstanding",
+    "classification": {
+      "description": "A REGISTERED CHARGE",
+      "type": "charge-description"
+    },
+    "etag": "cee2625e329e4961e84e6df35f171f3e644a0f90",
+    "delivered_on": "2017-12-16",
+    "assets_ceased_released": "property-ceased-to-belong",
+    "acquired_on": "1982-06-10",
+    "delivered_on": "2014-12-16",
+    "resolved_on": null,
+    "covering_instrument_date": "1993-08-09",
+    "more_than_four_persons_entitled": false,
+    "satisfied_on": "1999-12-01",
+    "id": "6Bbb9VQpwyDbMSPSPkjRYrqYeGM"
+  },
+  "internal_data": {
+    "updated_by": "test-partition_1-offset_1",
+    "delta_at": null
+  }
+}

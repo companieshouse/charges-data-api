@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -77,8 +76,6 @@ public class ChargesApplicationConfig implements WebMvcConfigurer {
         module.addDeserializer(LocalDateTime.class, new LocalDateTimeDeSerializer());
 
         objectMapper.registerModule(module);
-        objectMapper.registerModule(new JavaTimeModule());
-
         return objectMapper;
     }
 }

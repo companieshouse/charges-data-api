@@ -104,7 +104,7 @@ public class ChargesDocument {
         sb.append("id=").append(id);
         sb.append(", company_number=").append(companyNumber);
         sb.append(", data=").append(data.toString());
-        sb.append(", delta_at=").append(deltaAt.toString());
+        sb.append(", delta_at=").append(deltaAt != null ? deltaAt.toString() : "");
         sb.append(", updated=").append(updated.toString());
 
         sb.append('}');
