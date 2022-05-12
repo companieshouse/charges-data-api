@@ -13,4 +13,8 @@ public class HealthCheckController {
         return ResponseEntity.status(HttpStatus.OK).body("I am healthy");
     }
 
+    @GetMapping("/hi")
+    public ResponseEntity<String> hi() {
+        return ResponseEntity.status(HttpStatus.OK).body("I am hi");
+    }
 }
