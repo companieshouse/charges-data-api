@@ -1,8 +1,7 @@
 package uk.gov.companieshouse.charges.data.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
@@ -12,14 +11,26 @@ import static org.mockito.Mockito.when;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
+
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.apache.commons.io.FileUtils;
 import org.bson.Document;
+import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,12 +39,16 @@ import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.server.ResponseStatusException;
+import uk.gov.companieshouse.api.charges.ChargeApi;
 import uk.gov.companieshouse.api.charges.ChargesApi;
+import uk.gov.companieshouse.api.charges.InternalChargeApi;
 import uk.gov.companieshouse.api.metrics.MetricsApi;
 import uk.gov.companieshouse.charges.data.api.ChargesApiService;
 import uk.gov.companieshouse.charges.data.api.CompanyMetricsApiService;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
+import uk.gov.companieshouse.charges.data.model.Updated;
 import uk.gov.companieshouse.charges.data.repository.ChargesRepository;
 import uk.gov.companieshouse.charges.data.transform.ChargesTransformer;
 import uk.gov.companieshouse.logging.Logger;
@@ -142,4 +157,33 @@ public class ChargesServiceTest {
                 resource.getInputStream())));
         return Document.parse(data);
     }
+
+    @Test
+    void when_charge_id_does_not_exist_then_throws_IllegalArgumentExceptionException_error() {
+        String chargeId = "CIrBNCKGlthNq2r9HzblXGKpTrk";
+        Mockito.when(chargesRepository.existsById(chargeId)).thenReturn(false);
+
+        Assert.assertThrows(IllegalArgumentException.class, () ->
+                chargesService.deleteCharge("x-request-id", chargeId));
+
+        verify(chargesRepository, Mockito.times(0)).deleteById(Mockito.any());
+        verify(chargesRepository, Mockito.times(1)).existsById(Mockito.eq(chargeId));
+    }
+
+    @Test
+    void delete_charge_id_and_check_it_does_not_exist_in_database() throws Exception {
+        String chargeId = "123456789";
+            var chargesDocument = Optional.of(new ChargesDocument()
+                .setId(chargeId).setCompanyNumber("1234").setData(new ChargeApi())
+                .setDeltaAt(LocalDateTime.now()));
+        Mockito.when(chargesRepository.existsById(chargeId)).thenReturn(true);
+
+        chargesService.deleteCharge("x-request-id", chargeId);
+
+        verify(chargesRepository, Mockito.times(1)).deleteById(Mockito.any());
+        verify(chargesRepository, Mockito.times(1)).existsById(Mockito.eq(chargeId));
+
+    }
+
+
 }

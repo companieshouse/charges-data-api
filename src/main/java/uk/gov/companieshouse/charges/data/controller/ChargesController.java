@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -120,6 +121,25 @@ public class ChargesController {
                         companyNumber
                 ));
         return chargesApiResponseEntity;
+    }
+
+    /**
+     * Delete a company charge id from company charges.
+     *
+     * @param  companyNumber  the company number for charges
+     * @param  chargeId the charge information for a company
+     */
+    @DeleteMapping("/company/{company_number}/charges/{charge_id}")
+    public ResponseEntity<Void> deleteCharge(
+            @RequestHeader("x-request-id") String contextId,
+            @PathVariable("company_number") String companyNumber,
+            @PathVariable("charge_id") String chargeId) throws Exception {
+        logger.info(String.format(
+                "Deleting company charge information with id %s from company mortgages."
+                        + " x-request-id %s and companyNumber %s",
+                chargeId, contextId, companyNumber));
+        chargesService.deleteCharge(contextId, chargeId);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 }
