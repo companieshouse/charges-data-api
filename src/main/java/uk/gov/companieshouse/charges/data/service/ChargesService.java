@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -21,10 +22,12 @@ import uk.gov.companieshouse.api.metrics.MortgageApi;
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.charges.data.api.ChargesApiService;
 import uk.gov.companieshouse.charges.data.api.CompanyMetricsApiService;
+import uk.gov.companieshouse.charges.data.exceptions.ServiceUnavailableException;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.repository.ChargesRepository;
 import uk.gov.companieshouse.charges.data.transform.ChargesTransformer;
 import uk.gov.companieshouse.logging.Logger;
+
 
 @Service
 public class ChargesService {
@@ -196,6 +199,28 @@ public class ChargesService {
         if (httpStatus == null || !httpStatus.is2xxSuccessful()) {
             throw new ResponseStatusException(httpStatus != null
                     ? httpStatus : HttpStatus.INTERNAL_SERVER_ERROR, "invokeChsKafkaApi");
+        }
+    }
+
+    /**
+     * Delete charge from company mortgages.
+     * @param chargeId the charge identifier.
+     */
+    public void deleteCharge(String contextId, String chargeId) throws Exception {
+        try {
+            if (!chargesRepository.existsById(chargeId)) {
+                throw new IllegalArgumentException(String.format(
+                        "Company charge doesn't exist in company mortgages"
+                                + " with %s header x-request-id %s",
+                        chargeId, contextId));
+            }
+            chargesRepository.deleteById(chargeId);
+            logger.info(String.format(
+                    "Company charge delete called for charge id %s",
+                    chargeId));
+
+        } catch (DataAccessException dbException) {
+            throw new ServiceUnavailableException(dbException.getMessage());
         }
     }
 }
