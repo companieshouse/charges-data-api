@@ -138,7 +138,7 @@ public class ChargesController {
                 "Deleting company charge information with id %s from company mortgages."
                         + " x-request-id %s and companyNumber %s",
                 chargeId, contextId, companyNumber));
-        chargesService.deleteCharge(contextId, chargeId);
+        chargesService.deleteCharge(companyNumber,contextId, chargeId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
