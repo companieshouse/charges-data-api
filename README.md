@@ -4,6 +4,7 @@ charges-data-api
 charges-data-api is responsible for 
 1. Persisting company charges collection to database
 2. Making a call to CHS kafka api to notify the charges change.
+3. Delete the charge from company mortgages
 
 ## Development
 

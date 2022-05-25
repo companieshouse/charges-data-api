@@ -2,11 +2,7 @@ package uk.gov.companieshouse.charges.data.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -30,12 +26,15 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
+import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.FileCopyUtils;
@@ -44,9 +43,11 @@ import org.springframework.web.server.ResponseStatusException;
 import uk.gov.companieshouse.api.charges.ChargeApi;
 import uk.gov.companieshouse.api.charges.ChargesApi;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
+import uk.gov.companieshouse.api.insolvency.CompanyInsolvency;
 import uk.gov.companieshouse.api.metrics.MetricsApi;
 import uk.gov.companieshouse.charges.data.api.ChargesApiService;
 import uk.gov.companieshouse.charges.data.api.CompanyMetricsApiService;
+import uk.gov.companieshouse.charges.data.exceptions.ServiceUnavailableException;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.model.Updated;
 import uk.gov.companieshouse.charges.data.repository.ChargesRepository;
@@ -68,11 +69,16 @@ public class ChargesServiceTest {
 
     private static ChargesService chargesService;
 
+
     @Value("classpath:company-metrics-data.json")
     Resource metricsFile;
 
     @Value("classpath:charges-test-DB-record.json")
     Resource chargesFile;
+
+    private static ChargesApiService chargesApiService;
+
+    private static Logger logger;
 
     /**
      * Set up mocks and create the chargesService instance.
@@ -84,11 +90,11 @@ public class ChargesServiceTest {
      */
     @BeforeAll
     public static void setup() {
-        ChargesApiService chargesApiService = mock(ChargesApiService.class);
+        chargesApiService = mock(ChargesApiService.class);
         companyMetricsApiService = mock(CompanyMetricsApiService.class);
         ChargesTransformer chargesTransformer = mock(ChargesTransformer.class);
         chargesRepository = mock(ChargesRepository.class);
-        Logger logger = mock(Logger.class);
+        logger = mock(Logger.class);
         chargesService = new ChargesService(logger, chargesRepository,
             chargesTransformer, chargesApiService, companyMetricsApiService);
     }
@@ -161,29 +167,98 @@ public class ChargesServiceTest {
     @Test
     void when_charge_id_does_not_exist_then_throws_IllegalArgumentExceptionException_error() {
         String chargeId = "CIrBNCKGlthNq2r9HzblXGKpTrk";
-        Mockito.when(chargesRepository.existsById(chargeId)).thenReturn(false);
+        Mockito.when(chargesRepository.findById(chargeId)).thenReturn(Optional.empty());
 
         Assert.assertThrows(IllegalArgumentException.class, () ->
-                chargesService.deleteCharge("x-request-id", chargeId));
+                chargesService.deleteCharge("0","x-request-id", chargeId));
 
         verify(chargesRepository, Mockito.times(0)).deleteById(Mockito.any());
-        verify(chargesRepository, Mockito.times(1)).existsById(Mockito.eq(chargeId));
+        verify(chargesRepository, Mockito.times(1)).findById(Mockito.eq(chargeId));
+    }
+
+    @Test
+    void when_charge_id_does_exist_but_not_data_then_throws_IllegalArgumentExceptionException_error() {
+        String chargeId = "CIrBNCKGlthNq2r9HzblXGKpT12";
+        Mockito.when(chargesRepository.findById(chargeId)).thenReturn(populateChargesDocument(chargeId,null));
+
+        Assert.assertThrows(IllegalArgumentException.class, () ->
+                chargesService.deleteCharge("0","x-request-id", chargeId));
+
+        verify(chargesRepository, Mockito.times(0)).deleteById(Mockito.any());
+        verify(chargesRepository, Mockito.times(1)).findById(Mockito.eq(chargeId));
     }
 
     @Test
     void delete_charge_id_and_check_it_does_not_exist_in_database() throws Exception {
         String chargeId = "123456789";
-            var chargesDocument = Optional.of(new ChargesDocument()
-                .setId(chargeId).setCompanyNumber("1234").setData(new ChargeApi())
-                .setDeltaAt(LocalDateTime.now()));
-        Mockito.when(chargesRepository.existsById(chargeId)).thenReturn(true);
+        Mockito.when(chargesRepository.findById(chargeId)).thenReturn(
+                populateChargesDocument(chargeId,populateCharge()));
 
-        chargesService.deleteCharge("x-request-id", chargeId);
+        chargesService.deleteCharge("0","x-request-id", chargeId);
 
         verify(chargesRepository, Mockito.times(1)).deleteById(Mockito.any());
-        verify(chargesRepository, Mockito.times(1)).existsById(Mockito.eq(chargeId));
+        verify(chargesRepository, Mockito.times(1)).findById(Mockito.eq(chargeId));
 
     }
 
+    @Test
+    void when_charge_id_exist_then_invoke_chs_kafka_api_successfully_and_delete_charge() {
+        String chargeId = "123456789"; String contextId="1111111";
+        String companyNumber="0";
+
+        Mockito.when(chargesRepository.findById(chargeId)).thenReturn(
+                populateChargesDocument(chargeId,populateCharge()));
+
+        chargesService.deleteCharge(companyNumber,contextId, chargeId);
+
+        verify(logger, Mockito.times(1)).info(
+                "ChsKafka api invoked successfully for charge id " + chargeId +  " and x-request-id " + contextId
+        );
+        verify(chargesRepository, Mockito.times(1)).deleteById(Mockito.any());
+        verify(chargesRepository, Mockito.times(1)).findById(Mockito.eq(chargeId));
+        verify(chargesApiService, times(1)).
+                invokeChsKafkaApiWithDeleteEvent(eq(contextId), eq(chargeId), eq(companyNumber),eq(populateCharge()));
+
+    }
+
+    @Test
+    void when_connection_issue_in_db_on_delete_then_throw_service_unavailable_exception() {
+        String chargeId = "123456789";
+
+        Mockito.when(chargesRepository.findById(chargeId)).thenReturn(
+                populateChargesDocument(chargeId, populateCharge()));
+        doThrow(new DataAccessResourceFailureException("Connection broken"))
+                .when(chargesRepository).deleteById(chargeId);
+
+        Assert.assertThrows(ServiceUnavailableException.class, () ->
+                chargesService.deleteCharge("0", "x-request-id", chargeId));
+    }
+
+    @Test
+    void when_connection_issue_in_db_on_find_in_delete_then_throw_service_unavailable_exception() {
+        String chargeId = "123456789";
+
+        doThrow(new DataAccessResourceFailureException("Connection broken"))
+                .when(chargesRepository)
+                .findById(chargeId);
+
+        Assert.assertThrows(ServiceUnavailableException.class, () ->
+                chargesService.deleteCharge("0", "x-request-id", chargeId));
+    }
+
+    private Optional<ChargesDocument> populateChargesDocument(String chargeId, ChargeApi chargeApi) {
+
+        return Optional.of(new ChargesDocument()
+                .setId(chargeId).setCompanyNumber("1234").setData(chargeApi)
+                .setDeltaAt(LocalDateTime.now()));
+
+    }
+    private ChargeApi populateCharge() {
+
+        ChargeApi chargeApi =  new ChargeApi();
+        chargeApi.setId("12345"); chargeApi.setChargeCode("0");
+        chargeApi.setChargeNumber(123);chargeApi.setEtag("1111111");
+        return chargeApi;
+    }
 
 }

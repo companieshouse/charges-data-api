@@ -14,9 +14,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import uk.gov.companieshouse.api.InternalApiClient;
 import uk.gov.companieshouse.api.charges.ChargeApi;
 import uk.gov.companieshouse.api.charges.ChargesApi;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
+import uk.gov.companieshouse.api.error.ApiErrorResponseException;
+import uk.gov.companieshouse.api.handler.chskafka.request.PrivateChangedResourcePost;
 import uk.gov.companieshouse.api.metrics.MetricsApi;
 import uk.gov.companieshouse.api.metrics.MortgageApi;
 import uk.gov.companieshouse.api.model.ApiResponse;
@@ -27,6 +30,7 @@ import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.repository.ChargesRepository;
 import uk.gov.companieshouse.charges.data.transform.ChargesTransformer;
 import uk.gov.companieshouse.logging.Logger;
+
 
 
 @Service
@@ -204,23 +208,45 @@ public class ChargesService {
 
     /**
      * Delete charge from company mortgages.
+     * @param contextId the x-request-id.
      * @param chargeId the charge identifier.
+     * @param companyNumber the company number.
      */
-    public void deleteCharge(String contextId, String chargeId) throws Exception {
+    public void deleteCharge(String companyNumber,
+                             String contextId,
+                             String chargeId) {
         try {
-            if (!chargesRepository.existsById(chargeId)) {
+            Optional<ChargesDocument> chargesDocumentOptional =
+                    chargesRepository.findById(chargeId);
+
+            if (chargesDocumentOptional.isEmpty()) {
                 throw new IllegalArgumentException(String.format(
                         "Company charge doesn't exist in company mortgages"
                                 + " with %s header x-request-id %s",
                         chargeId, contextId));
             }
+
+            ChargeApi chargeApi =
+                    chargesDocumentOptional.map(ChargesDocument::getData)
+                            .orElseThrow(() -> new IllegalArgumentException("ChargeApi object "
+                                    + "doesn't exist for" + chargeId));
+
+            chargesApiService.invokeChsKafkaApiWithDeleteEvent(contextId,
+                    chargeId,
+                    companyNumber,
+                    chargeApi);
+
+            logger.info(String.format("ChsKafka api invoked successfully for "
+                    + "charge id %s and x-request-id %s" , chargeId, contextId));
+
             chargesRepository.deleteById(chargeId);
             logger.info(String.format(
-                    "Company charge delete called for charge id %s",
-                    chargeId));
+                    "Company charge delete called for "
+                            + "charge id %s and x-request-id %s", chargeId, contextId));
 
         } catch (DataAccessException dbException) {
             throw new ServiceUnavailableException(dbException.getMessage());
         }
     }
+
 }

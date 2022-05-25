@@ -51,7 +51,7 @@ public class ChargesControllerTest {
     private final String CHARGES_PUT_URL = "/company/" + companyNumber + "/charge/" + chargeId + "/internal";
     private final String CHARGE_DETAILS_GET_URL = "/company/" + companyNumber + "/charges/" + chargeId;
     private final String CHARGES_GET_URL = "/company/" + companyNumber + "/charges/" + itemsPerPage + "/" + startIndex;
-    private final String URL = String.format("/company/%s/charges/%s", companyNumber, chargeId);
+    private final String CHARGES_DELETE_URL = String.format("/company/%s/charges/%s", companyNumber, chargeId);
 
 
     private MockMvc mockMvc;
@@ -153,9 +153,9 @@ public class ChargesControllerTest {
     @Test
     @DisplayName("Company Charges DELETE request")
     void callChargeDeleteRequest() throws Exception {
-        doNothing().when(chargesService).deleteCharge(anyString(), anyString());
+        doNothing().when(chargesService).deleteCharge(anyString(), anyString(), anyString());
 
-        mockMvc.perform(delete(URL)
+        mockMvc.perform(delete(CHARGES_DELETE_URL)
                         .contentType(APPLICATION_JSON)
                         .header("x-request-id", "123456789"))
                 .andExpect(status().isOk());
