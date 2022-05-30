@@ -258,7 +258,7 @@
 						</goals>
 						<configuration>
 							<!-- Sets the path to the file which contains the execution model. -->
-							<destFile>${sonar.jacoco.reports}/jacoco.exec</destFile>
+							<destFile>${sonar.jacoco.reports}/jacoco-unit.exec</destFile>
 							<propertyName>surefireArgLine</propertyName>
 						</configuration>
 					</execution>
@@ -269,8 +269,8 @@
 							<goal>report</goal>
 						</goals>
 						<configuration>
-							<dataFile>${sonar.jacoco.reports}/jacoco.exec</dataFile>
-							<outputDirectory>${sonar.jacoco.reports}/jacoco</outputDirectory>
+							<dataFile>${sonar.jacoco.reports}/jacoco-unit.exec</dataFile>
+							<outputDirectory>${sonar.jacoco.reports}/jacoco-unit</outputDirectory>
 						</configuration>
 					</execution>
 					<execution>
@@ -296,6 +296,35 @@
 							<dataFile>${sonar.jacoco.reports}/jacoco-it.exec</dataFile>
 							<!-- Sets the output directory for the code coverage report. -->
 							<outputDirectory>${sonar.jacoco.reports}/jacoco-it</outputDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>merge-unit-and-integration</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>merge</goal>
+						</goals>
+						<configuration>
+							<fileSets>
+								<fileSet>
+									<directory>${sonar.jacoco.reports}/</directory>
+									<includes>
+										<include>*.exec</include>
+									</includes>
+								</fileSet>
+							</fileSets>
+							<destFile>${sonar.jacoco.reports}/jacoco.exec</destFile>
+						</configuration>
+					</execution>
+					<execution>
+						<id>create-merged-report</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<configuration>
+							<dataFile>${sonar.jacoco.reports}/jacoco.exec</dataFile>
+							<outputDirectory>${sonar.jacoco.reports}/jacoco</outputDirectory>
 						</configuration>
 					</execution>
 				</executions>
@@ -348,6 +377,12 @@
 					</execution>
 				</executions>
 				<configuration>
+					<properties>
+						<property>
+							<name>listener</name>
+							<value>org.sonar.java.jacoco.JUnitListener</value>
+						</property>
+					</properties>
 					<argLine>-Dfile.encoding=UTF-8</argLine>
 					<argLine>${failsafeArgLine}</argLine>
 					<classesDirectory>${project.build.outputDirectory}</classesDirectory>
