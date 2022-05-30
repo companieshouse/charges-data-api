@@ -1,33 +1,27 @@
 package uk.gov.companieshouse.charges.data.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
-
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.apache.commons.io.FileUtils;
 import org.bson.Document;
 import org.junit.Assert;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,19 +31,15 @@ import org.springframework.core.io.Resource;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.server.ResponseStatusException;
 import uk.gov.companieshouse.api.charges.ChargeApi;
 import uk.gov.companieshouse.api.charges.ChargesApi;
-import uk.gov.companieshouse.api.charges.InternalChargeApi;
-import uk.gov.companieshouse.api.insolvency.CompanyInsolvency;
 import uk.gov.companieshouse.api.metrics.MetricsApi;
 import uk.gov.companieshouse.charges.data.api.ChargesApiService;
 import uk.gov.companieshouse.charges.data.api.CompanyMetricsApiService;
-import uk.gov.companieshouse.charges.data.exceptions.ServiceUnavailableException;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
-import uk.gov.companieshouse.charges.data.model.Updated;
 import uk.gov.companieshouse.charges.data.repository.ChargesRepository;
 import uk.gov.companieshouse.charges.data.transform.ChargesTransformer;
 import uk.gov.companieshouse.logging.Logger;
@@ -169,8 +159,12 @@ public class ChargesServiceTest {
         String chargeId = "CIrBNCKGlthNq2r9HzblXGKpTrk";
         Mockito.when(chargesRepository.findById(chargeId)).thenReturn(Optional.empty());
 
-        Assert.assertThrows(IllegalArgumentException.class, () ->
-                chargesService.deleteCharge("0","x-request-id", chargeId));
+        try {
+            chargesService.deleteCharge("0", "x-request-id", chargeId);
+        }
+        catch (ResponseStatusException statusException)  {
+            Assert.assertEquals(HttpStatus.BAD_REQUEST, statusException.getStatus());
+        }
 
         verify(chargesRepository, Mockito.times(0)).deleteById(Mockito.any());
         verify(chargesRepository, Mockito.times(1)).findById(Mockito.eq(chargeId));
@@ -181,8 +175,12 @@ public class ChargesServiceTest {
         String chargeId = "CIrBNCKGlthNq2r9HzblXGKpT12";
         Mockito.when(chargesRepository.findById(chargeId)).thenReturn(populateChargesDocument(chargeId,null));
 
-        Assert.assertThrows(IllegalArgumentException.class, () ->
-                chargesService.deleteCharge("0","x-request-id", chargeId));
+        try {
+            chargesService.deleteCharge("0", "x-request-id", chargeId);
+        }
+        catch (ResponseStatusException statusException)  {
+            Assert.assertEquals(HttpStatus.NOT_FOUND, statusException.getStatus());
+        }
 
         verify(chargesRepository, Mockito.times(0)).deleteById(Mockito.any());
         verify(chargesRepository, Mockito.times(1)).findById(Mockito.eq(chargeId));
@@ -229,9 +227,12 @@ public class ChargesServiceTest {
                 populateChargesDocument(chargeId, populateCharge()));
         doThrow(new DataAccessResourceFailureException("Connection broken"))
                 .when(chargesRepository).deleteById(chargeId);
-
-        Assert.assertThrows(ServiceUnavailableException.class, () ->
-                chargesService.deleteCharge("0", "x-request-id", chargeId));
+        try {
+                chargesService.deleteCharge("0", "x-request-id", chargeId);
+        }
+        catch (ResponseStatusException statusException)  {
+            Assert.assertEquals(HttpStatus.SERVICE_UNAVAILABLE, statusException.getStatus());
+        }
     }
 
     @Test
@@ -241,9 +242,13 @@ public class ChargesServiceTest {
         doThrow(new DataAccessResourceFailureException("Connection broken"))
                 .when(chargesRepository)
                 .findById(chargeId);
+        try {
+            chargesService.deleteCharge("0", "x-request-id", chargeId);
+        }
+        catch (ResponseStatusException statusException)  {
+            Assert.assertEquals(HttpStatus.SERVICE_UNAVAILABLE, statusException.getStatus());
+        }
 
-        Assert.assertThrows(ServiceUnavailableException.class, () ->
-                chargesService.deleteCharge("0", "x-request-id", chargeId));
     }
 
     private Optional<ChargesDocument> populateChargesDocument(String chargeId, ChargeApi chargeApi) {
