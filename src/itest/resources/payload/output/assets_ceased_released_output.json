@@ -32,8 +32,6 @@
             "description" : "ALL MONIES DUE OR TO BECOME DUE FROM UMBRO INTERNATIONAL LIMITED TO THE TRUSTEE OR ANY OF THE OTHER BENEFICIARIES        UNDER THE TERMS OF THE AFOREMENTIONED INSTRUMENT CREATING OR EVIDENCING THE CHARGE"
         },
         "scottish_alterations" : {
-            "type": "type",
-            "description": "description",
             "has_alterations_to_order" : false,
             "has_alterations_to_prohibitions" : false,
             "has_restricting_provisions" : false

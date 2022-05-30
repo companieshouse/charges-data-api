@@ -17,8 +17,6 @@
             "chargor_acting_as_bare_trustee": false
         },
         "scottish_alterations": {
-            "type": "type",
-            "description": "description",
             "has_alterations_to_order": false,
             "has_alterations_to_prohibitions": false
         },
