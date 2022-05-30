@@ -17,12 +17,12 @@
       "chargor_acting_as_bare_trustee": false
     },
     "secured_details": {
-      "type": null,
-      "description": null
+      "type": "obligations-secured",
+      "description": "A REGISTERED CHARGE"
     },
     "scottish_alterations": {
-      "type": null,
-      "description": null,
+      "type": "type",
+      "description": "description",
       "has_alterations_to_order": null,
       "has_alterations_to_prohibitions": null,
       "has_restricting_provisions": null
@@ -73,7 +73,8 @@
     "resolved_on": null,
     "covering_instrument_date": null,
     "more_than_four_persons_entitled": false,
-    "satisfied_on": "2017-12-15"
+    "satisfied_on": "2017-12-15",
+    "etag" : "2e36ea1d2452cd2cb6e03b7aeb0d32d542d2bf27"
   },
   "internal_data": {
     "updated_by": "test-partition_1-offset_1",

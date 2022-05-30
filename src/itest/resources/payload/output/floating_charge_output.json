@@ -32,8 +32,8 @@
             "description" : "A REGISTERED CHARGE"
         },
         "scottish_alterations" : {
-            "type" : null,
-            "description" : null,
+            "type" : "type",
+            "description" : "description",
             "has_alterations_to_order" : false,
             "has_alterations_to_prohibitions" : false,
             "has_restricting_provisions" : false

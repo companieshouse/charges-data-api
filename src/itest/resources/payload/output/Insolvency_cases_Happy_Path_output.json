@@ -19,8 +19,8 @@
         "created_on" : "2008-05-07T00:00:00.000Z",
         "satisfied_on" : null,
         "particulars" : {
-            "type" : null,
-            "description" : null,
+            "type": "short-particulars",
+            "description": "description",
             "contains_floating_charge" : false,
             "contains_fixed_charge" : false,
             "floating_charge_covers_all" : false,
@@ -32,8 +32,8 @@
             "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
         },
         "scottish_alterations" : {
-            "type" : null,
-            "description" : null,
+            "type": "type",
+            "description": "description",
             "has_alterations_to_order" : null,
             "has_alterations_to_prohibitions" : null,
             "has_restricting_provisions" : null

@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.charges.data.controller;
 
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -43,7 +44,7 @@ public class ChargesController {
             @RequestHeader("x-request-id") final String contextId,
             @PathVariable("company_number") final String companyNumber,
             @PathVariable("charge_id") final String chargeId,
-            @RequestBody final InternalChargeApi requestBody
+            @Valid @RequestBody final InternalChargeApi requestBody
     ) {
         logger.debug(String.format(
                 "Started : Save or Update charge %s with company number %s ",
