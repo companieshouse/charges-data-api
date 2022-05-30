@@ -54,6 +54,7 @@
         "covering_instrument_date": null,
         "created_on": "1989-03-01",
         "satisfied_on": "1998-03-24",
+        "etag" : "65e43cbdd83869f95c11b2afa3f1694719ee3e1d",
         "classification": {
             "type": "charge-description",
             "description": "FLOATING CHARGE"
@@ -63,8 +64,8 @@
             "description": "FLOATING CHARGE"
         },
         "scottish_alterations": {
-            "type": null,
-            "description": null,
+            "type": "type",
+            "description": "description",
             "has_alterations_to_order": false,
             "has_alterations_to_prohibitions": false,
             "has_restricting_provisions": true
