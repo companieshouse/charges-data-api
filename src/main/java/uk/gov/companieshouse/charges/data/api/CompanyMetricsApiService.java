@@ -56,9 +56,15 @@ public class CompanyMetricsApiService {
             logger.error("Error occurred while calling getCompanyMetrics endpoint. ", exp);
 
         } catch (ApiErrorResponseException exp) {
-            logger.error("Error occurred while calling getCompanyMetrics endpoint. ", exp);
-            throw new ResponseStatusException(exp.getStatusCode(),
+            if (exp.getStatusCode() == 404) {
+                logger.error(String.format(
+                        "Error occurred while calling getCompanyMetrics endpoint "
+                        + "not found for %s.", companyNumber));
+            } else {
+                logger.error("Error occurred while calling getCompanyMetrics endpoint. ", exp);
+                throw new ResponseStatusException(exp.getStatusCode(),
                     exp.getStatusMessage(), exp);
+            }
         }
         logger.debug(String.format("Finished : getCompanyMetrics for Company Number %s ",
                 companyNumber
