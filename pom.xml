@@ -352,6 +352,12 @@
 					</execution>
 				</executions>
 				<configuration>
+					<properties>
+						<property>
+							<name>listener</name>
+							<value>org.sonar.java.jacoco.JUnitListener</value>
+						</property>
+					</properties>
 					<argLine>-Dfile.encoding=UTF-8</argLine>
 					<argLine>${failsafeArgLine}</argLine>
 					<classesDirectory>${project.build.outputDirectory}</classesDirectory>
