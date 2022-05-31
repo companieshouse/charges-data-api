@@ -1,7 +1,7 @@
 package uk.gov.companieshouse.charges.data.controller;
 
-import javax.validation.Valid;
 import java.util.Optional;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -113,7 +113,7 @@ public class ChargesController {
         }
 
         Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,
-            pageable);
+                pageable);
         ChargesApi chargesDocument = charges.isEmpty() ? null : charges.get();
         ResponseEntity<ChargesApi> chargesApiResponseEntity =
                                 new ResponseEntity<>(

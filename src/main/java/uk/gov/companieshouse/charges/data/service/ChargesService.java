@@ -159,7 +159,8 @@ public class ChargesService {
                             companyNumber));
             return Optional.empty();
         }
-        Optional<ChargesApi> result = Optional.ofNullable(createChargesApi(charges, companyMetrics));
+        Optional<ChargesApi> result = Optional.ofNullable(createChargesApi(charges,
+                companyMetrics));
         logger.debug(String.format("Finished : findCharges charges found for Company Number %s ",
                 companyNumber
         ));
@@ -169,7 +170,7 @@ public class ChargesService {
     private ChargesApi createChargesApi(List<ChargesDocument> charges,
             Optional<MetricsApi> metrics) {
         if (metrics.isEmpty()) { // No metrics so no need to create ChargesApi result.
-          return null;
+            return null;
         }
         var chargesApi = new ChargesApi();
         charges.forEach(charge -> chargesApi.addItemsItem(charge.getData()));
