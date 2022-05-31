@@ -77,9 +77,7 @@ public class ChargesService {
 
         chargesDocumentOptional.map(chargesDocument -> {
             OffsetDateTime dateFromBodyRequest = requestBody.getInternalData().getDeltaAt();
-            LocalDateTime deltaAt = chargesDocument.getDeltaAt();
-            OffsetDateTime deltaAtFromDb = deltaAt != null
-                    ? OffsetDateTime.of(LocalDateTime.from(deltaAt), ZoneOffset.UTC) : null;
+            OffsetDateTime deltaAtFromDb = chargesDocument.getDeltaAt();
 
             if (dateFromBodyRequest == null
                     || deltaAtFromDb == null || dateFromBodyRequest.isAfter(deltaAtFromDb)) {

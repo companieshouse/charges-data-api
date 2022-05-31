@@ -145,7 +145,7 @@ public class ChargesControllerTest {
                 new Updated().setAt(at.toLocalDateTime()).setType(type).setBy(by);
         var chargesDocument = new ChargesDocument().setId(chargeId)
                 .setCompanyNumber(companyNumber).setData(requestBody.getExternalData())
-                .setDeltaAt(deltaAt.toLocalDateTime())
+                .setDeltaAt(deltaAt)
                 .setUpdated(updated);
         return chargesDocument;
     }
