@@ -20,13 +20,6 @@
       "type": "obligations-secured",
       "description": "£225,000 DUE OR TO BECOME DUE"
     },
-    "scottish_alterations": {
-      "type": null,
-      "description": null,
-      "has_alterations_to_order": null,
-      "has_alterations_to_prohibitions": null,
-      "has_restricting_provisions": null
-    },
     "charge_code": "102862370001",
     "insolvency_cases": [
       {
@@ -64,7 +57,8 @@
     "resolved_on": null,
     "covering_instrument_date": null,
     "more_than_four_persons_entitled": false,
-    "satisfied_on": null
+    "satisfied_on": null,
+    "etag" : "43ae7629e84b872ae94f3d10a53703e69ed903e6"
   },
   "internal_data": {
     "updated_by": "test-partition_1-offset_1",

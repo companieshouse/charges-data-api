@@ -27,16 +27,9 @@
             "contains_negative_pledge" : true,
             "chargor_acting_as_bare_trustee" : false
         },
-        "secured_details" : {
-            "type" : null,
-            "description" : null
-        },
-        "scottish_alterations" : {
-            "type" : null,
-            "description" : null,
-            "has_alterations_to_order" : null,
-            "has_alterations_to_prohibitions" : null,
-            "has_restricting_provisions" : null
+        "secured_details": {
+            "type": "obligations-secured",
+            "description": "A REGISTERED CHARGE"
         },
         "more_than_four_persons_entitled" : false,
         "persons_entitled" : [ 

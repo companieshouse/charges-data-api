@@ -32,8 +32,6 @@
             "description" : "FLOATING CHARGE"
         },
         "scottish_alterations" : {
-            "type" : null,
-            "description" : null,
             "has_alterations_to_order" : false,
             "has_alterations_to_prohibitions" : false,
             "has_restricting_provisions" : true

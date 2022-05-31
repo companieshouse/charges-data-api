@@ -29,8 +29,6 @@
         },
         "secured_details" : null,
         "scottish_alterations" : {
-            "type": null,
-            "description": null,
             "has_alterations_to_order": false,
             "has_alterations_to_prohibitions": false
         },

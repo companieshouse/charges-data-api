@@ -31,13 +31,6 @@
             "type" : "obligations-secured",
             "description" : "£225,000 DUE OR TO BECOME DUE"
         },
-        "scottish_alterations" : {
-            "type" : null,
-            "description" : null,
-            "has_alterations_to_order" : null,
-            "has_alterations_to_prohibitions" : null,
-            "has_restricting_provisions" : null
-        },
         "more_than_four_persons_entitled" : false,
         "persons_entitled" : [ 
             {
