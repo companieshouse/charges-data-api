@@ -128,7 +128,7 @@ public class RepositoryITest {
             new Updated().setAt(at.toLocalDateTime()).setType(type).setBy(by);
     var chargesDocument = new ChargesDocument().setId(chargeId)
             .setCompanyNumber(companyNumber).setData(requestBody.getExternalData())
-            .setDeltaAt(deltaAt != null ? deltaAt.toLocalDateTime() : null)
+            .setDeltaAt(deltaAt)
             .setUpdated(updated);
 
     return chargesDocument;

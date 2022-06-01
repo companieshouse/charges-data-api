@@ -250,7 +250,7 @@ public class ChargesServiceTest {
 
         return Optional.of(new ChargesDocument()
                 .setId(chargeId).setCompanyNumber("1234").setData(chargeApi)
-                .setDeltaAt(LocalDateTime.now()));
+                .setDeltaAt(OffsetDateTime.now()));
 
     }
     private ChargeApi populateCharge() {

@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.charges.data.model;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 
 import org.springframework.data.annotation.Id;
@@ -22,11 +23,7 @@ public class ChargesDocument {
 
     private ChargeApi data;
 
-    @Field("delta_at")
-    @DateTimeFormat(
-            iso = DateTimeFormat.ISO.DATE
-    )
-    private LocalDateTime deltaAt;
+    private OffsetDateTime deltaAt;
 
     private Updated updated;
 
@@ -80,11 +77,11 @@ public class ChargesDocument {
         return this;
     }
 
-    public LocalDateTime getDeltaAt() {
+    public OffsetDateTime getDeltaAt() {
         return deltaAt;
     }
 
-    public ChargesDocument setDeltaAt(LocalDateTime deltaAt) {
+    public ChargesDocument setDeltaAt(OffsetDateTime deltaAt) {
         this.deltaAt = deltaAt;
         return this;
     }
