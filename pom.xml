@@ -50,7 +50,7 @@
 		<sonar.tests>src/test</sonar.tests>
 		<sonar.verbose>true</sonar.verbose>
 		<sonar.coverage.jacoco.xmlReportPaths>
-			${project.basedir}/target/site/jacoco-it/jacoco.xml
+			${project.basedir}/target/site/jacoco/jacoco.xml
 		</sonar.coverage.jacoco.xmlReportPaths>
 		<sonar.jacoco.reports>${project.basedir}/target/site</sonar.jacoco.reports>
 	</properties>
@@ -261,19 +261,8 @@
 						</goals>
 						<configuration>
 							<!-- Sets the path to the file which contains the execution model. -->
-							<destFile>${sonar.jacoco.reports}/jacoco.exec</destFile>
+							<destFile>${sonar.jacoco.reports}/jacoco-unit.exec</destFile>
 							<propertyName>surefireArgLine</propertyName>
-						</configuration>
-					</execution>
-					<execution>
-						<id>post-unit-test</id>
-						<phase>test</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-						<configuration>
-							<dataFile>${sonar.jacoco.reports}/jacoco.exec</dataFile>
-							<outputDirectory>${sonar.jacoco.reports}/jacoco</outputDirectory>
 						</configuration>
 					</execution>
 					<execution>
@@ -289,16 +278,32 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>post-integration-test</id>
+						<id>merge-unit-and-integration</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>merge</goal>
+						</goals>
+						<configuration>
+							<fileSets>
+								<fileSet>
+									<directory>${sonar.jacoco.reports}/</directory>
+									<includes>
+										<include>*.exec</include>
+									</includes>
+								</fileSet>
+							</fileSets>
+							<destFile>${sonar.jacoco.reports}/jacoco.exec</destFile>
+						</configuration>
+					</execution>
+					<execution>
+						<id>create-merged-report</id>
 						<phase>post-integration-test</phase>
 						<goals>
 							<goal>report</goal>
 						</goals>
 						<configuration>
-							<!-- Sets the path to the file which contains the execution data. -->
-							<dataFile>${sonar.jacoco.reports}/jacoco-it.exec</dataFile>
-							<!-- Sets the output directory for the code coverage report. -->
-							<outputDirectory>${sonar.jacoco.reports}/jacoco-it</outputDirectory>
+							<dataFile>${sonar.jacoco.reports}/jacoco.exec</dataFile>
+							<outputDirectory>${sonar.jacoco.reports}/jacoco</outputDirectory>
 						</configuration>
 					</execution>
 				</executions>
