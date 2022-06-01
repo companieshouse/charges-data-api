@@ -49,9 +49,6 @@
 		<sonar.sources>src/main</sonar.sources>
 		<sonar.tests>src/test</sonar.tests>
 		<sonar.verbose>true</sonar.verbose>
-		<sonar.coverage.jacoco.xmlReportPaths>
-			${project.basedir}/target/site/jacoco/jacoco.xml
-		</sonar.coverage.jacoco.xmlReportPaths>
 		<sonar.jacoco.reports>${project.basedir}/target/site</sonar.jacoco.reports>
 	</properties>
 
@@ -348,6 +345,7 @@
 					<argLine>-Dfile.encoding=UTF-8</argLine>
 					<argLine>${failsafeArgLine}</argLine>
 					<classesDirectory>${project.build.outputDirectory}</classesDirectory>
+					<reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
 					<skipITs>${skip.integration.tests}</skipITs>
 					<includes>
 						<include>**/*ITest.java</include>
