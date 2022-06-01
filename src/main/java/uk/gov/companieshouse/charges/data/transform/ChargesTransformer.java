@@ -42,7 +42,7 @@ public class ChargesTransformer {
         var chargesDocument = new ChargesDocument().setId(chargeId)
                 .setCompanyNumber(companyNumber)
                 .setData(externalData)
-                .setDeltaAt(deltaAt.toLocalDateTime())
+                .setDeltaAt(deltaAt)
                 .setUpdated(updated);
         logger.debug(String.format("Finished: Transformation complete successfully for chargeId: "
                        + "%s and companyNumber: %s", chargeId, companyNumber));

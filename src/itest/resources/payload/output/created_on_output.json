@@ -19,8 +19,8 @@
         "created_on" : "2016-07-29T00:00:00.000Z",
         "satisfied_on" : null,
         "particulars" : {
-            "type" : null,
-            "description" : null,
+            "type": "short-particulars",
+            "description": "L/H PROPERTY AT LAKESIDE 5400, CHEADLE ROYAL BUSINESS PARK, WILMSLOW ROAD, CHEADLE, CHESHIRE T/N GM839134               ",
             "contains_floating_charge" : null,
             "contains_fixed_charge" : null,
             "floating_charge_covers_all" : null,
@@ -32,8 +32,6 @@
             "description" : "A REGISTERED CHARGE"
         },
         "scottish_alterations" : {
-            "type" : null,
-            "description" : null,
             "has_alterations_to_order" : false,
             "has_alterations_to_prohibitions" : false,
             "has_restricting_provisions" : false

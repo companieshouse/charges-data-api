@@ -45,6 +45,7 @@
     "covering_instrument_date": null,
     "created_on": "2016-07-29T00:00:00.000Z",
     "satisfied_on": null,
+    "etag" : "ee95d57073f3e2c0a2ac41f058d1975f19f74192",
 
     "classification": {
       "type": "charge-description",
@@ -56,8 +57,6 @@
       "description": "A REGISTERED CHARGE"
     },
     "scottish_alterations": {
-      "type": null,
-      "description": null,
       "has_alterations_to_order": false,
       "has_alterations_to_prohibitions": false,
       "has_restricting_provisions": false

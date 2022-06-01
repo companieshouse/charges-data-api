@@ -17,8 +17,6 @@
             "chargor_acting_as_bare_trustee": false
         },
         "scottish_alterations": {
-            "type": null,
-            "description": null,
             "has_alterations_to_order": false,
             "has_alterations_to_prohibitions": false
         },
@@ -80,7 +78,8 @@
         "resolved_on": null,
         "covering_instrument_date": null,
         "more_than_four_persons_entitled": false,
-        "satisfied_on": null
+        "satisfied_on": null,
+        "etag" : "f15c1fb0b1804470ed2a0f3512f6049acd9e367f"
     },
     "internal_data": {
         "updated_by": "test-partition_1-offset_1",

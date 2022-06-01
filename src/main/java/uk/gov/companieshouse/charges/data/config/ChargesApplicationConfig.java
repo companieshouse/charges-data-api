@@ -20,6 +20,8 @@ import uk.gov.companieshouse.api.InternalApiClient;
 import uk.gov.companieshouse.charges.data.converter.ChargeApiReadConverter;
 import uk.gov.companieshouse.charges.data.converter.ChargeApiWriteConverter;
 import uk.gov.companieshouse.charges.data.converter.EnumConverters;
+import uk.gov.companieshouse.charges.data.converter.OffsetDateTimeReadConverter;
+import uk.gov.companieshouse.charges.data.converter.OffsetDateTimeWriteConverter;
 import uk.gov.companieshouse.charges.data.serialization.LocalDateDeSerializer;
 import uk.gov.companieshouse.charges.data.serialization.LocalDateSerializer;
 import uk.gov.companieshouse.charges.data.serialization.LocalDateTimeDeSerializer;
@@ -55,7 +57,8 @@ public class ChargesApplicationConfig implements WebMvcConfigurer {
         ObjectMapper objectMapper = mongoDbObjectMapper();
         return new MongoCustomConversions(List.of(new ChargeApiWriteConverter(objectMapper),
                 new ChargeApiReadConverter(objectMapper),new EnumConverters.StringToEnum(),
-                new EnumConverters.EnumToString()));
+                new EnumConverters.EnumToString(), new OffsetDateTimeReadConverter(),
+                new OffsetDateTimeWriteConverter()));
     }
 
     /**

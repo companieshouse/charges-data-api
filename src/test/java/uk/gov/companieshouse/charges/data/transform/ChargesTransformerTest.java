@@ -47,7 +47,7 @@ public class ChargesTransformerTest {
         assertNotNull(result.getData());
         assertEquals(result.getData(), externalData);
         assertNotNull(result.getDeltaAt());
-        assertEquals(result.getDeltaAt().toInstant(ZoneOffset.UTC), internalData.getDeltaAt().toInstant());
+        assertEquals(result.getDeltaAt(), internalData.getDeltaAt());
         assertNotNull(result.getUpdated());
         assertEquals(result.getUpdated().getBy(), internalData.getUpdatedBy());
     }

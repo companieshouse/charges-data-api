@@ -55,6 +55,7 @@
         "created_on": "2003-08-04",
         "satisfied_on": null,
         "more_than_four_persons_entitled": null,
+        "etag" : "77cf1753686e2d888e40386c2fe23d1568a04705",
         "classification": {
             "type": "charge-description",
             "description": "MORTGAGE"
@@ -64,8 +65,6 @@
             "description": "ALL MONIES DUE OR TO BECOME DUE FROM UMBRO INTERNATIONAL LIMITED TO THE TRUSTEE OR ANY OF THE OTHER BENEFICIARIES        UNDER THE TERMS OF THE AFOREMENTIONED INSTRUMENT CREATING OR EVIDENCING THE CHARGE"
         },
         "scottish_alterations": {
-            "type": null,
-            "description": null,
             "has_alterations_to_order": false,
             "has_alterations_to_prohibitions": false,
             "has_restricting_provisions": false

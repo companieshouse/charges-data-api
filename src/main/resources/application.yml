@@ -12,6 +12,8 @@ server:
   port : 8088
 
 spring:
+  jackson:
+    default-property-inclusion: NON_NULL
   data:
     mongodb:
       uri: ${MONGODB_URL:mongodb://localhost:27017/company_mortgages?retryWrites=false}
