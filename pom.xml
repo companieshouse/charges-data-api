@@ -229,11 +229,6 @@
 						</dependency>
 					</dependencies>
 				</plugin>
-				<plugin>
-					<groupId>org.sonarsource.scanner.maven</groupId>
-					<artifactId>sonar-maven-plugin</artifactId>
-					<version>${sonar-maven-plugin.version}</version>
-				</plugin>
 			</plugins>
 		</pluginManagement>
 
@@ -259,59 +254,45 @@
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>${jacoco-maven-plugin.version}</version>
 				<configuration>
+					<append>true</append>
+					<destFile>${sonar.jacoco.reports}/jacoco.exec</destFile>
 					<dataFile>${sonar.jacoco.reports}/jacoco.exec</dataFile>
+					<outputDirectory>${sonar.jacoco.reports}/jacoco</outputDirectory>
 				</configuration>
 
 				<executions>
 					<execution>
-						<id>report</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>pre-test</id>
-						<phase>process-test-classes</phase>
+						<id>pre-unit-test</id>
 						<goals>
 							<goal>prepare-agent</goal>
 						</goals>
 						<configuration>
 							<propertyName>surefireArgLine</propertyName>
-							<destFile>${sonar.jacoco.reports}/jacoco-ut.exec</destFile>
 						</configuration>
 					</execution>
 					<execution>
-						<id>pre-itest</id>
+						<id>post-unit-test</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>pre-integration-test</id>
 						<phase>pre-integration-test</phase>
 						<goals>
-							<goal>prepare-agent-integration</goal>
+							<goal>prepare-agent</goal>
 						</goals>
 						<configuration>
 							<propertyName>failsafeArgLine</propertyName>
-							<destFile>${sonar.jacoco.reports}/jacoco-it.exec</destFile>
 						</configuration>
 					</execution>
 					<execution>
-						<id>merge</id>
+						<id>post-integration-test</id>
 						<phase>post-integration-test</phase>
 						<goals>
-							<goal>merge</goal>
+							<goal>report</goal>
 						</goals>
-						<configuration>
-							<fileSets>
-								<fileSet>
-									<directory>${sonar.jacoco.reports}</directory>
-									<includes>
-										<include>*.exec</include>
-									</includes>
-									<excludes>
-										<exclude>jacoco.exec</exclude>
-									</excludes>
-								</fileSet>
-							</fileSets>
-							<destFile>${sonar.jacoco.reports}/jacoco.exec</destFile>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>
