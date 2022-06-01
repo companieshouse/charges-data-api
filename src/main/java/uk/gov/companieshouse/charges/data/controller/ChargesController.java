@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import uk.gov.companieshouse.api.charges.ChargeApi;
 import uk.gov.companieshouse.api.charges.ChargesApi;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
 import uk.gov.companieshouse.charges.data.service.ChargesService;
 import uk.gov.companieshouse.logging.Logger;
+
 
 @RestController
 public class ChargesController {
@@ -142,8 +144,20 @@ public class ChargesController {
                 "Deleting company charge information with id %s from company mortgages."
                         + " x-request-id %s and companyNumber %s",
                 chargeId, contextId, companyNumber));
-        chargesService.deleteCharge(companyNumber,contextId, chargeId);
-        return ResponseEntity.status(HttpStatus.OK).build();
+
+        try {
+            chargesService.deleteCharge(companyNumber,contextId, chargeId);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (ResponseStatusException responseStatusException) {
+            logger.error("Error Occurred during a Delete company charge: "
+                    + responseStatusException.getMessage());
+            return ResponseEntity.status(responseStatusException.getStatus()).build();
+        } catch (Exception exception) {
+            logger.error("Error Occurred during a Delete company charge: "
+                    + exception.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
     }
 
 }

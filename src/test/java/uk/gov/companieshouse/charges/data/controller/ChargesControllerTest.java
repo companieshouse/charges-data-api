@@ -31,9 +31,11 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.server.ResponseStatusException;
 import uk.gov.companieshouse.api.charges.ChargesApi;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
@@ -161,4 +163,78 @@ public class ChargesControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    @DisplayName("Company Charges DELETE request - NotFound status code 404 ")
+    void callChargeDeleteRequestIllegalArgument() throws Exception {
+        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND))
+                .when(chargesService).deleteCharge(anyString(),anyString(), anyString());
+
+        mockMvc.perform(delete(CHARGES_DELETE_URL)
+                        .contentType(APPLICATION_JSON)
+                        .header("x-request-id", "123456789"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("Company Charges DELETE request - BadRequest status code 400")
+    void callChargeDeleteRequestBadRequest() throws Exception {
+        doThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST))
+                .when(chargesService).deleteCharge(anyString(),anyString(), anyString());
+
+        mockMvc.perform(delete(CHARGES_DELETE_URL)
+                        .contentType(APPLICATION_JSON)
+                        .header("x-request-id", "123456789"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("Company Charges DELETE request - MethodNotAllowed status code 405")
+    void callChargeDeleteRequestMethodNotAllowed() throws Exception {
+        doThrow(new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED))
+                .when(chargesService).deleteCharge(anyString(),anyString(), anyString());
+
+        mockMvc.perform(put(CHARGES_DELETE_URL)
+                        .contentType(APPLICATION_JSON)
+                        .header("x-request-id", "123456789"))
+                .andExpect(status().isMethodNotAllowed());
+    }
+
+    @Test
+    @DisplayName("Company Charges DELETE request - InternalServerError status code 500")
+    void callChargeDeleteRequestInternalServerError() throws Exception {
+
+        doThrow(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR))
+                .when(chargesService).deleteCharge(anyString(),anyString(), anyString());
+
+        mockMvc.perform(delete(CHARGES_DELETE_URL)
+                        .contentType(APPLICATION_JSON)
+                        .header("x-request-id", "123456789"))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    @DisplayName("Company Charges DELETE request - ServiceUnavailable status code 503")
+    void callChargeDeleteRequestServiceUnavailable() throws Exception {
+
+        doThrow(new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE))
+                .when(chargesService).deleteCharge(anyString(),anyString(), anyString());
+
+        mockMvc.perform(delete(CHARGES_DELETE_URL)
+                        .contentType(APPLICATION_JSON)
+                        .header("x-request-id", "123456789"))
+                .andExpect(status().isServiceUnavailable());
+    }
+
+    @Test
+    @DisplayName("Company Charges DELETE request - BadGateway status code 502")
+    void callChargeDeleteRequestBadGatewayError() throws Exception {
+
+        doThrow(new ResponseStatusException(HttpStatus.BAD_GATEWAY))
+                .when(chargesService).deleteCharge(anyString(),anyString(), anyString());
+
+        mockMvc.perform(delete(CHARGES_DELETE_URL)
+                        .contentType(APPLICATION_JSON)
+                        .header("x-request-id", "123456789"))
+                .andExpect(status().isBadGateway());
+    }
 }
