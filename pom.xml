@@ -269,41 +269,35 @@
 						<id>pre-integration-test</id>
 						<phase>pre-integration-test</phase>
 						<goals>
-							<goal>prepare-agent</goal>
+							<goal>prepare-agent-integration</goal>
 						</goals>
 						<configuration>
 							<!-- Sets the path to the file which contains the execution model. -->
 							<destFile>${sonar.jacoco.reports}/jacoco-it.exec</destFile>
+							<append>true</append>
 							<propertyName>failsafeArgLine</propertyName>
 						</configuration>
 					</execution>
 					<execution>
-						<id>merge-unit-and-integration</id>
+						<id>merge-and-report</id>
 						<phase>post-integration-test</phase>
 						<goals>
 							<goal>merge</goal>
+							<goal>report</goal>
 						</goals>
 						<configuration>
+							<!-- merge config -->
+							<destFile>${sonar.jacoco.reports}/jacoco.exec</destFile>
 							<fileSets>
 								<fileSet>
-									<directory>${sonar.jacoco.reports}/</directory>
+									<directory>${sonar.jacoco.reports}</directory>
 									<includes>
 										<include>*.exec</include>
 									</includes>
 								</fileSet>
 							</fileSets>
-							<destFile>${sonar.jacoco.reports}/jacoco.exec</destFile>
-						</configuration>
-					</execution>
-					<execution>
-						<id>create-merged-report</id>
-						<phase>post-integration-test</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-						<configuration>
+							<!-- report config -->
 							<dataFile>${sonar.jacoco.reports}/jacoco.exec</dataFile>
-							<outputDirectory>${sonar.jacoco.reports}/jacoco</outputDirectory>
 						</configuration>
 					</execution>
 				</executions>
