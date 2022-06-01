@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.charges.data.controller;
 
+import java.util.Optional;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -110,12 +111,14 @@ public class ChargesController {
         if (itemsPerPage != null && startIndex != null) {
             pageable = PageRequest.of(startIndex, itemsPerPage);
         }
+
+        Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,
+                pageable);
+        ChargesApi chargesDocument = charges.isEmpty() ? null : charges.get();
         ResponseEntity<ChargesApi> chargesApiResponseEntity =
-                chargesService.findCharges(companyNumber, pageable).map(chargesDocument ->
                                 new ResponseEntity<>(
                                         chargesDocument,
-                                        HttpStatus.OK))
-                        .orElse(ResponseEntity.notFound().build());
+                                        HttpStatus.OK);
 
         logger.debug(
                 String.format("Finished : getCompanyCharges Charges found for Company Number %s ",
