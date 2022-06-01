@@ -30,8 +30,8 @@ Feature: Process company charges
     And the Get call response body should match "<result>" file
 
     Examples:
-      | data                              | company_number  |   charge_id                                                       |  result                                    |
-      | Insolvency_cases_Happy_Path_input | 08124207    |   OzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng          |  Insolvency_cases_Happy_Path_output        |
+      | data                              | company_number |   charge_id                                               |  result                             |
+      | Insolvency_cases_Happy_Path_input | 08124207       |   OzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng  |  Insolvency_cases_Happy_Path_output |
 
 
 
@@ -41,11 +41,11 @@ Feature: Process company charges
     And the company charges with "<company_number>" and "<charge_id>" exists with data "<data>"
     When I send GET request with company number "<company_number>"
     Then I should receive 200 status code
-    And the Get charges call response body should match "<result>" file
+    And the Get charges call response body should match "<result>" file for "<company_number>"
 
     Examples:
-      | data                              | company_number  |   charge_id                                                       |  result                                    |
-      | Insolvency_cases_Happy_Path_input | 08124207        |   OzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng          |  Insolvency_Company_Metrics_output         |
+      | data                              | company_number  |   charge_id                                               |  result                            |
+      | Insolvency_cases_Happy_Path_input | 08124207        |   OzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng  |  Insolvency_Company_Metrics_output |
 
 
   Scenario: Process company charges should return correct response code on repository call failure
@@ -82,3 +82,16 @@ Feature: Process company charges
     When  PUT Rest endpoint is invoked with a valid json payload
     Then  Rest endpoint returns http response code 503 to the client
     And   MongoDB is successfully updated
+
+
+  Scenario Outline: Retrieve charges successfully no metrics
+
+    Given Charges data api service is running
+    And the company charges with "<company_number>" and "<charge_id>" exists with data "<data>"
+    When I send GET request with company number "<company_number>"
+    Then I should receive 200 status code
+    And the Get charges call response body should match "<result>" file for "<company_number>"
+
+    Examples:
+      | data                              | company_number  |   charge_id                                              |  result                                    |
+      | Insolvency_cases_Happy_Path_input | 70242180        |   OzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng |  Insolvency_Company_Metrics_abent_output   |

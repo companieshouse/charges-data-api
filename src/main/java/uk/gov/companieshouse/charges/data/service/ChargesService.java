@@ -6,7 +6,7 @@ import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
+import javax.validation.Valid;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +26,6 @@ import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.repository.ChargesRepository;
 import uk.gov.companieshouse.charges.data.transform.ChargesTransformer;
 import uk.gov.companieshouse.logging.Logger;
-
 
 
 @Service
@@ -155,32 +154,34 @@ public class ChargesService {
                     String.format(
                             "Finished: findCharges No company metrics data found for company %s ",
                             companyNumber));
-            return Optional.empty();
         }
-        var result = companyMetrics.map(metrics -> createChargesApi(charges, metrics));
+        Optional<ChargesApi> result = Optional.of(createChargesApi(charges,
+                companyMetrics));
         logger.debug(String.format("Finished : findCharges charges found for Company Number %s ",
                 companyNumber
         ));
         return result;
     }
 
-    private ChargesApi createChargesApi(List<ChargesDocument> charges, MetricsApi metrics) {
+    private ChargesApi createChargesApi(List<ChargesDocument> charges,
+            Optional<MetricsApi> metrics) {
         var chargesApi = new ChargesApi();
         charges.forEach(charge -> chargesApi.addItemsItem(charge.getData()));
-        MortgageApi mortgage = metrics.getMortgage();
-        int totalCount = chargesApi.getItems().size();
-        int satisfiedCount = mortgage.getSatisfiedCount() != null
-                ? mortgage.getSatisfiedCount() : 0;
-        int partSatisfiedCount = mortgage.getPartSatisfiedCount() != null
-                ? mortgage.getPartSatisfiedCount() : 0;
-        int unfilteredCount = mortgage.getTotalCount() != null
-                ? mortgage.getTotalCount() : 0;
-        chargesApi.setTotalCount(totalCount);
-        chargesApi.setSatisfiedCount(satisfiedCount);
-        chargesApi.setEtag(metrics.getEtag());
-        chargesApi.setPartSatisfiedCount(partSatisfiedCount);
-        chargesApi.setUnfilteredCount(unfilteredCount);
+        chargesApi.setTotalCount(chargesApi.getItems().size());
+
+        if (metrics.isPresent()) {
+            chargesApi.setEtag(metrics.get().getEtag());
+            MortgageApi mortgage = metrics.get().getMortgage();
+
+            chargesApi.setSatisfiedCount(integerDefaultZero(mortgage.getSatisfiedCount()));
+            chargesApi.setPartSatisfiedCount(integerDefaultZero(mortgage.getPartSatisfiedCount()));
+            chargesApi.setUnfilteredCount(integerDefaultZero(mortgage.getTotalCount()));
+        }
         return chargesApi;
+    }
+
+    private int integerDefaultZero(Integer integer) {
+        return integer == null ? 0 : integer;
     }
 
     private void saveAndInvokeChsKafkaApi(String contextId, String companyNumber,

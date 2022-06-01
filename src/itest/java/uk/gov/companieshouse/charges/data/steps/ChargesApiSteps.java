@@ -7,9 +7,12 @@ import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -166,8 +169,8 @@ public class ChargesApiSteps {
         assertThat(actual).isEqualTo(expected);
     }
 
-    @Then("the Get charges call response body should match {string} file")
-    public void the_get_charges_call_response_body_should_match(String dataFile) throws IOException {
+    @Then("the Get charges call response body should match {string} file for {string}")
+    public void the_get_charges_call_response_body_should_match(String dataFile, String companyNumber) throws IOException {
         FileSystemResource file = new FileSystemResource("src/itest/resources/payload/output/"+dataFile+".json");
         ChargesApi expectedDocument =
                 mongoCustomConversions.readValue(file.getFile(), ChargesApi.class);
@@ -176,7 +179,7 @@ public class ChargesApiSteps {
         assertThat(actual.getUnfilteredCount()).isEqualTo(expectedDocument.getUnfilteredCount());
         assertThat(actual.getPartSatisfiedCount()).isEqualTo(expectedDocument.getPartSatisfiedCount());
         assertThat(actual.getEtag()).isEqualTo(expectedDocument.getEtag());
-        verify(moreThanOrExactly(1), getRequestedFor(urlEqualTo("/company/08124207/metrics")));
+        verify(moreThanOrExactly(1), getRequestedFor(urlEqualTo(String.format("/company/%s/metrics", companyNumber))));
     }
 
     @Given("Charges Data API component is successfully running")
@@ -191,6 +194,7 @@ public class ChargesApiSteps {
     public void mongo_db_is_not_reachable() {
         CucumberFeaturesRunnerITest.stop();
     }
+
     @When("PUT Rest endpoint is invoked with a valid json payload but Repository throws an error")
     public void put_rest_endpoint_is_invoked_with_a_valid_json_payload_but_repository_throws_an_error()
             throws IOException {
