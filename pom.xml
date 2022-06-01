@@ -264,7 +264,6 @@
 					</execution>
 					<execution>
 						<id>pre-integration-test</id>
-						<phase>pre-integration-test</phase>
 						<goals>
 							<goal>prepare-agent-integration</goal>
 						</goals>
@@ -276,8 +275,8 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>post-integration-test</id>
-						<phase>post-integration-test</phase>
+						<id>post-unit-test</id>
+						<phase>test</phase>
 						<goals>
 							<goal>report</goal>
 						</goals>
