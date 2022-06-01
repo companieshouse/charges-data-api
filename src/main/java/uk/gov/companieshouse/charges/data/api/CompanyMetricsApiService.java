@@ -57,7 +57,7 @@ public class CompanyMetricsApiService {
 
         } catch (ApiErrorResponseException exp) {
             if (exp.getStatusCode() == 404) {
-                logger.error(String.format(
+                logger.info(String.format(
                         "Error occurred while calling getCompanyMetrics endpoint "
                         + "not found for %s.", companyNumber));
             } else {

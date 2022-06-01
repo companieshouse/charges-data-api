@@ -1,6 +1,8 @@
 package uk.gov.companieshouse.charges.data.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -145,7 +147,12 @@ public class ChargesServiceTest {
                 .thenReturn(page);
 
         Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,pageable);
-        assertThat(charges.isPresent()).isFalse();
+        assertThat(charges.isPresent()).isTrue();
+        //assert no metrics
+        assertNull(charges.get().getPartSatisfiedCount());
+        assertNull(charges.get().getUnfilteredCount());
+        assertNull(charges.get().getPartSatisfiedCount());
+        assertEquals(charges.get().getItems().size(), charges.get().getTotalCount());
     }
 
     private ChargesDocument createCharges() throws IOException {

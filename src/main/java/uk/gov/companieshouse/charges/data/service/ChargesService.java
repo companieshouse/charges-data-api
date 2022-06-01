@@ -157,9 +157,8 @@ public class ChargesService {
                     String.format(
                             "Finished: findCharges No company metrics data found for company %s ",
                             companyNumber));
-            return Optional.empty();
         }
-        Optional<ChargesApi> result = Optional.ofNullable(createChargesApi(charges,
+        Optional<ChargesApi> result = Optional.of(createChargesApi(charges,
                 companyMetrics));
         logger.debug(String.format("Finished : findCharges charges found for Company Number %s ",
                 companyNumber
@@ -169,18 +168,18 @@ public class ChargesService {
 
     private ChargesApi createChargesApi(List<ChargesDocument> charges,
             Optional<MetricsApi> metrics) {
-        if (metrics.isEmpty()) { // No metrics so no need to create ChargesApi result.
-            return null;
-        }
         var chargesApi = new ChargesApi();
         charges.forEach(charge -> chargesApi.addItemsItem(charge.getData()));
-
-        chargesApi.setEtag(metrics.get().getEtag());
-        MortgageApi mortgage = metrics.get().getMortgage();
         chargesApi.setTotalCount(chargesApi.getItems().size());
-        chargesApi.setSatisfiedCount(integerDefaultZero(mortgage.getSatisfiedCount()));
-        chargesApi.setPartSatisfiedCount(integerDefaultZero(mortgage.getPartSatisfiedCount()));
-        chargesApi.setUnfilteredCount(integerDefaultZero(mortgage.getTotalCount()));
+
+        if (metrics.isPresent()) {
+            chargesApi.setEtag(metrics.get().getEtag());
+            MortgageApi mortgage = metrics.get().getMortgage();
+
+            chargesApi.setSatisfiedCount(integerDefaultZero(mortgage.getSatisfiedCount()));
+            chargesApi.setPartSatisfiedCount(integerDefaultZero(mortgage.getPartSatisfiedCount()));
+            chargesApi.setUnfilteredCount(integerDefaultZero(mortgage.getTotalCount()));
+        }
         return chargesApi;
     }
 

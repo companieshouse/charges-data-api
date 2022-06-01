@@ -90,7 +90,7 @@ Feature: Process company charges
     And the company charges with "<company_number>" and "<charge_id>" exists with data "<data>"
     When I send GET request with company number "<company_number>"
     Then I should receive 200 status code
-    And the Get charges call response body should be empty for "<company_number>"
+    And the Get charges call response body should match "<result>" file for "<company_number>"
 
     Examples:
       | data                              | company_number  |   charge_id                                              |  result                                    |

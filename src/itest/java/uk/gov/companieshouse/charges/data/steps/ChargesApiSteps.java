@@ -182,13 +182,6 @@ public class ChargesApiSteps {
         verify(moreThanOrExactly(1), getRequestedFor(urlEqualTo(String.format("/company/%s/metrics", companyNumber))));
     }
 
-    @And("the Get charges call response body should be empty for {string}")
-    public void charges_call_response_body_should_be_empty(String companyNumber) throws IOException {
-        ChargesApi actual = CucumberContext.CONTEXT.get("getChargesResponseBody");
-        assertNull(actual);
-        verify(moreThanOrExactly(1), getRequestedFor(urlEqualTo(String.format("/company/%s/metrics", companyNumber))));
-    }
-
     @Given("Charges Data API component is successfully running")
     public void charges_data_api_component_is_successfully_running() {
         assertThat(restTemplate).isNotNull();
