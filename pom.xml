@@ -261,7 +261,7 @@
 						</goals>
 						<configuration>
 							<!-- Sets the path to the file which contains the execution model. -->
-							<destFile>${sonar.jacoco.reports}/jacoco-unit.exec</destFile>
+							<destFile>${sonar.jacoco.reports}/jacoco.exec</destFile>
 							<propertyName>surefireArgLine</propertyName>
 						</configuration>
 					</execution>
@@ -273,31 +273,20 @@
 						</goals>
 						<configuration>
 							<!-- Sets the path to the file which contains the execution model. -->
-							<destFile>${sonar.jacoco.reports}/jacoco-it.exec</destFile>
+							<destFile>${sonar.jacoco.reports}/jacoco.exec</destFile>
 							<append>true</append>
 							<propertyName>failsafeArgLine</propertyName>
 						</configuration>
 					</execution>
 					<execution>
-						<id>merge-and-report</id>
+						<id>post-integration-test</id>
 						<phase>post-integration-test</phase>
 						<goals>
-							<goal>merge</goal>
 							<goal>report</goal>
 						</goals>
 						<configuration>
-							<!-- merge config -->
-							<destFile>${sonar.jacoco.reports}/jacoco.exec</destFile>
-							<fileSets>
-								<fileSet>
-									<directory>${sonar.jacoco.reports}</directory>
-									<includes>
-										<include>*.exec</include>
-									</includes>
-								</fileSet>
-							</fileSets>
-							<!-- report config -->
 							<dataFile>${sonar.jacoco.reports}/jacoco.exec</dataFile>
+							<outputDirectory>${sonar.jacoco.reports}/jacoco</outputDirectory>
 						</configuration>
 					</execution>
 				</executions>
