@@ -274,6 +274,17 @@
 							<propertyName>failsafeArgLine</propertyName>
 						</configuration>
 					</execution>
+					<execution>
+						<id>post-unit-test</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<configuration>
+							<dataFile>${sonar.jacoco.reports}/jacoco.exec</dataFile>
+							<outputDirectory>${sonar.jacoco.reports}/jacoco</outputDirectory>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 
