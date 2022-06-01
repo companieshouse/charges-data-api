@@ -353,7 +353,6 @@
 					<argLine>-Dfile.encoding=UTF-8</argLine>
 					<argLine>${failsafeArgLine}</argLine>
 					<classesDirectory>${project.build.outputDirectory}</classesDirectory>
-					<reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
 					<skipITs>${skip.integration.tests}</skipITs>
 					<includes>
 						<include>**/*ITest.java</include>
