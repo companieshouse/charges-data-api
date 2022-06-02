@@ -31,11 +31,6 @@
             "type" : "amount-secured",
             "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
         },
-        "scottish_alterations" : {
-            "has_alterations_to_order" : null,
-            "has_alterations_to_prohibitions" : null,
-            "has_restricting_provisions" : null
-        },
         "more_than_four_persons_entitled" : false,
         "persons_entitled" : [
             {

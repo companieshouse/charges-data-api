@@ -64,9 +64,9 @@
             "description": "FLOATING CHARGE"
         },
         "scottish_alterations": {
-            "has_alterations_to_order": false,
-            "has_alterations_to_prohibitions": false,
-            "has_restricting_provisions": true
+            "has_alterations_to_order": null,
+            "has_alterations_to_prohibitions": null,
+            "has_restricting_provisions": null
         },
         "more_than_four_persons_entitled": false
     },
