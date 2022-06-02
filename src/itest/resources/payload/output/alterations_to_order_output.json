@@ -31,11 +31,6 @@
             "type" : "obligations-secured",
             "description" : "FLOATING CHARGE"
         },
-        "scottish_alterations" : {
-            "has_alterations_to_order" : false,
-            "has_alterations_to_prohibitions" : false,
-            "has_restricting_provisions" : true
-        },
         "more_than_four_persons_entitled" : false,
         "persons_entitled" : [
             {
@@ -44,7 +39,7 @@
         ],
         "transactions" : [
             {
-                "filing_type" : "",
+                "filing_type" : null,
                 "transaction_id" : null,
                 "delivered_on" : "1998-03-24T00:00:00.000Z",
                 "insolvency_case_number" : null,

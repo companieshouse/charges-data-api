@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import uk.gov.companieshouse.api.InternalApiClient;
+import uk.gov.companieshouse.api.charges.ScottishAlterationsApi;
 import uk.gov.companieshouse.charges.data.converter.ChargeApiReadConverter;
 import uk.gov.companieshouse.charges.data.converter.ChargeApiWriteConverter;
 import uk.gov.companieshouse.charges.data.converter.EnumConverters;
@@ -26,9 +27,11 @@ import uk.gov.companieshouse.charges.data.serialization.LocalDateDeSerializer;
 import uk.gov.companieshouse.charges.data.serialization.LocalDateSerializer;
 import uk.gov.companieshouse.charges.data.serialization.LocalDateTimeDeSerializer;
 import uk.gov.companieshouse.charges.data.serialization.LocalDateTimeSerializer;
+import uk.gov.companieshouse.charges.data.serialization.NonBlankStringSerializer;
 import uk.gov.companieshouse.charges.data.serialization.OffsetDateTimeDeSerializer;
 import uk.gov.companieshouse.charges.data.serialization.OffsetDateTimeSerializer;
 
+import uk.gov.companieshouse.charges.data.serialization.ScottishAlterationsApiSerializer;
 import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.environment.impl.EnvironmentReaderImpl;
 import uk.gov.companieshouse.sdk.manager.ApiSdkManager;
@@ -79,7 +82,8 @@ public class ChargesApplicationConfig implements WebMvcConfigurer {
         module.addDeserializer(OffsetDateTime.class, new OffsetDateTimeDeSerializer());
         module.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer());
         module.addDeserializer(LocalDateTime.class, new LocalDateTimeDeSerializer());
-
+        module.addSerializer(String.class, new NonBlankStringSerializer());
+        module.addSerializer(ScottishAlterationsApi.class, new ScottishAlterationsApiSerializer());
         objectMapper.registerModule(module);
         return objectMapper;
     }
