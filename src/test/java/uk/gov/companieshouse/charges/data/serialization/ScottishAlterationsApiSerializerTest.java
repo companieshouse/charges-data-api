@@ -40,17 +40,20 @@ public class ScottishAlterationsApiSerializerTest {
     }
 
     @Test
-    void testEmptyScottishAlterationsApiObject() throws IOException {
+    void testEmptyScottishAlterationsApiObject() {
         ScottishAlterationsApi alterationsApi = new ScottishAlterationsApi();
 
-        apiSerializer.serialize(alterationsApi, jsonGenerator, serializerProvider);
-        verify(jsonGenerator).writeNull();
+        assertTrue(apiSerializer.isEmpty(serializerProvider, alterationsApi));
+        assertTrue(apiSerializer.isEmpty(serializerProvider, null));
     }
 
     @Test
-    void testNullScottishAlterationsApiObject() throws IOException {
-        apiSerializer.serialize(null, jsonGenerator, serializerProvider);
-        verify(jsonGenerator).writeNull();
+    void testNonEmptyScottishAlterationsApiObject() {
+        ScottishAlterationsApi alterationsApi = new ScottishAlterationsApi();
+        alterationsApi.setDescription("some description");
+        alterationsApi.setHasAlterationsToProhibitions(true);
+
+        assertFalse(apiSerializer.isEmpty(serializerProvider, alterationsApi));
     }
 
 }

@@ -15,13 +15,18 @@ public class ScottishAlterationsApiSerializer extends JsonSerializer<ScottishAlt
     @Override
     public void serialize(ScottishAlterationsApi value, JsonGenerator jsonGenerator,
                           SerializerProvider serializerProvider) throws IOException {
-        if (value == null || allFieldsNull(value)) {
+        if (isEmpty(serializerProvider, value)) {
             jsonGenerator.writeNull();
         } else {
             ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
             jsonGenerator.writeRawValue(objectMapper.writeValueAsString(value));
         }
+    }
+
+    @Override
+    public boolean isEmpty(SerializerProvider provider, ScottishAlterationsApi value) {
+        return value == null || allFieldsNull(value);
     }
 
     private boolean allFieldsNull(ScottishAlterationsApi value) {

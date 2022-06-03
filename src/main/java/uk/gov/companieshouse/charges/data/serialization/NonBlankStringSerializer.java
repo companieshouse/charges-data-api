@@ -12,11 +12,15 @@ public class NonBlankStringSerializer extends JsonSerializer<String> {
     @Override
     public void serialize(String value, JsonGenerator jsonGenerator,
                           SerializerProvider serializerProvider) throws IOException {
-        if (StringUtils.isBlank(value)) {
+        if (isEmpty(serializerProvider, value)) {
             jsonGenerator.writeNull();
         } else {
             jsonGenerator.writeString(value);
         }
     }
 
+    @Override
+    public boolean isEmpty(SerializerProvider provider, String value) {
+        return StringUtils.isBlank(value);
+    }
 }
