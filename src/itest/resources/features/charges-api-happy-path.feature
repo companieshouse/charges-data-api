@@ -1,4 +1,4 @@
-Feature: Process company charges
+Feature: Process company charges (Happy path)
 
   Scenario Outline: Process company charges successfully
 

@@ -16,18 +16,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class ScottishAlterationsApiSerializerTest {
+public class NotNullFieldObjectSerializerTest {
 
     @Mock
     private SerializerProvider serializerProvider;
     @Mock
     private JsonGenerator jsonGenerator;
 
-    private ScottishAlterationsApiSerializer apiSerializer;
+    private NotNullFieldObjectSerializer apiSerializer;
 
     @BeforeEach
     void setUp() {
-        apiSerializer = new ScottishAlterationsApiSerializer();
+        apiSerializer = new NotNullFieldObjectSerializer();
     }
 
     @Test

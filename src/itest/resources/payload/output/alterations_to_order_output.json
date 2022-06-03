@@ -53,10 +53,7 @@
                 "transaction_id" : null,
                 "delivered_on" : null,
                 "insolvency_case_number" : null,
-                "links" : {
-                    "filing" : null,
-                    "insolvency_case" : null
-                }
+                "links" : null
             }
         ],
         "insolvency_cases" : null,
