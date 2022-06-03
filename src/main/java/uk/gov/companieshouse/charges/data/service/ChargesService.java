@@ -65,9 +65,6 @@ public class ChargesService {
     @Transactional
     public void upsertCharges(String contextId, String companyNumber, String chargeId,
                               InternalChargeApi requestBody) {
-        logger.debug(String.format("Started :upsertCharges for chargeId %s company number %s ",
-                chargeId, companyNumber));
-
         Optional<ChargesDocument> chargesDocumentOptional = chargesRepository.findById(chargeId);
 
         chargesDocumentOptional.map(chargesDocument -> {
@@ -81,7 +78,7 @@ public class ChargesService {
 
                 saveAndInvokeChsKafkaApi(contextId, companyNumber, chargeId, charges);
             } else {
-                logger.error("Finished : upsertCharges, charge not saved "
+                logger.error("Charge not saved "
                                 + "as record provided is older than the one already stored.");
             }
             return null;
@@ -101,28 +98,16 @@ public class ChargesService {
      * @return charge details.
      */
     public Optional<ChargeApi> getChargeDetails(final String companyNumber, final String chargeId) {
-        logger.debug(String.format("Started : get Charge Details for Company Number %s "
-                        + " Charge Id %s ",
-                companyNumber,
-                chargeId
-        ));
         Optional<ChargesDocument> chargesDocuments =
                 this.chargesRepository.findChargeDetails(companyNumber, chargeId);
         if (chargesDocuments.isEmpty()) {
             logger.trace(
                     String.format(
-                            "Finished: Company charges not found for company %s with charge id %s",
+                            "Company charges not found for company %s with charge id %s",
                             companyNumber, chargeId));
             return Optional.empty();
         }
-        Optional<ChargeApi> chargeDetails =
-                chargesDocuments.map(ChargesDocument::getData);
-        logger.debug(String.format("Finished : Charges details found for Company Number %s "
-                        + "with Charge id %s",
-                companyNumber,
-                chargeId
-        ));
-        return chargeDetails;
+        return chargesDocuments.map(ChargesDocument::getData);
     }
 
     /**
@@ -132,17 +117,10 @@ public class ChargesService {
      * @return charges.
      */
     public Optional<ChargesApi> findCharges(final String companyNumber, final Pageable pageable) {
-        logger.debug(String.format("Started : findCharges for Company Number %s ",
-                companyNumber
-        ));
-
         Page<ChargesDocument> page = chargesRepository.findCharges(companyNumber, pageable);
         List<ChargesDocument> charges = page == null ? Collections.emptyList() : page.getContent();
         if (charges.isEmpty()) {
-            logger.error(
-                    String.format(
-                            "Finished: findCharges No charges found for company %s ",
-                            companyNumber));
+            logger.error(String.format("No charges found for company %s ", companyNumber));
             return Optional.empty();
         }
 
@@ -150,17 +128,10 @@ public class ChargesService {
                 companyMetricsApiService.getCompanyMetrics(companyNumber);
 
         if (companyMetrics.isEmpty()) {
-            logger.error(
-                    String.format(
-                            "Finished: findCharges No company metrics data found for company %s ",
-                            companyNumber));
+            logger.error(String.format("No company metrics data found for company %s ",
+                    companyNumber));
         }
-        Optional<ChargesApi> result = Optional.of(createChargesApi(charges,
-                companyMetrics));
-        logger.debug(String.format("Finished : findCharges charges found for Company Number %s ",
-                companyNumber
-        ));
-        return result;
+        return Optional.of(createChargesApi(charges, companyMetrics));
     }
 
     private ChargesApi createChargesApi(List<ChargesDocument> charges,
@@ -188,7 +159,7 @@ public class ChargesService {
                                           String chargeId, ChargesDocument charges) {
         this.chargesRepository.save(charges);
         logger.debug(
-                String.format("Finished : upsertCharges for chargeId %s company number %s ",
+                String.format("Invoking chs-kafka-api for chargeId %s company number %s ",
                         chargeId,
                         companyNumber));
         ApiResponse<Void> res = chargesApiService.invokeChsKafkaApi(contextId,

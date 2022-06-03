@@ -114,19 +114,17 @@ public class ChargesController {
             pageable = PageRequest.of(startIndex, itemsPerPage);
         }
 
-        Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,
-                pageable);
-        ChargesApi chargesDocument = charges.isEmpty() ? null : charges.get();
-        ResponseEntity<ChargesApi> chargesApiResponseEntity =
-                                new ResponseEntity<>(
-                                        chargesDocument,
-                                        HttpStatus.OK);
+        ResponseEntity<ChargesApi> chargeApiResponse = chargesService.findCharges(companyNumber,
+                                pageable).map(charges -> new ResponseEntity<>(
+                                        charges,
+                                        HttpStatus.OK))
+                        .orElse(ResponseEntity.notFound().build());
 
         logger.debug(
                 String.format("Finished : getCompanyCharges Charges found for Company Number %s ",
                         companyNumber
                 ));
-        return chargesApiResponseEntity;
+        return chargeApiResponse;
     }
 
     /**

@@ -19,7 +19,7 @@ public class ScottishAlterationsApiSerializer extends JsonSerializer<ScottishAlt
             jsonGenerator.writeNull();
         } else {
             ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
             jsonGenerator.writeRawValue(objectMapper.writeValueAsString(value));
         }
     }
