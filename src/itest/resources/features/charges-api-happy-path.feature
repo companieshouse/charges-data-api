@@ -17,7 +17,6 @@ Feature: Process company charges (Happy path)
       | created_on_input                                                  | created_on_output                                           |
       | floating_charge_input                                             | floating_charge_output                                      |
       | more_than_4_persons_input                                         | more_than_4_persons_output                                  |
-      | obligation_secured_&_nature_of_charge_Happy_Path_input            | obligation_secured_&_nature_of_charge_Happy_Path_output     |
       | satisfied_on_Happy_Path_input                                     | satisfied_on_Happy_Path_output                              |
 
 
