@@ -167,7 +167,7 @@ public class ChargesServiceTest {
         Mockito.when(chargesRepository.findById(chargeId)).thenReturn(Optional.empty());
 
         try {
-            chargesService.deleteCharge("0", "x-request-id", chargeId);
+            chargesService.deleteCharge("x-request-id", chargeId);
         }
         catch (ResponseStatusException statusException)  {
             Assert.assertEquals(HttpStatus.BAD_REQUEST, statusException.getStatus());
@@ -183,7 +183,7 @@ public class ChargesServiceTest {
         Mockito.when(chargesRepository.findById(chargeId)).thenReturn(populateChargesDocument(chargeId,null));
 
         try {
-            chargesService.deleteCharge("0", "x-request-id", chargeId);
+            chargesService.deleteCharge( "x-request-id", chargeId);
         }
         catch (ResponseStatusException statusException)  {
             Assert.assertEquals(HttpStatus.NOT_FOUND, statusException.getStatus());
@@ -199,7 +199,7 @@ public class ChargesServiceTest {
         Mockito.when(chargesRepository.findById(chargeId)).thenReturn(
                 populateChargesDocument(chargeId,populateCharge()));
 
-        chargesService.deleteCharge("0","x-request-id", chargeId);
+        chargesService.deleteCharge("x-request-id", chargeId);
 
         verify(chargesRepository, Mockito.times(1)).deleteById(Mockito.any());
         verify(chargesRepository, Mockito.times(1)).findById(Mockito.eq(chargeId));
@@ -208,13 +208,12 @@ public class ChargesServiceTest {
 
     @Test
     void when_charge_id_exist_then_invoke_chs_kafka_api_successfully_and_delete_charge() {
-        String chargeId = "123456789"; String contextId="1111111";
-        String companyNumber="0";
+        String chargeId = "123456789"; String contextId="1111111"; String companyNumber="1234";
 
         Mockito.when(chargesRepository.findById(chargeId)).thenReturn(
                 populateChargesDocument(chargeId,populateCharge()));
 
-        chargesService.deleteCharge(companyNumber,contextId, chargeId);
+        chargesService.deleteCharge(contextId, chargeId);
 
         verify(logger, Mockito.times(1)).info(
                 "ChsKafka api invoked successfully for charge id " + chargeId +  " and x-request-id " + contextId
@@ -235,7 +234,7 @@ public class ChargesServiceTest {
         doThrow(new DataAccessResourceFailureException("Connection broken"))
                 .when(chargesRepository).deleteById(chargeId);
         try {
-                chargesService.deleteCharge("0", "x-request-id", chargeId);
+                chargesService.deleteCharge("x-request-id", chargeId);
         }
         catch (ResponseStatusException statusException)  {
             Assert.assertEquals(HttpStatus.SERVICE_UNAVAILABLE, statusException.getStatus());
@@ -250,7 +249,7 @@ public class ChargesServiceTest {
                 .when(chargesRepository)
                 .findById(chargeId);
         try {
-            chargesService.deleteCharge("0", "x-request-id", chargeId);
+            chargesService.deleteCharge( "x-request-id", chargeId);
         }
         catch (ResponseStatusException statusException)  {
             Assert.assertEquals(HttpStatus.SERVICE_UNAVAILABLE, statusException.getStatus());
