@@ -155,7 +155,7 @@ public class ChargesControllerTest {
     @Test
     @DisplayName("Company Charges DELETE request")
     void callChargeDeleteRequest() throws Exception {
-        doNothing().when(chargesService).deleteCharge(anyString(), anyString(), anyString());
+        doNothing().when(chargesService).deleteCharge(anyString(), anyString());
 
         mockMvc.perform(delete(CHARGES_DELETE_URL)
                         .contentType(APPLICATION_JSON)
@@ -167,7 +167,7 @@ public class ChargesControllerTest {
     @DisplayName("Company Charges DELETE request - NotFound status code 404 ")
     void callChargeDeleteRequestIllegalArgument() throws Exception {
         doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND))
-                .when(chargesService).deleteCharge(anyString(),anyString(), anyString());
+                .when(chargesService).deleteCharge(anyString(), anyString());
 
         mockMvc.perform(delete(CHARGES_DELETE_URL)
                         .contentType(APPLICATION_JSON)
@@ -179,7 +179,7 @@ public class ChargesControllerTest {
     @DisplayName("Company Charges DELETE request - BadRequest status code 400")
     void callChargeDeleteRequestBadRequest() throws Exception {
         doThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST))
-                .when(chargesService).deleteCharge(anyString(),anyString(), anyString());
+                .when(chargesService).deleteCharge(anyString(), anyString());
 
         mockMvc.perform(delete(CHARGES_DELETE_URL)
                         .contentType(APPLICATION_JSON)
@@ -191,7 +191,7 @@ public class ChargesControllerTest {
     @DisplayName("Company Charges DELETE request - MethodNotAllowed status code 405")
     void callChargeDeleteRequestMethodNotAllowed() throws Exception {
         doThrow(new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED))
-                .when(chargesService).deleteCharge(anyString(),anyString(), anyString());
+                .when(chargesService).deleteCharge(anyString(), anyString());
 
         mockMvc.perform(put(CHARGES_DELETE_URL)
                         .contentType(APPLICATION_JSON)
@@ -204,7 +204,7 @@ public class ChargesControllerTest {
     void callChargeDeleteRequestInternalServerError() throws Exception {
 
         doThrow(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR))
-                .when(chargesService).deleteCharge(anyString(),anyString(), anyString());
+                .when(chargesService).deleteCharge(anyString(), anyString());
 
         mockMvc.perform(delete(CHARGES_DELETE_URL)
                         .contentType(APPLICATION_JSON)
@@ -217,7 +217,7 @@ public class ChargesControllerTest {
     void callChargeDeleteRequestServiceUnavailable() throws Exception {
 
         doThrow(new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE))
-                .when(chargesService).deleteCharge(anyString(),anyString(), anyString());
+                .when(chargesService).deleteCharge(anyString(), anyString());
 
         mockMvc.perform(delete(CHARGES_DELETE_URL)
                         .contentType(APPLICATION_JSON)
@@ -230,7 +230,7 @@ public class ChargesControllerTest {
     void callChargeDeleteRequestBadGatewayError() throws Exception {
 
         doThrow(new ResponseStatusException(HttpStatus.BAD_GATEWAY))
-                .when(chargesService).deleteCharge(anyString(),anyString(), anyString());
+                .when(chargesService).deleteCharge(anyString(), anyString());
 
         mockMvc.perform(delete(CHARGES_DELETE_URL)
                         .contentType(APPLICATION_JSON)

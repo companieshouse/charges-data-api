@@ -144,7 +144,7 @@ public class ChargesController {
                 chargeId, contextId, companyNumber));
 
         try {
-            chargesService.deleteCharge(companyNumber,contextId, chargeId);
+            chargesService.deleteCharge(contextId, chargeId);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (ResponseStatusException responseStatusException) {
             logger.error("Error Occurred during a Delete company charge: "

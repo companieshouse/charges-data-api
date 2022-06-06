@@ -6,6 +6,7 @@ import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import javax.validation.Valid;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
@@ -176,10 +177,8 @@ public class ChargesService {
      * Delete charge from company mortgages.
      * @param contextId the x-request-id.
      * @param chargeId the charge identifier.
-     * @param companyNumber the company number.
      */
-    public void deleteCharge(String companyNumber,
-                             String contextId,
+    public void deleteCharge(String contextId,
                              String chargeId) {
         try {
             Optional<ChargesDocument> chargesDocumentOptional =
@@ -191,6 +190,15 @@ public class ChargesService {
                                 + " with %s header x-request-id %s",
                         chargeId, contextId));
             }
+            Optional<String> companyNumberOptional = Optional.ofNullable(
+                    chargesDocumentOptional.get().getCompanyNumber())
+                    .filter(Predicate.not(String::isEmpty));
+
+            String companyNumber = companyNumberOptional.orElseThrow(
+                    () -> new ResponseStatusException(
+                            HttpStatus.NOT_FOUND,
+                            "Company number doesn't exist in document for the given "
+                                    + "charge id" + chargeId));
 
             ChargeApi chargeApi =
                     chargesDocumentOptional.map(ChargesDocument::getData)
