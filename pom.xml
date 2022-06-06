@@ -272,7 +272,7 @@
 					</execution>
 					<execution>
 						<id>post-unit-test</id>
-						<phase>test</phase>
+						<phase>verify</phase>
 						<goals>
 							<goal>report</goal>
 						</goals>
@@ -289,7 +289,7 @@
 					</execution>
 					<execution>
 						<id>post-integration-test</id>
-						<phase>post-integration-test</phase>
+						<phase>verify</phase>
 						<goals>
 							<goal>report</goal>
 						</goals>
@@ -337,6 +337,7 @@
 				<version>${maven-failsafe-plugin.version}</version>
 				<executions>
 					<execution>
+						<phase>integration-test</phase>
 						<goals>
 							<goal>integration-test</goal>
 							<goal>verify</goal>
