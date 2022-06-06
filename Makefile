@@ -41,7 +41,7 @@ test: test-integration test-unit
 .PHONY: test-unit
 test-unit:
 	@# Help: Run unit tests
-	mvn test -Dskip.integration.tests=true
+	mvn integration-test
 
 .PHONY: test-integration
 test-integration:
@@ -75,7 +75,7 @@ dist: clean build package
 .PHONY: sonar-pr-analysis
 sonar-pr-analysis:
 	@# Help: Run sonar scan on a PR
-	mvn verify sonar:sonar -P sonar-pr-analysis
+	mvn sonar:sonar -P sonar-pr-analysis
 
 .PHONY: sonar
 sonar:
