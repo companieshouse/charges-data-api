@@ -18,7 +18,7 @@
     },
     "secured_details": {
       "type": "obligations-secured",
-      "description": "£225,000 DUE OR TO BECOME DUE"
+      "description": "225,000 DUE OR TO BECOME DUE"
     },
     "charge_code": "102862370001",
     "insolvency_cases": [
