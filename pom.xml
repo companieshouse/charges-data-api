@@ -373,7 +373,6 @@
 					</compilerArgs>
 					<showWarnings>true</showWarnings>
 					<showDeprecation>true</showDeprecation>
-					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
 
