@@ -122,9 +122,10 @@ public class ChargesServiceTest {
     @Test
     public void empty_charges_when_repository_returns_empty_result() {
         var pageable = Pageable.ofSize(1);
-        Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,pageable);
-        assertThat(charges.isPresent()).isFalse();
-        verify(companyMetricsApiService, times(0))
+        Optional<ChargesApi> charges = chargesService.findCharges(companyNumber, pageable);
+        assertThat(charges.isPresent()).isTrue();
+        assertThat(charges.get().getTotalCount()).isEqualTo(0);
+        verify(companyMetricsApiService, times(1))
                 .getCompanyMetrics(companyNumber);
     }
 
@@ -136,12 +137,12 @@ public class ChargesServiceTest {
         when(chargesRepository.findCharges(eq(companyNumber), any(Pageable.class)))
                 .thenReturn(page);
 
-        Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,pageable);
+        Optional<ChargesApi> charges = chargesService.findCharges(companyNumber, pageable);
         assertThat(charges.isPresent()).isTrue();
         //assert no metrics
-        assertNull(charges.get().getPartSatisfiedCount());
-        assertNull(charges.get().getUnfilteredCount());
-        assertNull(charges.get().getPartSatisfiedCount());
+        assertThat(charges.get().getPartSatisfiedCount()).isEqualTo(0);
+        assertThat(charges.get().getUnfilteredCount()).isEqualTo(0);
+        assertThat(charges.get().getSatisfiedCount()).isEqualTo(0);
         assertEquals(charges.get().getItems().size(), charges.get().getTotalCount());
     }
 

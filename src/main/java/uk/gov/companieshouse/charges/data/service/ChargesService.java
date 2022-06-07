@@ -120,10 +120,6 @@ public class ChargesService {
     public Optional<ChargesApi> findCharges(final String companyNumber, final Pageable pageable) {
         Page<ChargesDocument> page = chargesRepository.findCharges(companyNumber, pageable);
         List<ChargesDocument> charges = page == null ? Collections.emptyList() : page.getContent();
-        if (charges.isEmpty()) {
-            logger.error(String.format("No charges found for company %s ", companyNumber));
-            return Optional.empty();
-        }
 
         Optional<MetricsApi> companyMetrics =
                 companyMetricsApiService.getCompanyMetrics(companyNumber);
@@ -139,16 +135,21 @@ public class ChargesService {
             Optional<MetricsApi> metrics) {
         var chargesApi = new ChargesApi();
         charges.forEach(charge -> chargesApi.addItemsItem(charge.getData()));
-        chargesApi.setTotalCount(chargesApi.getItems().size());
+        chargesApi.setTotalCount(charges.size());
+        MortgageApi mortgage = null;
 
         if (metrics.isPresent()) {
             chargesApi.setEtag(metrics.get().getEtag());
-            MortgageApi mortgage = metrics.get().getMortgage();
-
-            chargesApi.setSatisfiedCount(integerDefaultZero(mortgage.getSatisfiedCount()));
-            chargesApi.setPartSatisfiedCount(integerDefaultZero(mortgage.getPartSatisfiedCount()));
-            chargesApi.setUnfilteredCount(integerDefaultZero(mortgage.getTotalCount()));
+            mortgage = metrics.get().getMortgage();
         }
+
+        chargesApi.setSatisfiedCount(integerDefaultZero(mortgage == null ? null :
+                mortgage.getSatisfiedCount()));
+        chargesApi.setPartSatisfiedCount(integerDefaultZero(mortgage == null ? null :
+                mortgage.getPartSatisfiedCount()));
+        chargesApi.setUnfilteredCount(integerDefaultZero(mortgage == null ? null :
+                mortgage.getTotalCount()));
+
         return chargesApi;
     }
 
