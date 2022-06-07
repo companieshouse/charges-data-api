@@ -351,6 +351,7 @@
 							<value>org.sonar.java.jacoco.JUnitListener</value>
 						</property>
 					</properties>
+					<argLine>-Dfile.encoding=UTF-8</argLine>
 					<argLine>${failsafeArgLine}</argLine>
 					<classesDirectory>${project.build.outputDirectory}</classesDirectory>
 					<skipITs>${skip.integration.tests}</skipITs>
@@ -372,6 +373,7 @@
 					</compilerArgs>
 					<showWarnings>true</showWarnings>
 					<showDeprecation>true</showDeprecation>
+					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
 
