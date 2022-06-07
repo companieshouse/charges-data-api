@@ -29,7 +29,7 @@
         },
         "secured_details" : {
             "type" : "obligations-secured",
-            "description" : "225,000 DUE OR TO BECOME DUE"
+            "description" : "£225,000 DUE OR TO BECOME DUE"
         },
         "more_than_four_persons_entitled" : false,
         "persons_entitled" : [ 
