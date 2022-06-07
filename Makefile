@@ -75,12 +75,12 @@ dist: clean build package
 .PHONY: sonar-pr-analysis
 sonar-pr-analysis:
 	@# Help: Run sonar scan on a PR
-	mvn verify sonar:sonar -P sonar-pr-analysis -Dfile.encoding=UTF-8
+	mvn verify sonar:sonar -P sonar-pr-analysis
 
 .PHONY: sonar
 sonar:
 	@# Help: Run sonar scan
-	mvn verify sonar:sonar -Dfile.encoding=UTF-8
+	mvn verify sonar:sonar
 
 .PHONY: deps
 deps:
