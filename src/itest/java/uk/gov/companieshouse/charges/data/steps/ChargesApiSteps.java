@@ -7,21 +7,20 @@ import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
-import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
+
+import org.apache.commons.io.IOUtils;
 import org.assertj.core.api.Assertions;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -251,9 +250,6 @@ public class ChargesApiSteps {
     }
 
     private Document readData(Resource resource) throws IOException {
-        var data= FileCopyUtils.copyToString(new InputStreamReader(Objects.requireNonNull(
-                resource.getInputStream())));
-        Document document = Document.parse(data);
-        return document;
+        return Document.parse(IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8));
     }
 }
