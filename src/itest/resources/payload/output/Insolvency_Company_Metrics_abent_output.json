@@ -1,6 +1,9 @@
 {
   "etag": null,
   "total_count": 1,
+  "unfiltered_count": 0,
+  "satisfied_count": 0,
+  "part_satisfied_count": 0,
   "items": [
     {
       "etag": "511db80f474c632e1f33ec0422e18e0a4d20c298",
