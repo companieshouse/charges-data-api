@@ -39,7 +39,7 @@ import org.springframework.web.server.ResponseStatusException;
 import uk.gov.companieshouse.api.charges.ChargesApi;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
-import uk.gov.companieshouse.charges.data.model.Updated;
+import uk.gov.companieshouse.charges.data.model.ChargesDocument.Updated;
 import uk.gov.companieshouse.charges.data.service.ChargesService;
 import uk.gov.companieshouse.charges.data.transform.ChargesTransformer;
 import uk.gov.companieshouse.logging.Logger;

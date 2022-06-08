@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.GenerateEtagUtil;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
-import uk.gov.companieshouse.charges.data.model.Updated;
+import uk.gov.companieshouse.charges.data.model.ChargesDocument.Updated;
 import uk.gov.companieshouse.logging.Logger;
 
 @Component

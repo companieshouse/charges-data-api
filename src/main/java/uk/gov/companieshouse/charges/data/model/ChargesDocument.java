@@ -31,7 +31,6 @@ public class ChargesDocument {
      * default constructor.
      */
     public ChargesDocument() {
-
     }
 
     /**
@@ -96,19 +95,6 @@ public class ChargesDocument {
     }
 
     @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("ChargesDocument{");
-        sb.append("id=").append(id);
-        sb.append(", company_number=").append(companyNumber);
-        sb.append(", data=").append(data.toString());
-        sb.append(", delta_at=").append(deltaAt != null ? deltaAt.toString() : "");
-        sb.append(", updated=").append(updated.toString());
-
-        sb.append('}');
-        return sb.toString();
-    }
-
-    @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
@@ -117,12 +103,49 @@ public class ChargesDocument {
             return false;
         }
         ChargesDocument that = (ChargesDocument) obj;
-        return id.equals(that.id) && companyNumber.equals(that.companyNumber) && data.equals(
-                that.data) && deltaAt.equals(that.deltaAt) && updated.equals(that.updated);
+        return id.equals(that.id) && companyNumber.equals(that.companyNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, companyNumber, data, deltaAt, updated);
+        return Objects.hash(id, companyNumber);
+    }
+
+    public static class Updated {
+
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+        private LocalDateTime at;
+
+        private String type;
+
+        private String by;
+
+        public LocalDateTime getAt() {
+            return at;
+        }
+
+        public Updated setAt(LocalDateTime at) {
+            this.at = at;
+            return this;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public Updated setType(String type) {
+            this.type = type;
+            return this;
+        }
+
+        public String getBy() {
+            return by;
+        }
+
+        public Updated setBy(String by) {
+            this.by = by;
+            return this;
+        }
+
     }
 }
