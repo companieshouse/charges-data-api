@@ -23,8 +23,7 @@ public class EnumConverters {
             try {
                 return targetType.getType().getDeclaredMethod("fromValue", String.class)
                         .invoke(null, source);
-            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException
-                    exception) {
+            } catch (Exception ex) {
                 throw new IllegalArgumentException("Unexpected Enum " + targetType);
             }
         }
@@ -43,8 +42,7 @@ public class EnumConverters {
             try {
                 return sourceType.getType().getDeclaredMethod("getValue", null)
                         .invoke(source, null);
-            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException
-                    exception) {
+            } catch (Exception ex) {
                 return ((Enum<?>) source).name();
             }
         }

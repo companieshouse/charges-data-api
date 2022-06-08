@@ -29,8 +29,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
-import uk.gov.companieshouse.charges.data.model.Updated;
-
+import uk.gov.companieshouse.charges.data.model.ChargesDocument.Updated;
 
 
 import static org.assertj.core.api.Assertions.assertThat;

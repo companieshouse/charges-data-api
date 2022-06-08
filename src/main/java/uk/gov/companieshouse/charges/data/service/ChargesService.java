@@ -1,13 +1,11 @@
 package uk.gov.companieshouse.charges.data.service;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
-import javax.validation.Valid;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -68,7 +66,7 @@ public class ChargesService {
                               InternalChargeApi requestBody) {
         Optional<ChargesDocument> chargesDocumentOptional = chargesRepository.findById(chargeId);
 
-        chargesDocumentOptional.map(chargesDocument -> {
+        chargesDocumentOptional.ifPresentOrElse(chargesDocument -> {
             OffsetDateTime dateFromBodyRequest = requestBody.getInternalData().getDeltaAt();
             OffsetDateTime deltaAtFromDb = chargesDocument.getDeltaAt();
 
@@ -80,15 +78,14 @@ public class ChargesService {
                 saveAndInvokeChsKafkaApi(contextId, companyNumber, chargeId, charges);
             } else {
                 logger.error("Charge not saved "
-                                + "as record provided is older than the one already stored.");
+                        + "as record provided is older than the one already stored.");
             }
-            return null;
-        }).orElseGet(() -> {
-            ChargesDocument charges =
-                    this.chargesTransformer.transform(companyNumber, chargeId, requestBody);
-            saveAndInvokeChsKafkaApi(contextId, companyNumber, chargeId, charges);
-            return null;
-        });
+        },
+                () -> {
+                    ChargesDocument charges =
+                            this.chargesTransformer.transform(companyNumber, chargeId, requestBody);
+                    saveAndInvokeChsKafkaApi(contextId, companyNumber, chargeId, charges);
+                });
     }
 
     /**
@@ -132,7 +129,7 @@ public class ChargesService {
     }
 
     private ChargesApi createChargesApi(List<ChargesDocument> charges,
-            Optional<MetricsApi> metrics) {
+                                        Optional<MetricsApi> metrics) {
         var chargesApi = new ChargesApi();
         charges.forEach(charge -> chargesApi.addItemsItem(charge.getData()));
         chargesApi.setTotalCount(charges.size());
@@ -176,8 +173,9 @@ public class ChargesService {
 
     /**
      * Delete charge from company mortgages.
+     *
      * @param contextId the x-request-id.
-     * @param chargeId the charge identifier.
+     * @param chargeId  the charge identifier.
      */
     public void deleteCharge(String contextId,
                              String chargeId) {
@@ -192,7 +190,7 @@ public class ChargesService {
                         chargeId, contextId));
             }
             Optional<String> companyNumberOptional = Optional.ofNullable(
-                    chargesDocumentOptional.get().getCompanyNumber())
+                            chargesDocumentOptional.get().getCompanyNumber())
                     .filter(Predicate.not(String::isEmpty));
 
             String companyNumber = companyNumberOptional.orElseThrow(
@@ -205,7 +203,7 @@ public class ChargesService {
                     chargesDocumentOptional.map(ChargesDocument::getData)
                             .orElseThrow(() -> new ResponseStatusException(
                                     HttpStatus.NOT_FOUND,
-                             "ChargeApi object doesn't exist for" + chargeId));
+                                    "ChargeApi object doesn't exist for" + chargeId));
 
             chargesApiService.invokeChsKafkaApiWithDeleteEvent(contextId,
                     chargeId,
@@ -213,7 +211,7 @@ public class ChargesService {
                     chargeApi);
 
             logger.info(String.format("ChsKafka api invoked successfully for "
-                    + "charge id %s and x-request-id %s" , chargeId, contextId));
+                    + "charge id %s and x-request-id %s", chargeId, contextId));
 
             chargesRepository.deleteById(chargeId);
             logger.info(String.format(
