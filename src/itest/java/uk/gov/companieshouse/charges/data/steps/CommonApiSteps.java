@@ -2,6 +2,8 @@ package uk.gov.companieshouse.charges.data.steps;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -10,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import uk.gov.companieshouse.charges.data.CucumberFeaturesRunnerITest;
+import uk.gov.companieshouse.charges.data.config.WiremockTestConfig;
 
 public class CommonApiSteps {
 
@@ -17,6 +21,16 @@ public class CommonApiSteps {
 
     @Autowired
     protected TestRestTemplate restTemplate;
+
+    @Before
+    public static void before_each() {
+        CucumberFeaturesRunnerITest.start();
+    }
+
+    @After
+    public static void after_each() {
+        CucumberFeaturesRunnerITest.stop();
+    }
 
     @Given("the application running")
     public void theApplicationRunning() {

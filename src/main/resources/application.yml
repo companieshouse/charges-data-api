@@ -37,3 +37,15 @@ api:
     metrics:
         endpoint: ${COMPANY_METRICS_API_URL:https://localhost}
         key: ${COMPANY_METRICS_API_KEY:apiKey}
+
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      base-path: /
+      path-mapping:
+        health: charges-data-api/healthcheck
+  endpoint:
+    health:
+      show-details: never
+      enabled: true
