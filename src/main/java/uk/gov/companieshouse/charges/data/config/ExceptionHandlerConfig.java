@@ -9,10 +9,12 @@ import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.server.MethodNotAllowedException;
 import org.springframework.web.server.ResponseStatusException;
 import uk.gov.companieshouse.logging.Logger;
 
@@ -130,6 +132,26 @@ public class ExceptionHandlerConfig {
         Map<String, Object> responseBody = new LinkedHashMap<>();
         populateResponseBody(responseBody, correlationId);
         return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * MethodNotAllowedException exception handler.
+     *
+     * @param ex      exception to handle.
+     * @param request request.
+     * @return error response to return.
+     */
+    @ExceptionHandler(value = {MethodNotAllowedException.class,
+            HttpRequestMethodNotSupportedException.class})
+    public ResponseEntity<Object> handleMethodNotAllowedException(Exception ex,
+                                                                  WebRequest request) {
+        var correlationId = generateShortCorrelationId();
+        logger.error(String.format("Started: handleException: %s Generating error response ",
+                correlationId), ex);
+        Map<String, Object> responseBody = new LinkedHashMap<>();
+        populateResponseBody(responseBody, correlationId);
+        return new ResponseEntity<>(responseBody, HttpStatus.METHOD_NOT_ALLOWED);
+
     }
 
     private String generateShortCorrelationId() {
