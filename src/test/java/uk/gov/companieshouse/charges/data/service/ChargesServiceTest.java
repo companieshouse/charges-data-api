@@ -3,6 +3,7 @@ package uk.gov.companieshouse.charges.data.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.mock;
@@ -167,13 +168,11 @@ public class ChargesServiceTest {
         String chargeId = "CIrBNCKGlthNq2r9HzblXGKpTrk";
         Mockito.when(chargesRepository.findById(chargeId)).thenReturn(Optional.empty());
 
-        try {
+        Exception exception = assertThrows(ResponseStatusException.class, () -> {
             chargesService.deleteCharge("x-request-id", chargeId);
-        }
-        catch (ResponseStatusException statusException)  {
-            Assert.assertEquals(HttpStatus.BAD_REQUEST, statusException.getStatus());
-        }
+        });
 
+        assertEquals(HttpStatus.GONE, ((ResponseStatusException)exception).getStatus());
         verify(chargesRepository, Mockito.times(0)).deleteById(Mockito.any());
         verify(chargesRepository, Mockito.times(1)).findById(Mockito.eq(chargeId));
     }
