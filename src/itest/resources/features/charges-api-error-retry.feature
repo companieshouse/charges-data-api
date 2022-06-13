@@ -27,7 +27,7 @@ Feature: Process company charges error scenarios
     And   Data is not updated into Mongo DB
     And   CHS Kafka API is never invoked
 
-  Scenario: Process company charges should return correct response code for payload which causes NPE
+  Scenario: Process company charges should return correct response code for payload
 
     Given Charges Data API component is successfully running
     And   Stubbed CHS Kafka API endpoint will return 503 http response code

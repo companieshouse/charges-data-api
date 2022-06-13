@@ -30,8 +30,7 @@ public class CompanyMetricsApiServiceTest {
     @Mock
     private ApiClientService apiClientService;
 
-    @Mock
-    private Logger logger;
+    private final Logger logger = Mockito.mock(Logger.class);;
 
     @Mock
     private InternalApiClient internalApiClient;
@@ -47,11 +46,6 @@ public class CompanyMetricsApiServiceTest {
 
     @InjectMocks
     private CompanyMetricsApiService companyMetricsApiService;
-
-    @Before
-    public void setup() {
-        this.logger = Mockito.mock(Logger.class);
-    }
 
     @Test
     void should_invoke_company_metrics_endpoint_successfully()

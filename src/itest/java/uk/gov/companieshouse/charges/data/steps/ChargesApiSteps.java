@@ -70,7 +70,6 @@ public class ChargesApiSteps {
     @After
     public static void after_each() {
         CucumberFeaturesRunnerITest.stop();
-        WiremockTestConfig.stop();
     }
 
     @Given("Charges data api service is running")
@@ -97,6 +96,8 @@ public class ChargesApiSteps {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.set(x_request_id, x_request_value);
+        headers.set("ERIC-Identity" , "SOME_IDENTITY");
+        headers.set("ERIC-Identity-Type", "key");
 
         HttpEntity request = new HttpEntity(companyCharge, headers);
         String uri = "/company/{company_number}/charge/{charge_id}/internal";
@@ -218,6 +219,8 @@ public class ChargesApiSteps {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.set(x_request_id, x_request_value);
+        headers.set("ERIC-Identity" , "SOME_IDENTITY");
+        headers.set("ERIC-Identity-Type", "key");
 
         HttpEntity request = new HttpEntity(chargeId, headers);
         String uri = "/company/{company_number}/charge/{charge_id}/internal";
@@ -228,16 +231,16 @@ public class ChargesApiSteps {
     @When("PUT Rest endpoint is invoked with a valid json payload that causes a NPE")
     public void put_rest_endpoint_is_invoked_with_a_valid_json_payload_that_causes_a_npe()
             throws IOException {
-        this.i_send_put_request_for_company_number_and_charge_id_with_payload(companyNumber,
+        i_send_put_request_for_company_number_and_charge_id_with_payload(companyNumber,
                 chargeId, invalid_payload);
     }
 
     @When("PUT Rest endpoint is invoked with a valid json payload")
     public void put_rest_endpoint_is_invoked_with_a_valid_json_payload() throws IOException {
-
-        this.i_send_put_request_for_company_number_and_charge_id_with_payload(companyNumber,
+        i_send_put_request_for_company_number_and_charge_id_with_payload(companyNumber,
                 chargeId, insolvency_cases_happy_path_input);
     }
+
     @Then("MongoDB is successfully updated")
     public void mongo_db_is_successfully_updated() throws IOException {
        this.the_expected_result_should_match("Insolvency_cases_Happy_Path_output");
