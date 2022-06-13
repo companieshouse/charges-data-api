@@ -159,12 +159,6 @@ public class ChargesService {
                                           String chargeId, ChargesDocument charges) {
         this.chargesRepository.save(charges);
         logger.info(String.format(
-                        "Successfully invoked chs-kafka-api PUT endpoint "
-                                + "for context id %s and company number %s",
-                contextId,
-                companyNumber));
-
-        logger.info(String.format(
                 "Company charges is updated in MongoDB "
                         + "with context id %s and company number %s",
                 contextId,
@@ -178,6 +172,12 @@ public class ChargesService {
             throw new ResponseStatusException(httpStatus != null
                     ? httpStatus : HttpStatus.INTERNAL_SERVER_ERROR, "invokeChsKafkaApi");
         }
+
+        logger.info(String.format("ChsKafka api CHANGED invoked "
+                        + "creating successfully for context id %s and company number %s",
+                contextId,
+                companyNumber));
+
     }
 
     /**
@@ -218,9 +218,8 @@ public class ChargesService {
                     chargeId,
                     companyNumber,
                     chargeApi);
-            logger.info(String.format(
-                            "Successfully invoked chs-kafka-api DELETED endpoint "
-                                    + "for context id %s and company number %s",
+            logger.info(String.format("ChsKafka api DELETED "
+                            + "invoked successfully for context id %s and company number %s",
                     contextId,
                     companyNumber));
 
