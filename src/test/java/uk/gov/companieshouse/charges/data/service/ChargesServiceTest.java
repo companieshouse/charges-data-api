@@ -217,7 +217,7 @@ public class ChargesServiceTest {
         chargesService.deleteCharge(contextId, chargeId);
 
         verify(logger, Mockito.times(1)).info(
-                "ChsKafka api invoked successfully for charge id " + chargeId +  " and x-request-id " + contextId
+                "Successfully invoked chs-kafka-api DELETED endpoint for context id "  + contextId + " and company number " + companyNumber
         );
         verify(chargesRepository, Mockito.times(1)).deleteById(Mockito.any());
         verify(chargesRepository, Mockito.times(1)).findById(Mockito.eq(chargeId));

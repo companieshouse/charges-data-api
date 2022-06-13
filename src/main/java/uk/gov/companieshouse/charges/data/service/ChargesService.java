@@ -78,7 +78,8 @@ public class ChargesService {
                 saveAndInvokeChsKafkaApi(contextId, companyNumber, chargeId, charges);
             } else {
                 logger.error("Charge not saved "
-                        + "as record provided is older than the one already stored.");
+                        + "as record provided is older than the one already stored"
+                );
             }
         },
                 () -> {
@@ -157,10 +158,18 @@ public class ChargesService {
     private void saveAndInvokeChsKafkaApi(String contextId, String companyNumber,
                                           String chargeId, ChargesDocument charges) {
         this.chargesRepository.save(charges);
-        logger.debug(
-                String.format("Invoking chs-kafka-api for chargeId %s company number %s ",
-                        chargeId,
-                        companyNumber));
+        logger.info(String.format(
+                        "Successfully invoked chs-kafka-api PUT endpoint "
+                                + "for context id %s and company number %s",
+                contextId,
+                companyNumber));
+
+        logger.info(String.format(
+                "Company charges is updated in MongoDB "
+                        + "with context id %s and company number %s",
+                contextId,
+                companyNumber));
+
         ApiResponse<Void> res = chargesApiService.invokeChsKafkaApi(contextId,
                 companyNumber,
                 chargeId);
@@ -209,14 +218,18 @@ public class ChargesService {
                     chargeId,
                     companyNumber,
                     chargeApi);
-
-            logger.info(String.format("ChsKafka api invoked successfully for "
-                    + "charge id %s and x-request-id %s", chargeId, contextId));
+            logger.info(String.format(
+                            "Successfully invoked chs-kafka-api DELETED endpoint "
+                                    + "for context id %s and company number %s",
+                    contextId,
+                    companyNumber));
 
             chargesRepository.deleteById(chargeId);
             logger.info(String.format(
-                    "Company charge delete called for "
-                            + "charge id %s and x-request-id %s", chargeId, contextId));
+                    "Company charge is deleted in "
+                            + "MongoDB with context id %s and company number %s",
+                    contextId,
+                    companyNumber));
 
         } catch (DataAccessException dbException) {
             logger.error(String.format(
