@@ -411,13 +411,8 @@
       "title": "InsolvencyCasesApi",
       "properties": {
         "case_number": {
-          "type": "integer",
+          "type": "string",
           "description": "The number of this insolvency case"
-        },
-        "transaction_id": {
-          "type": "integer",
-          "format": "int64",
-          "description": "The id of the insolvency filing"
         },
         "links": {
           "description": "The resources related to this insolvency case",

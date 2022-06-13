@@ -26,8 +26,7 @@
     "charge_code": "NI6224000001",
     "insolvency_cases": [
       {
-        "case_number": 2,
-        "transaction_id": 22222,
+        "case_number": "2",
         "links": null
       }
     ],
