@@ -165,7 +165,7 @@ public class ChargesService {
                 companyNumber,
                 chargeId);
         HttpStatus httpStatus = HttpStatus.resolve(res.getStatusCode());
-        if (httpStatus == null || !httpStatus.is2xxSuccessful()) {
+        if (httpStatus == null || !(httpStatus.is2xxSuccessful() || httpStatus.value() == 503)) {
             throw new ResponseStatusException(httpStatus != null
                     ? httpStatus : HttpStatus.INTERNAL_SERVER_ERROR, "invokeChsKafkaApi");
         }

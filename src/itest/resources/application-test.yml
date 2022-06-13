@@ -27,7 +27,7 @@ charges:
   api:
     resource:
       changed:
-        uri: ${CHARGES_API_RESOURCE_CHANGED_URI:http://localhost:8888/resource-changed}
+        uri: ${CHARGES_API_RESOURCE_CHANGED_URI:/resource-changed}
       kind: ${CHARGES_API_RESOURCE_KIND:company-charges}
 
 api:

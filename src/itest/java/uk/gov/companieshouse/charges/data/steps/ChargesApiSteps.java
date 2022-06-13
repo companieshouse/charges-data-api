@@ -81,7 +81,7 @@ public class ChargesApiSteps {
 
     @Given("the company charges with {string} and {string} exists with data {string}")
     public void the_company_charges_with_and_exists_with_data(String inCompanyNumber, String inChargeId, String dataFile) throws IOException {
-        this.i_send_put_request_for_company_number_and_charge_id_with_payload(inCompanyNumber, inChargeId, dataFile);
+        i_send_put_request_for_company_number_and_charge_id_with_payload(inCompanyNumber, inChargeId, dataFile);
     }
 
 
@@ -101,19 +101,26 @@ public class ChargesApiSteps {
 
         HttpEntity request = new HttpEntity(companyCharge, headers);
         String uri = "/company/{company_number}/charge/{charge_id}/internal";
-        this.companyNumber = inCompanyNumber;
-        this.chargeId = inChargeId;
+        companyNumber = inCompanyNumber;
+        chargeId = inChargeId;
         ResponseEntity<Void> response = restTemplate.exchange(uri, HttpMethod.PUT, request, Void.class, companyNumber, chargeId);
 
-        this.companyNumber = companyNumber;
-        this.chargeId = chargeId;
+        companyNumber = companyNumber;
+        chargeId = chargeId;
         CucumberContext.CONTEXT.set("statusCode", response.getStatusCodeValue());
     }
 
+    private HttpEntity getSecurityForRequest(){
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("ERIC-Identity" , "SOME_IDENTITY");
+        headers.set("ERIC-Identity-Type", "key");
+        return new HttpEntity(null, headers);
+
+    }
     @When("I send GET request with company number {string} and charge Id {string}")
     public void i_send_get_request_with_parameters(String companyNumber, String chargeId) {
         String uri = "/company/{company_number}/charges/{charge_id}";
-        ResponseEntity<ChargeApi> response = restTemplate.exchange(uri, HttpMethod.GET, null, ChargeApi.class, companyNumber, chargeId);
+        ResponseEntity<ChargeApi> response = restTemplate.exchange(uri, HttpMethod.GET, getSecurityForRequest(), ChargeApi.class, companyNumber, chargeId);
         CucumberContext.CONTEXT.set("statusCode", response.getStatusCodeValue());
         CucumberContext.CONTEXT.set("getChargeDetailsResponseBody", response.getBody());
     }
@@ -121,7 +128,7 @@ public class ChargesApiSteps {
     @When("I send GET request with company number {string}")
     public void i_send_get_request_with_parameters(String companyNumber) {
         String uri = "/company/{company_number}/charges";
-        ResponseEntity<ChargesApi> response = restTemplate.exchange(uri, HttpMethod.GET, null, ChargesApi.class, companyNumber);
+        ResponseEntity<ChargesApi> response = restTemplate.exchange(uri, HttpMethod.GET, getSecurityForRequest(), ChargesApi.class, companyNumber);
         CucumberContext.CONTEXT.set("statusCode", response.getStatusCodeValue());
         CucumberContext.CONTEXT.set("getChargesResponseBody", response.getBody());
     }
@@ -199,7 +206,7 @@ public class ChargesApiSteps {
     public void put_rest_endpoint_is_invoked_with_a_valid_json_payload_but_repository_throws_an_error()
             throws IOException {
 
-        this.i_send_put_request_for_company_number_and_charge_id_with_payload(companyNumber,
+        i_send_put_request_for_company_number_and_charge_id_with_payload(companyNumber,
                 chargeId, insolvency_cases_happy_path_input);
     }
     @Then("Rest endpoint returns http response code {int} to the client")
@@ -243,7 +250,7 @@ public class ChargesApiSteps {
 
     @Then("MongoDB is successfully updated")
     public void mongo_db_is_successfully_updated() throws IOException {
-       this.the_expected_result_should_match("Insolvency_cases_Happy_Path_output");
+       the_expected_result_should_match("Insolvency_cases_Happy_Path_output");
     }
 
     @Then("Data is not updated into Mongo DB")
