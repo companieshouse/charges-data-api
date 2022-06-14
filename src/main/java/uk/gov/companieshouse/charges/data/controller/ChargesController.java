@@ -50,6 +50,11 @@ public class ChargesController {
             @Valid @RequestBody final InternalChargeApi requestBody
     ) {
         logger.debug(String.format(
+                "Payload Successfully received on PUT with context id %s and company number %s",
+                contextId,
+                companyNumber));
+
+        logger.debug(String.format(
                 "Started : Save or Update charge %s with company number %s ",
                 chargeId,
                 companyNumber));
@@ -139,20 +144,25 @@ public class ChargesController {
             @PathVariable("company_number") String companyNumber,
             @PathVariable("charge_id") String chargeId) throws Exception {
         logger.info(String.format(
-                "Deleting company charge information with id %s from company mortgages."
-                        + " x-request-id %s and companyNumber %s",
-                chargeId, contextId, companyNumber));
+                "Payload Successfully received on DELETE with context id %s and company number %s",
+                contextId,
+                companyNumber
+                ));
 
         try {
             chargesService.deleteCharge(contextId, chargeId);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (ResponseStatusException responseStatusException) {
-            logger.error("Error Occurred during a Delete company charge: "
-                    + responseStatusException.getMessage());
+            logger.error(String.format("Unexpected error occurred "
+                            + "while processing DELETE request with context id %s:"
+                    + responseStatusException.getMessage(),
+                    contextId));
             return ResponseEntity.status(responseStatusException.getStatus()).build();
         } catch (Exception exception) {
-            logger.error("Error Occurred during a Delete company charge: "
-                    + exception.getMessage());
+            logger.error(String.format("Unexpected error occurred "
+                            + "while processing DELETE request with context id %s:"
+                    + exception.getMessage(),
+                    contextId));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
