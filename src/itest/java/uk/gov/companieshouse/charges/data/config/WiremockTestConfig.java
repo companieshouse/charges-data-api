@@ -56,7 +56,7 @@ public class WiremockTestConfig {
         stubFor(
             get(urlPathMatching("/company/70242180/metrics"))
                 .willReturn(aResponse()
-                    .withStatus(404)
+                    .withStatus(410)
                     .withHeader("Content-Type", "application/json")
                 ));
 
