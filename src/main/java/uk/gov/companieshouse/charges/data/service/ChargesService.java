@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
-
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -172,12 +171,10 @@ public class ChargesService {
             throw new ResponseStatusException(httpStatus != null
                     ? httpStatus : HttpStatus.INTERNAL_SERVER_ERROR, "invokeChsKafkaApi");
         }
-
         logger.info(String.format("ChsKafka api CHANGED invoked "
-                        + "creating successfully for context id %s and company number %s",
+                + "successfully for context id %s and company number %s",
                 contextId,
                 companyNumber));
-
     }
 
     /**
