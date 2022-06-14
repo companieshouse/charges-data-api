@@ -83,7 +83,7 @@ public class ChargesController {
                                 new ResponseEntity<>(
                                         chargesDocument,
                                         HttpStatus.OK))
-                        .orElse(ResponseEntity.notFound().build());
+                        .orElse(ResponseEntity.status(HttpStatus.GONE).build());
         logger.debug(String.format("Finished : %s Charge details found for Company Number %s "
                         + "with Charge id %s",
                 chargeApiResponse.getStatusCode() != HttpStatus.OK ? "No" : "",
@@ -118,7 +118,7 @@ public class ChargesController {
                                 pageable).map(charges -> new ResponseEntity<>(
                                         charges,
                                         HttpStatus.OK))
-                        .orElse(ResponseEntity.notFound().build());
+                        .orElse(ResponseEntity.status(HttpStatus.GONE).build());
 
         logger.debug(
                 String.format("Finished : getCompanyCharges Charges found for Company Number %s ",
