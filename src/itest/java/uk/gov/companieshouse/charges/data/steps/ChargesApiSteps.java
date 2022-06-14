@@ -1,14 +1,19 @@
 package uk.gov.companieshouse.charges.data.steps;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.lessThanOrExactly;
+import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.github.tomakehurst.wiremock.client.WireMock.moreThanOrExactly;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.verify;
+import static com.github.tomakehurst.wiremock.client.WireMock.lessThanOrExactly;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
@@ -21,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+
 import org.assertj.core.api.Assertions;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +39,12 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.FileCopyUtils;
 import uk.gov.companieshouse.api.charges.ChargeApi;
 import uk.gov.companieshouse.api.charges.ChargesApi;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
+import uk.gov.companieshouse.api.chskafka.ChangedResource;
 import uk.gov.companieshouse.charges.data.CucumberFeaturesRunnerITest;
+import uk.gov.companieshouse.charges.data.api.ChargesApiService;
 import uk.gov.companieshouse.charges.data.config.CucumberContext;
 import uk.gov.companieshouse.charges.data.config.WiremockTestConfig;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
@@ -53,6 +60,10 @@ public class ChargesApiSteps {
 
     @Autowired
     private ChargesRepository chargesRepository;
+
+    @Autowired
+    public ChargesApiService chargesApiService;
+
 
     String companyNumber = "08124207";
     String chargeId = "AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==";
@@ -251,5 +262,80 @@ public class ChargesApiSteps {
 
     private Document readData(Resource resource) throws IOException {
         return Document.parse(IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8));
+    }
+
+    @Given("the company charge exists for charge id {string}")
+    public void the_company_charge_exists_for_charge_id(String id) throws IOException {
+
+        FileSystemResource file = new FileSystemResource("src/itest/resources/payload/input/" + id + ".json");
+        Document document = readData(file);
+        ChargesDocument chargesDocument = mongoCustomConversions.convertValue(document, ChargesDocument.class);
+        chargesDocument.setId(id); chargesDocument.setCompanyNumber(companyNumber);
+        chargesRepository.save(chargesDocument);
+        assertNotNull(chargesRepository.findById(id));
+    }
+
+    @Given("populate invalid company number for charge id {string}")
+    public void populate_invalid_company_number_for_charge_id(String chargeId) throws IOException {
+
+        FileSystemResource file = new FileSystemResource("src/itest/resources/payload/input/" + chargeId + ".json");
+        Document document = readData(file);
+        ChargesDocument chargesDocument = mongoCustomConversions.convertValue(document, ChargesDocument.class);
+        chargesDocument.setId(chargeId); chargesDocument.setCompanyNumber(null);
+        chargesRepository.save(chargesDocument);
+    }
+
+    @When("I send DELETE request with company number {string} and charge id {string}")
+    public void i_send_delete_request_with_company_number(String companyNumber, String chargeId) {
+        String uri = "/company/{company_number}/charges/{charge_id}";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.set(x_request_id, x_request_value);
+        var request = new HttpEntity<>(null, headers);
+
+        ResponseEntity<Void> response = restTemplate.exchange(uri, HttpMethod.DELETE, request, Void.class, companyNumber, chargeId);
+
+        CucumberContext.CONTEXT.set("statusCode", response.getStatusCodeValue());
+    }
+
+    @Then("charge id {string} does not exist in mongo db")
+    public void charge_id_does_not_exist_in_mongo_db(String chargeId) throws IOException {
+        assertFalse(chargesRepository.findById(chargeId).isPresent());
+    }
+
+    @Then("charge id {string} exist in mongo db")
+    public void charge_id_exist_in_mongo_db(String chargeId) throws IOException {
+        assertTrue(chargesRepository.findById(chargeId).isPresent());
+    }
+
+    @Given("the company mortgages database is down")
+    public void the_company_mortgages_db_is_down() {
+        CucumberFeaturesRunnerITest.mongoDBContainer.stop();
+    }
+
+    @Given("the company mortgages database is up")
+    public void the_company_mortgages_db_is_up() {
+        CucumberFeaturesRunnerITest.mongoDBContainer.start();
+    }
+
+
+    @Then("the CHS Kafka API is invoked successfully with delete event payload {string}")
+    public void chs_kafka_api_invoked(String payload) throws IOException {
+
+        File file = new FileSystemResource("src/itest/resources/payload/input/" + payload + ".json").getFile();
+        List<ServeEvent> serverEvents = WiremockTestConfig.getServeEvents();
+        assertThat(serverEvents.size()).isEqualTo(1);
+        assertThat(serverEvents.isEmpty()).isFalse();
+        String requestReceived = serverEvents.get(0).getRequest().getBodyAsString();
+
+        ChangedResource expectedChangedResource = mongoCustomConversions.readValue(file, ChangedResource.class);
+        ChangedResource actualChangedResource = mongoCustomConversions.convertValue(Document.parse(requestReceived), ChangedResource.class);
+
+        assertEquals( expectedChangedResource.getEvent().getType(), actualChangedResource.getEvent().getType());
+        assertEquals( expectedChangedResource.getResourceUri(), actualChangedResource.getResourceUri());
+        assertEquals(expectedChangedResource.getResourceKind(), actualChangedResource.getResourceKind());
+
     }
 }
