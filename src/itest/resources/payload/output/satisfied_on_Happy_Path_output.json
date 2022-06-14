@@ -62,7 +62,6 @@
         "insolvency_cases" : [ 
             {
                 "case_number" : null,
-                "transaction_id" : null,
                 "links" : null
             }
         ],
