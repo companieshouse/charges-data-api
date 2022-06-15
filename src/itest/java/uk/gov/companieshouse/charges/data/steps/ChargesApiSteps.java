@@ -303,6 +303,8 @@ public class ChargesApiSteps {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.set(x_request_id, x_request_value);
+        headers.set("ERIC-Identity" , "SOME_IDENTITY");
+        headers.set("ERIC-Identity-Type", "key");
         var request = new HttpEntity<>(null, headers);
 
         ResponseEntity<Void> response = restTemplate.exchange(uri, HttpMethod.DELETE, request, Void.class, companyNumber, chargeId);
