@@ -14,12 +14,12 @@ Feature: Delete company charges information
       | 0       |   12345678910123456789  | chs-kafka-api-12345678910123456789   |
 
 
-  Scenario Outline: Delete company charges URL returns 400
+  Scenario Outline: Delete company charges URL returns 410
 
     Given Charges data api service is running
     And  the company charge exists for charge id "<charge_id>"
     When I send DELETE request with company number "<company_number>" and charge id "<charge_id_to_send>"
-    Then I should receive 400 status code
+    Then I should receive 410 status code
 
     Examples:
       | company_number |   charge_id      | charge_id_to_send |
