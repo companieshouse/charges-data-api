@@ -56,7 +56,7 @@
           5,
           13
         ],
-        "insolvency_case_number":1,
+        "insolvency_case_number":"1",
         "links":{
           "filing":"/company/04796390/filing-history/MjAwNTQ2ODczNmFkaXF6a2N4",
           "insolvency_case":null
@@ -70,7 +70,7 @@
           8,
           12
         ],
-        "insolvency_case_number":1,
+        "insolvency_case_number":"1",
         "links":{
           "filing":"/company/04796390/filing-history/MzEyOTMxNzI3NGFkaXF6a2N4",
           "insolvency_case":null
@@ -84,7 +84,7 @@
           1,
           14
         ],
-        "insolvency_case_number":1,
+        "insolvency_case_number":"1",
         "links":{
           "filing":"/company/04796390/filing-history/MzE2NzIzODEzM2FkaXF6a2N4",
           "insolvency_case":null
@@ -98,7 +98,7 @@
           1,
           14
         ],
-        "insolvency_case_number":1,
+        "insolvency_case_number":"1",
         "links":{
           "filing":"/company/04796390/filing-history/MzE2NzIzODI3MmFkaXF6a2N4",
           "insolvency_case":null

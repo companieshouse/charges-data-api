@@ -385,7 +385,7 @@
           "description": "The date the filing was submitted to Companies House"
         },
         "insolvency_case_number": {
-          "type": "integer",
+          "type": "string",
           "description": "The insolvency case related to this filing"
         },
         "links": {

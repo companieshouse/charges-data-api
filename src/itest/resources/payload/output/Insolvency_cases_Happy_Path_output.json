@@ -42,7 +42,7 @@
                 "filing_type" : "create-charge-pre-2006-companies-act",
                 "transaction_id" : 3129317274,
                 "delivered_on" : "2008-05-13T00:00:00.000Z",
-                "insolvency_case_number" : 1,
+                "insolvency_case_number" : "1",
                 "links" : {
                     "filing" : "/company/04796390/filing-history/MjAwNTQ2ODczNmFkaXF6a2N4",
                     "insolvency_case" : null
@@ -52,7 +52,7 @@
                 "filing_type" : "liquidation-appointment-of-receiver",
                 "transaction_id" : 3129317274,
                 "delivered_on" : "2015-08-12T00:00:00.000Z",
-                "insolvency_case_number" : 1,
+                "insolvency_case_number" : "1",
                 "links" : {
                     "filing" : "/company/04796390/filing-history/MzEyOTMxNzI3NGFkaXF6a2N4",
                     "insolvency_case" : null
@@ -62,7 +62,7 @@
                 "filing_type" : "liquidation-cease-to-act-receiver",
                 "transaction_id" : 3129317274,
                 "delivered_on" : "2017-01-14T00:00:00.000Z",
-                "insolvency_case_number" : 1,
+                "insolvency_case_number" : "1",
                 "links" : {
                     "filing" : "/company/04796390/filing-history/MzE2NzIzODEzM2FkaXF6a2N4",
                     "insolvency_case" : null
@@ -72,7 +72,7 @@
                 "filing_type" : "liquidation-cease-to-act-receiver",
                 "transaction_id" : 3129317274,
                 "delivered_on" : "2017-01-14T00:00:00.000Z",
-                "insolvency_case_number" : 1,
+                "insolvency_case_number" : "1",
                 "links" : {
                     "filing" : "/company/04796390/filing-history/MzE2NzIzODI3MmFkaXF6a2N4",
                     "insolvency_case" : null
