@@ -8,30 +8,25 @@ import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class WiremockTestConfig {
 
-    private static String port = "8888";
+    private static final String port = "8888";
 
-    private static WireMockServer wireMockServer;
+    private static WireMockServer wireMockServer = null;
 
     public static void setupWiremock() {
-        wireMockServer = new WireMockServer(Integer.parseInt(port));
-        start();
-        configureFor("localhost", Integer.parseInt(port));
-    }
-
-    public static void start() {
-        wireMockServer.start();
-    }
-
-    public static void stop() {
-        wireMockServer.stop();
-    }
-
-    public static void restart() {
-        stop();
-        start();
+        if (wireMockServer == null) {
+            wireMockServer = new WireMockServer(Integer.parseInt(port));
+            wireMockServer.start();
+            configureFor("localhost", Integer.parseInt(port));
+        } else {
+            wireMockServer.resetAll();
+        }
     }
 
 
@@ -60,6 +55,11 @@ public class WiremockTestConfig {
                     .withHeader("Content-Type", "application/json")
                 ));
 
+    }
+
+    public static List<ServeEvent> getServeEvents() {
+        return wireMockServer != null ? wireMockServer.getAllServeEvents() :
+                new ArrayList<>();
     }
 
 

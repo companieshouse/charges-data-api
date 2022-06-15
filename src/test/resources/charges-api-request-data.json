@@ -41,7 +41,7 @@
         "filing_type": "403a",
         "transaction_id": null,
         "delivered_on": "2016-12-16",
-        "insolvency_case_number": 1,
+        "insolvency_case_number": "1",
         "links": {
           "filing": "/company/NI622400/filing-history/MzM4Nzc3OHRyYW5zSWRfc2FsdA==",
           "insolvency_case": null

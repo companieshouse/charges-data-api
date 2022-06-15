@@ -1,9 +1,9 @@
 {
-    "_id" : "AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==",
-    "company_number" : "88124207",
+    "_id" : "null",
+    "company_number" : "null",
     "data" : {
-        "etag" : "0e485b158f23b11f0b32dd7536c4a705db5ecd87",
-        "id" : "AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==",
+        "etag" : "0e485b158f23b11f0b32dd7536c4a705db5ec1",
+        "id" : "null",
         "charge_code" : null,
         "classification" : {
             "type" : "charge-description",
@@ -81,7 +81,8 @@
         ],
         "insolvency_cases" : [
             {
-                "case_number" : "1",
+                "case_number" : 1,
+                "transaction_id" : 3129317274,
                 "links" : {
                     "case" : "/company/04796390/insolvency#case-1"
                 }
