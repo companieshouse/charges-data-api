@@ -10,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import uk.gov.companieshouse.api.charges.ChargeApi;
 import uk.gov.companieshouse.api.charges.ChargesApi;
@@ -60,7 +59,6 @@ public class ChargesService {
      * @param chargeId      charges Id.
      * @param requestBody   request body.
      */
-    @Transactional
     public void upsertCharges(String contextId, String companyNumber, String chargeId,
                               InternalChargeApi requestBody) {
         Optional<ChargesDocument> chargesDocumentOptional = chargesRepository.findById(chargeId);
@@ -156,13 +154,11 @@ public class ChargesService {
 
     private void saveAndInvokeChsKafkaApi(String contextId, String companyNumber,
                                           String chargeId, ChargesDocument charges) {
-        this.chargesRepository.save(charges);
-        logger.info(String.format(
-                "Company charges is updated in MongoDB "
-                        + "with context id %s and company number %s",
-                contextId,
-                companyNumber));
 
+        logger.debug(
+                String.format("Invoking chs-kafka-api for chargeId %s company number %s ",
+                        chargeId,
+                        companyNumber));
         ApiResponse<Void> res = chargesApiService.invokeChsKafkaApi(contextId,
                 companyNumber,
                 chargeId);
@@ -171,6 +167,12 @@ public class ChargesService {
             throw new ResponseStatusException(httpStatus != null
                     ? httpStatus : HttpStatus.INTERNAL_SERVER_ERROR, "invokeChsKafkaApi");
         }
+        logger.info(String.format("ChsKafka api CHANGED invoked "
+                        + "successfully for context id %s and company number %s",
+                contextId,
+                companyNumber));
+
+        this.chargesRepository.save(charges);
         logger.info(String.format("ChsKafka api CHANGED invoked "
                 + "successfully for context id %s and company number %s",
                 contextId,
@@ -211,7 +213,8 @@ public class ChargesService {
                                     HttpStatus.NOT_FOUND,
                                     "ChargeApi object doesn't exist for" + chargeId));
 
-            chargesApiService.invokeChsKafkaApiWithDeleteEvent(contextId,
+            ApiResponse<Void> apiResponse = chargesApiService.invokeChsKafkaApiWithDeleteEvent(
+                    contextId,
                     chargeId,
                     companyNumber,
                     chargeApi);
@@ -219,6 +222,12 @@ public class ChargesService {
                             + "invoked successfully for context id %s and company number %s",
                     contextId,
                     companyNumber));
+
+            if (apiResponse == null || apiResponse.getStatusCode() != 200) {
+                throw new ResponseStatusException(apiResponse != null
+                        ? HttpStatus.valueOf(apiResponse.getStatusCode()) :
+                        HttpStatus.INTERNAL_SERVER_ERROR, "invokeChsKafkaApi");
+            }
 
             chargesRepository.deleteById(chargeId);
             logger.info(String.format(

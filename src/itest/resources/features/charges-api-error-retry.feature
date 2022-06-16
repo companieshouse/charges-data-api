@@ -24,13 +24,13 @@ Feature: Process company charges error scenarios
     And   Stubbed CHS Kafka API endpoint will return 200 http response code
     When  PUT Rest endpoint is invoked with a valid json payload that causes a NPE
     Then  Rest endpoint returns http response code 500 to the client
-    And   Data is not updated into Mongo DB
     And   CHS Kafka API is never invoked
+    And   Data is not updated into Mongo DB
 
-  Scenario: Process company charges should return correct response code for payload
+  Scenario: Process company charges with CHS Kafka API endpoint returning 503 response code
 
     Given Charges Data API component is successfully running
     And   Stubbed CHS Kafka API endpoint will return 503 http response code
     When  PUT Rest endpoint is invoked with a valid json payload
     Then  Rest endpoint returns http response code 503 to the client
-    And   MongoDB is successfully updated
+    And   Data is not updated into Mongo DB

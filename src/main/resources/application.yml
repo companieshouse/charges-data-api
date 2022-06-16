@@ -21,7 +21,6 @@ spring:
 
 mongodb:
   charges:
-    transactions: ${TRANSACTIONS_ENABLED:false}
     collection:
       name: ${CHARGES_COLLECTION_NAME:company_mortgages}
 
