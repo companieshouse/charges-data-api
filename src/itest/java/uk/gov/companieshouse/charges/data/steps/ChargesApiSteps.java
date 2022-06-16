@@ -74,7 +74,7 @@ public class ChargesApiSteps {
     @Before
     public static void before_each() {
         WiremockTestConfig.setupWiremock();
-        CucumberFeaturesRunnerITest.start();
+        //CucumberFeaturesRunnerITest.start();
         companyCharge = null;
     }
 
