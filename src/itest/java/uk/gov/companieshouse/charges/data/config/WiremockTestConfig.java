@@ -9,21 +9,20 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class WiremockTestConfig {
 
-    private static final String port = "8888";
+    private static final int port = 8888;
 
     private static WireMockServer wireMockServer = null;
 
     public static void setupWiremock() {
         if (wireMockServer == null) {
-            wireMockServer = new WireMockServer(Integer.parseInt(port));
+            wireMockServer = new WireMockServer(port);
             wireMockServer.start();
-            configureFor("localhost", Integer.parseInt(port));
+            configureFor("localhost", port);
         } else {
             wireMockServer.resetAll();
         }
@@ -46,7 +45,6 @@ public class WiremockTestConfig {
                                 .withStatus(200)
                                 .withHeader("Content-Type", "application/json")
                                 .withBody("{\"etag\":\"0dbf16c34be9d2d10ad374d206f598563bc20eb7\",\"counts\":{\"persons-with-significant-control\":null,\"appointments\":{\"active_directors_count\":null,\"active_secretaries_count\":null,\"active_count\":null,\"resigned_count\":null,\"total_count\":null,\"active_llp_members_count\":null}},\"mortgage\":{\"satisfied_count\":0,\"part_satisfied_count\":0,\"total_count\":14}}")
-
                         ));
         stubFor(
             get(urlPathMatching("/company/70242180/metrics"))
@@ -54,13 +52,10 @@ public class WiremockTestConfig {
                     .withStatus(404)
                     .withHeader("Content-Type", "application/json")
                 ));
-
     }
 
     public static List<ServeEvent> getServeEvents() {
         return wireMockServer != null ? wireMockServer.getAllServeEvents() :
-                new ArrayList<>();
+            new ArrayList<>();
     }
-
-
 }
