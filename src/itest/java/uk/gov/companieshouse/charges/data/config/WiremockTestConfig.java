@@ -8,6 +8,9 @@ import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WiremockTestConfig {
 
@@ -49,5 +52,10 @@ public class WiremockTestConfig {
                     .withStatus(404)
                     .withHeader("Content-Type", "application/json")
                 ));
+    }
+
+    public static List<ServeEvent> getServeEvents() {
+        return wireMockServer != null ? wireMockServer.getAllServeEvents() :
+            new ArrayList<>();
     }
 }
