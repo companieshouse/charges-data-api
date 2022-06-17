@@ -1,55 +1,32 @@
 package uk.gov.companieshouse.charges.data.repository;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.apache.commons.io.FileUtils;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.stereotype.Component;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.util.ResourceUtils;
-import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
+import uk.gov.companieshouse.charges.data.AbstractIntegrationTest;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument.Updated;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Testcontainers
-@DataMongoTest(excludeAutoConfiguration = EmbeddedMongoAutoConfiguration.class, includeFilters = @ComponentScan.Filter(Component.class))
-@TestInstance(Lifecycle.PER_CLASS)
-public class RepositoryITest {
-
-  static final MongoDBContainer mongoDBContainer = new MongoDBContainer(
-      DockerImageName.parse("mongo:4.0.10"));
+public class ChargesRepositoryITest extends AbstractIntegrationTest {
 
   @Autowired
   ChargesRepository chargesRepository;
-
-  @DynamicPropertySource
-  static void setProperties(DynamicPropertyRegistry registry) {
-    registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl );
-    mongoDBContainer.start();
-  }
 
   @BeforeEach
   public void setup(){
@@ -106,12 +83,6 @@ public class RepositoryITest {
             transform(companyNumber, chargeId, chargesDocument);
 
     return transformedChargesDocument;
-  }
-
-  @AfterAll
-  public void tear() {
-    this.chargesRepository.deleteAll();;
-    mongoDBContainer.stop();
   }
 
   public ChargesDocument transform(String companyNumber, String chargeId,
