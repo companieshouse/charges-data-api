@@ -26,7 +26,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic().disable()
-                .csrf().disable()
+                //REST APIs not enabled for cross site script headers
+                .csrf().disable() //NOSONAR
                 .formLogin().disable()
                 .logout().disable()
                 .sessionManagement()
