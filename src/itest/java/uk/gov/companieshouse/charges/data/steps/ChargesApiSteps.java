@@ -383,6 +383,14 @@ public class ChargesApiSteps {
 
     }
 
+    @When("I send GET request with company number {string} and charge id {string}")
+    public void i_send_get_request_with_company_number_and_charge_id(String companyNumber, String chargeId) {
+        String uri = "/company/{company_number}/charges/{charge_id}";
+        ResponseEntity<ChargesApi> response = restTemplate.exchange(uri, HttpMethod.GET, getSecurityForRequest(null), ChargesApi.class, companyNumber, chargeId);
+        CucumberContext.CONTEXT.set("statusCode", response.getStatusCodeValue());
+        CucumberContext.CONTEXT.set("getChargesResponseBody", response.getBody());
+    }
+
     @Then("charge id {string} does not exist in mongo db")
     public void charge_id_does_not_exist_in_mongo_db(String chargeId) throws IOException {
         assertFalse(chargesRepository.findById(chargeId).isPresent());
