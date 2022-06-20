@@ -3,7 +3,9 @@ package uk.gov.companieshouse.charges.data.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
@@ -39,6 +41,7 @@ import org.springframework.web.server.ResponseStatusException;
 import uk.gov.companieshouse.api.charges.ChargeApi;
 import uk.gov.companieshouse.api.charges.ChargesApi;
 import uk.gov.companieshouse.api.metrics.MetricsApi;
+import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.charges.data.api.ChargesApiService;
 import uk.gov.companieshouse.charges.data.api.CompanyMetricsApiService;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
@@ -167,13 +170,11 @@ public class ChargesServiceTest {
         String chargeId = "CIrBNCKGlthNq2r9HzblXGKpTrk";
         Mockito.when(chargesRepository.findById(chargeId)).thenReturn(Optional.empty());
 
-        try {
+        Exception exception = assertThrows(ResponseStatusException.class, () -> {
             chargesService.deleteCharge("x-request-id", chargeId);
-        }
-        catch (ResponseStatusException statusException)  {
-            Assert.assertEquals(HttpStatus.BAD_REQUEST, statusException.getStatus());
-        }
+        });
 
+        assertEquals(HttpStatus.GONE, ((ResponseStatusException)exception).getStatus());
         verify(chargesRepository, Mockito.times(0)).deleteById(Mockito.any());
         verify(chargesRepository, Mockito.times(1)).findById(Mockito.eq(chargeId));
     }
@@ -197,27 +198,29 @@ public class ChargesServiceTest {
     @Test
     void delete_charge_id_and_check_it_does_not_exist_in_database() throws Exception {
         String chargeId = "123456789";
+        Mockito.when(chargesApiService.invokeChsKafkaApiWithDeleteEvent(anyString(), anyString(), anyString(), any())).thenReturn(new ApiResponse<>(200, null));
         Mockito.when(chargesRepository.findById(chargeId)).thenReturn(
                 populateChargesDocument(chargeId,populateCharge()));
 
         chargesService.deleteCharge("x-request-id", chargeId);
 
         verify(chargesRepository, Mockito.times(1)).deleteById(Mockito.any());
+        verify(chargesApiService, Mockito.times(1)).invokeChsKafkaApiWithDeleteEvent(anyString(), anyString(), anyString(), any());
         verify(chargesRepository, Mockito.times(1)).findById(Mockito.eq(chargeId));
 
     }
 
     @Test
-    void when_charge_id_exist_then_invoke_chs_kafka_api_successfully_and_delete_charge() {
+    void when_charge_id_exist_ani_invoke_chs_kafka_api_successfully_invoked_then_delete_charge() {
         String chargeId = "123456789"; String contextId="1111111"; String companyNumber="1234";
-
+        Mockito.when(chargesApiService.invokeChsKafkaApiWithDeleteEvent(anyString(), anyString(), anyString(), any())).thenReturn(new ApiResponse<>(200, null));
         Mockito.when(chargesRepository.findById(chargeId)).thenReturn(
                 populateChargesDocument(chargeId,populateCharge()));
 
         chargesService.deleteCharge(contextId, chargeId);
 
         verify(logger, Mockito.times(1)).info(
-                "ChsKafka api invoked successfully for charge id " + chargeId +  " and x-request-id " + contextId
+                    "ChsKafka api DELETED invoked successfully for context id "  + contextId + " and company number " + companyNumber
         );
         verify(chargesRepository, Mockito.times(1)).deleteById(Mockito.any());
         verify(chargesRepository, Mockito.times(1)).findById(Mockito.eq(chargeId));

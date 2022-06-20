@@ -1,3 +1,5 @@
+server:
+  port : 8089
 
 logger:
   namespace: charges-data-api
@@ -8,9 +10,6 @@ chs:
       endpoint: ${CHS_KAFKA_API_URL:http://localhost:8888}
       key: ${CHS_INTERNAL_API_KEY:chsInternalApiKey}
 
-server:
-  port : 8088
-
 spring:
   data:
     mongodb:
@@ -19,7 +18,6 @@ spring:
 
 mongodb:
   charges:
-    transactions: ${TRANSACTIONS_ENABLED:false}
     collection:
       name: ${CHARGES_COLLECTION_NAME:company_mortgages}
 

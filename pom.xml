@@ -37,7 +37,7 @@
 		<jib-maven-plugin.version>3.1.1</jib-maven-plugin.version>
 		<skip.integration.tests>false</skip.integration.tests>
 		<skip.unit.tests>false</skip.unit.tests>
-		<private-api-sdk-java.version>2.0.180</private-api-sdk-java.version>
+		<private-api-sdk-java.version>2.0.181</private-api-sdk-java.version>
 		<io-cucumber.version>7.2.3</io-cucumber.version>
 		<wiremock.standalone.version>2.32.0</wiremock.standalone.version>
 		<maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
@@ -215,6 +215,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 	</dependencies>
 
