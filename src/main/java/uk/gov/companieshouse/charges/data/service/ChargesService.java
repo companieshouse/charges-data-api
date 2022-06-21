@@ -168,13 +168,13 @@ public class ChargesService {
                     ? httpStatus : HttpStatus.INTERNAL_SERVER_ERROR, "invokeChsKafkaApi");
         }
         logger.info(String.format("ChsKafka api CHANGED invoked "
-                        + "successfully for context id %s and company number %s",
+                        + "successfully for contextId %s and company number %s",
                 contextId,
                 companyNumber));
 
         this.chargesRepository.save(charges);
         logger.info(String.format("ChsKafka api CHANGED invoked "
-                + "successfully for context id %s and company number %s",
+                + "successfully for contextId %s and company number %s",
                 contextId,
                 companyNumber));
     }
@@ -219,20 +219,24 @@ public class ChargesService {
                     companyNumber,
                     chargeApi);
             logger.info(String.format("ChsKafka api DELETED "
-                            + "invoked successfully for context id %s and company number %s",
+                            + "invoked successfully for contextId %s and company number %s",
                     contextId,
                     companyNumber));
 
-            if (apiResponse == null || apiResponse.getStatusCode() != 200) {
+            if (apiResponse == null
+                    ||
+                    !HttpStatus.resolve(apiResponse.getStatusCode()).is2xxSuccessful()) {
                 throw new ResponseStatusException(apiResponse != null
                         ? HttpStatus.valueOf(apiResponse.getStatusCode()) :
-                        HttpStatus.INTERNAL_SERVER_ERROR, "invokeChsKafkaApi");
+                        HttpStatus.INTERNAL_SERVER_ERROR,
+                        " error response received from ChsKafkaApi");
             }
+
 
             chargesRepository.deleteById(chargeId);
             logger.info(String.format(
                     "Company charge is deleted in "
-                            + "MongoDB with context id %s and company number %s",
+                            + "MongoDB with contextId %s and company number %s",
                     contextId,
                     companyNumber));
 

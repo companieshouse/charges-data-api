@@ -50,7 +50,7 @@ public class ChargesController {
             @Valid @RequestBody final InternalChargeApi requestBody
     ) {
         logger.debug(String.format(
-                "Payload Successfully received on PUT with context id %s and company number %s",
+                "Payload Successfully received on PUT with contextId %s and company number %s",
                 contextId,
                 companyNumber));
 
@@ -144,7 +144,7 @@ public class ChargesController {
             @PathVariable("company_number") String companyNumber,
             @PathVariable("charge_id") String chargeId) throws Exception {
         logger.info(String.format(
-                "Payload Successfully received on DELETE with context id %s and company number %s",
+                "Payload Successfully received on DELETE with contextId %s and company number %s",
                 contextId,
                 companyNumber
                 ));
@@ -154,13 +154,13 @@ public class ChargesController {
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (ResponseStatusException responseStatusException) {
             logger.error(String.format("Unexpected error occurred "
-                            + "while processing DELETE request with context id %s:"
+                            + "while processing DELETE request with contextId %s:"
                     + responseStatusException.getMessage(),
                     contextId));
             return ResponseEntity.status(responseStatusException.getStatus()).build();
         } catch (Exception exception) {
             logger.error(String.format("Unexpected error occurred "
-                            + "while processing DELETE request with context id %s:"
+                            + "while processing DELETE request with contextId %s:"
                     + exception.getMessage(),
                     contextId));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

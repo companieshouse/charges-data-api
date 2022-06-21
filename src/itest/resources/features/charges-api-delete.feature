@@ -74,3 +74,29 @@ Feature: Delete company charges information
     Examples:
       | company_number |   charge_id    |
       | 0       |   123456789101236666  |
+
+  Scenario Outline: Delete company charges URL returns 301 when chs kafka api is down
+
+    Given Charges data api service is running
+    And Stubbed CHS Kafka API endpoint will return 301 http response code
+    And  the company charge exists for charge id "<charge_id>"
+    When I send DELETE request with company number "<company_number>" and charge id "<charge_id>"
+    Then I should receive 301 status code
+    And charge id "<charge_id>" exist in mongo db
+
+    Examples:
+      | company_number |   charge_id      |
+      | 0       |   12345678910123456789  |
+
+  Scenario Outline: Delete company charges URL returns 201 when chs kafka api is down
+
+    Given Charges data api service is running
+    And Stubbed CHS Kafka API endpoint will return 201 http response code
+    And  the company charge exists for charge id "<charge_id>"
+    When I send DELETE request with company number "<company_number>" and charge id "<charge_id>"
+    Then I should receive 200 status code
+    And charge id "<charge_id>" does not exist in mongo db
+
+    Examples:
+      | company_number |   charge_id      |
+      | 0       |   12345678910123456789  |

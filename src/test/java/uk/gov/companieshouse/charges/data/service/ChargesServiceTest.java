@@ -26,6 +26,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,12 +59,13 @@ public class ChargesServiceTest {
     @Autowired
     private ObjectMapper mongoCustomConversions;
 
-    private static ChargesRepository chargesRepository;
+    @Mock
+    private ChargesRepository chargesRepository;
 
-    private static CompanyMetricsApiService companyMetricsApiService;
+    @Mock
+    private CompanyMetricsApiService companyMetricsApiService;
 
-    private static ChargesService chargesService;
-
+    private ChargesService chargesService;
 
     @Value("classpath:company-metrics-data.json")
     Resource metricsFile;
@@ -71,36 +73,23 @@ public class ChargesServiceTest {
     @Value("classpath:charges-test-DB-record.json")
     Resource chargesFile;
 
-    private static ChargesApiService chargesApiService;
+    @Mock
+    private ChargesApiService chargesApiService;
 
-    private static Logger logger;
+    @Mock
+    private Logger logger;
 
-    /**
-     * Set up mocks and create the chargesService instance.
-     * When using injects mocks and the @mock annotation the mock
-     * in the service was not the same as the mock in the test so the when
-     * was always returning null because it was a different mock instance.
-     * Suspect this was due to sprint injection, not proven but
-     * mock are now the same in test and serice to tests work and pass.
-     */
-    @BeforeAll
-    public static void setup() {
-        chargesApiService = mock(ChargesApiService.class);
-        companyMetricsApiService = mock(CompanyMetricsApiService.class);
-        ChargesTransformer chargesTransformer = mock(ChargesTransformer.class);
-        chargesRepository = mock(ChargesRepository.class);
-        logger = mock(Logger.class);
-        chargesService = new ChargesService(logger, chargesRepository,
-            chargesTransformer, chargesApiService, companyMetricsApiService);
-    }
+    @Mock
+    private ChargesTransformer chargesTransformer;
+
 
     /**
      * Reset the mocks so defaults are returned and invocation counters cleared.
      */
     @BeforeEach
     public void resetMocks() {
-        reset(companyMetricsApiService);
-        reset(chargesRepository);
+        chargesService = new ChargesService(logger, chargesRepository,
+                chargesTransformer, chargesApiService, companyMetricsApiService);
     }
 
    @Test
@@ -220,7 +209,7 @@ public class ChargesServiceTest {
         chargesService.deleteCharge(contextId, chargeId);
 
         verify(logger, Mockito.times(1)).info(
-                    "ChsKafka api DELETED invoked successfully for context id "  + contextId + " and company number " + companyNumber
+                    "ChsKafka api DELETED invoked successfully for contextId "  + contextId + " and company number " + companyNumber
         );
         verify(chargesRepository, Mockito.times(1)).deleteById(Mockito.any());
         verify(chargesRepository, Mockito.times(1)).findById(Mockito.eq(chargeId));
@@ -230,18 +219,17 @@ public class ChargesServiceTest {
     }
 
     @Test
-    void when_connection_issue_in_db_on_delete_then_throw_service_unavailable_exception() {
+    void when_connection_issue_in_db_on_delete_then_throw_service_internal_exception() {
         String chargeId = "123456789";
 
         Mockito.when(chargesRepository.findById(chargeId)).thenReturn(
                 populateChargesDocument(chargeId, populateCharge()));
-        doThrow(new DataAccessResourceFailureException("Connection broken"))
-                .when(chargesRepository).deleteById(chargeId);
+
         try {
                 chargesService.deleteCharge("x-request-id", chargeId);
         }
         catch (ResponseStatusException statusException)  {
-            Assert.assertEquals(HttpStatus.SERVICE_UNAVAILABLE, statusException.getStatus());
+            Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, statusException.getStatus());
         }
     }
 
@@ -276,4 +264,23 @@ public class ChargesServiceTest {
         return chargeApi;
     }
 
+    @Test
+    void when_charge_id_exist_ani_invoke_chs_kafka_api_un_successfully_invoked_then_delete_charge() {
+        String chargeId = "123456789"; String contextId="1111111"; String companyNumber="1234";
+        Mockito.when(chargesApiService.invokeChsKafkaApiWithDeleteEvent(anyString(), anyString(), anyString(), any()))
+                .thenReturn(new ApiResponse<>(301, null));
+        Mockito.when(chargesRepository.findById(chargeId)).thenReturn(
+                populateChargesDocument(chargeId,populateCharge()));
+
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> chargesService.deleteCharge(contextId, chargeId));
+
+        verify(logger, Mockito.times(1)).info(
+                "ChsKafka api DELETED invoked successfully for contextId "  + contextId + " and company number " + companyNumber
+        );
+        verify(chargesRepository, Mockito.times(1)).findById(Mockito.eq(chargeId));
+        verify(chargesRepository, Mockito.times(0)).deleteById(Mockito.any());
+        verify(chargesApiService, times(1)).
+                invokeChsKafkaApiWithDeleteEvent(eq(contextId), eq(chargeId), eq(companyNumber),eq(populateCharge()));
+
+    }
 }
