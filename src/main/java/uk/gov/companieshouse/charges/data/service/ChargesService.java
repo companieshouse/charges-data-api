@@ -228,13 +228,13 @@ public class ChargesService {
             if (apiResponse == null) {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
                         " error response received from ChsKafkaApi");
-            } else {
-                HttpStatus statusCode = HttpStatus.valueOf(apiResponse.getStatusCode());
-                if (!statusCode.is2xxSuccessful()) {
-                    throw new ResponseStatusException(HttpStatus
-                            .valueOf(apiResponse.getStatusCode()),
-                            " error response received from ChsKafkaApi");
-                }
+            }
+
+            HttpStatus statusCode = HttpStatus.valueOf(apiResponse.getStatusCode());
+            if (!statusCode.is2xxSuccessful()) {
+                throw new ResponseStatusException(HttpStatus
+                        .valueOf(apiResponse.getStatusCode()),
+                        " error response received from ChsKafkaApi");
             }
 
             chargesRepository.deleteById(chargeId);
