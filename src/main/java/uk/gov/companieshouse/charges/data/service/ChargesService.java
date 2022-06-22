@@ -223,15 +223,18 @@ public class ChargesService {
                     contextId,
                     companyNumber));
 
-            if (apiResponse == null
-                    ||
-                    !HttpStatus.resolve(apiResponse.getStatusCode()).is2xxSuccessful()) {
-                throw new ResponseStatusException(apiResponse != null
-                        ? HttpStatus.valueOf(apiResponse.getStatusCode()) :
-                        HttpStatus.INTERNAL_SERVER_ERROR,
+
+            if (apiResponse == null) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
                         " error response received from ChsKafkaApi");
             }
 
+            HttpStatus statusCode = HttpStatus.valueOf(apiResponse.getStatusCode());
+            if (!statusCode.is2xxSuccessful()) {
+                throw new ResponseStatusException(HttpStatus
+                        .valueOf(apiResponse.getStatusCode()),
+                        " error response received from ChsKafkaApi");
+            }
 
             chargesRepository.deleteById(chargeId);
             logger.info(String.format(

@@ -29,8 +29,22 @@ public class ExceptionHandlerConfig {
 
     private void populateResponseBody(Map<String, Object> responseBody , String correlationId) {
         responseBody.put("timestamp", LocalDateTime.now());
-        responseBody.put("message", "There is issue completing the request.");
-        responseBody.put("correlationId", correlationId);
+        responseBody.put("message", String.format("Exception occurred while processing the API"
+                + " request with Correlation ID: %s", correlationId));
+    }
+
+    private void errorLogException(Exception ex, String correlationId) {
+        logger.errorContext(null, String.format("Exception occurred while processing the "
+                + "API request with Correlation ID: %s", correlationId), ex, null);
+    }
+
+    private Map<String, Object> responseAndLogBuilderHandler(Exception ex) {
+        var correlationId = generateShortCorrelationId();
+        Map<String, Object> responseBody = new LinkedHashMap<>();
+        populateResponseBody(responseBody, correlationId);
+        errorLogException(ex, correlationId);
+
+        return responseBody;
     }
 
     /**
@@ -42,14 +56,8 @@ public class ExceptionHandlerConfig {
      */
     @ExceptionHandler(value = {Exception.class})
     public ResponseEntity<Object> handleException(Exception ex, WebRequest request) {
-        var correlationId = generateShortCorrelationId();
-        logger.error(String.format("Started: handleException: %s Generating error response ",
-                correlationId), ex);
-        Map<String, Object> responseBody = new LinkedHashMap<>();
-        populateResponseBody(responseBody, correlationId);
-        request.setAttribute("javax.servlet.error.exception", ex, 0);
-        logger.error(String.format("Finished: handleException: %s handleException", correlationId));
-        return new ResponseEntity<>(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(responseAndLogBuilderHandler(ex),
+                HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -62,13 +70,8 @@ public class ExceptionHandlerConfig {
     @ExceptionHandler(value = {DataAccessResourceFailureException.class})
     public ResponseEntity<Object> handleException(DataAccessResourceFailureException ex,
             WebRequest request) {
-        var correlationId = generateShortCorrelationId();
-        logger.error(String.format("Started: handleException: %s Generating error response ",
-                correlationId), ex);
-        Map<String, Object> responseBody = new LinkedHashMap<>();
-        populateResponseBody(responseBody, correlationId);
-
-        return new ResponseEntity<>(responseBody, HttpStatus.SERVICE_UNAVAILABLE);
+        return new ResponseEntity<>(responseAndLogBuilderHandler(ex),
+                HttpStatus.SERVICE_UNAVAILABLE);
     }
 
     /**
@@ -80,20 +83,18 @@ public class ExceptionHandlerConfig {
     */
     @ExceptionHandler(value = { ResponseStatusException.class })
     public ResponseEntity<Object> handleException(ResponseStatusException ex, WebRequest request) {
-        var correlationId = generateShortCorrelationId();
-        logger.error(String.format("Started: handleException: %s Generating error response ",
-                correlationId), ex);
-        Map<String, Object> responseBody = new LinkedHashMap<>();
-        populateResponseBody(responseBody, correlationId);
 
         if ("invokeChsKafkaApi".equals(ex.getReason())) {
-            return new ResponseEntity<>(responseBody, HttpStatus.NOT_EXTENDED);
+            return new ResponseEntity<>(responseAndLogBuilderHandler(ex),
+                    HttpStatus.NOT_EXTENDED);
         }
 
         if (HttpStatus.SERVICE_UNAVAILABLE.equals(ex.getStatus())) {
-            return new ResponseEntity(responseBody, HttpStatus.SERVICE_UNAVAILABLE);
+            return new ResponseEntity<>(responseAndLogBuilderHandler(ex),
+                    HttpStatus.SERVICE_UNAVAILABLE);
         }
-        return new ResponseEntity(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(responseAndLogBuilderHandler(ex),
+                HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 
@@ -107,12 +108,8 @@ public class ExceptionHandlerConfig {
     @ExceptionHandler(value = {HttpMessageNotReadableException.class})
     public ResponseEntity<Object> handleException(HttpMessageNotReadableException ex,
             WebRequest request) {
-        var correlationId = generateShortCorrelationId();
-        logger.error(String.format("Started: handleException: %s Generating error response ",
-                correlationId), ex);
-        Map<String, Object> responseBody = new LinkedHashMap<>();
-        populateResponseBody(responseBody, correlationId);
-        return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(responseAndLogBuilderHandler(ex),
+                HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -126,12 +123,8 @@ public class ExceptionHandlerConfig {
     public ResponseEntity<Object> handleMethodArgumentNotValidException(
             MethodArgumentNotValidException ex,
             WebRequest request) {
-        var correlationId = generateShortCorrelationId();
-        logger.error(String.format("Started: handleException: %s Generating error response ",
-                correlationId), ex);
-        Map<String, Object> responseBody = new LinkedHashMap<>();
-        populateResponseBody(responseBody, correlationId);
-        return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(responseAndLogBuilderHandler(ex),
+                HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -145,16 +138,12 @@ public class ExceptionHandlerConfig {
             HttpRequestMethodNotSupportedException.class})
     public ResponseEntity<Object> handleMethodNotAllowedException(Exception ex,
                                                                   WebRequest request) {
-        var correlationId = generateShortCorrelationId();
-        logger.error(String.format("Started: handleException: %s Generating error response ",
-                correlationId), ex);
-        Map<String, Object> responseBody = new LinkedHashMap<>();
-        populateResponseBody(responseBody, correlationId);
-        return new ResponseEntity<>(responseBody, HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity<>(responseAndLogBuilderHandler(ex),
+                HttpStatus.METHOD_NOT_ALLOWED);
 
     }
 
     private String generateShortCorrelationId() {
-        return UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+        return UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase();
     }
 }
