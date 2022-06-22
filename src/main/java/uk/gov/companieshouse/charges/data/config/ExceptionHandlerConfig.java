@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,8 @@ public class ExceptionHandlerConfig {
 
     private final Logger logger;
 
+    private static final String X_REQUEST_ID_HEADER = "x-request-id";
+
     public ExceptionHandlerConfig(final Logger logger) {
         this.logger = logger;
     }
@@ -38,8 +41,12 @@ public class ExceptionHandlerConfig {
                 + "API request with Correlation ID: %s", correlationId), ex, null);
     }
 
-    private Map<String, Object> responseAndLogBuilderHandler(Exception ex) {
-        var correlationId = generateShortCorrelationId();
+    private Map<String, Object> responseAndLogBuilderHandler(Exception ex, WebRequest request) {
+        var correlationId = request.getHeader(X_REQUEST_ID_HEADER);
+
+        if (StringUtils.isEmpty(correlationId)) {
+            correlationId = generateShortCorrelationId();
+        }
         Map<String, Object> responseBody = new LinkedHashMap<>();
         populateResponseBody(responseBody, correlationId);
         errorLogException(ex, correlationId);
@@ -56,7 +63,7 @@ public class ExceptionHandlerConfig {
      */
     @ExceptionHandler(value = {Exception.class})
     public ResponseEntity<Object> handleException(Exception ex, WebRequest request) {
-        return new ResponseEntity<>(responseAndLogBuilderHandler(ex),
+        return new ResponseEntity<>(responseAndLogBuilderHandler(ex, request),
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -70,7 +77,7 @@ public class ExceptionHandlerConfig {
     @ExceptionHandler(value = {DataAccessResourceFailureException.class})
     public ResponseEntity<Object> handleException(DataAccessResourceFailureException ex,
             WebRequest request) {
-        return new ResponseEntity<>(responseAndLogBuilderHandler(ex),
+        return new ResponseEntity<>(responseAndLogBuilderHandler(ex, request),
                 HttpStatus.SERVICE_UNAVAILABLE);
     }
 
@@ -85,15 +92,15 @@ public class ExceptionHandlerConfig {
     public ResponseEntity<Object> handleException(ResponseStatusException ex, WebRequest request) {
 
         if ("invokeChsKafkaApi".equals(ex.getReason())) {
-            return new ResponseEntity<>(responseAndLogBuilderHandler(ex),
+            return new ResponseEntity<>(responseAndLogBuilderHandler(ex, request),
                     HttpStatus.NOT_EXTENDED);
         }
 
         if (HttpStatus.SERVICE_UNAVAILABLE.equals(ex.getStatus())) {
-            return new ResponseEntity<>(responseAndLogBuilderHandler(ex),
+            return new ResponseEntity<>(responseAndLogBuilderHandler(ex,request),
                     HttpStatus.SERVICE_UNAVAILABLE);
         }
-        return new ResponseEntity<>(responseAndLogBuilderHandler(ex),
+        return new ResponseEntity<>(responseAndLogBuilderHandler(ex, request),
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -108,7 +115,7 @@ public class ExceptionHandlerConfig {
     @ExceptionHandler(value = {HttpMessageNotReadableException.class})
     public ResponseEntity<Object> handleException(HttpMessageNotReadableException ex,
             WebRequest request) {
-        return new ResponseEntity<>(responseAndLogBuilderHandler(ex),
+        return new ResponseEntity<>(responseAndLogBuilderHandler(ex, request),
                 HttpStatus.BAD_REQUEST);
     }
 
@@ -123,7 +130,7 @@ public class ExceptionHandlerConfig {
     public ResponseEntity<Object> handleMethodArgumentNotValidException(
             MethodArgumentNotValidException ex,
             WebRequest request) {
-        return new ResponseEntity<>(responseAndLogBuilderHandler(ex),
+        return new ResponseEntity<>(responseAndLogBuilderHandler(ex, request),
                 HttpStatus.BAD_REQUEST);
     }
 
@@ -138,7 +145,7 @@ public class ExceptionHandlerConfig {
             HttpRequestMethodNotSupportedException.class})
     public ResponseEntity<Object> handleMethodNotAllowedException(Exception ex,
                                                                   WebRequest request) {
-        return new ResponseEntity<>(responseAndLogBuilderHandler(ex),
+        return new ResponseEntity<>(responseAndLogBuilderHandler(ex, request),
                 HttpStatus.METHOD_NOT_ALLOWED);
 
     }
