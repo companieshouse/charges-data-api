@@ -224,7 +224,6 @@ public class ChargesService {
                     companyNumber));
 
 
-
             if (apiResponse == null) {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
                         " error response received from ChsKafkaApi");
