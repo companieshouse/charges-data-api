@@ -1,5 +1,5 @@
 charges-data-api
-==========================
+===========================
 
 charges-data-api is responsible for 
 1. Persisting company charges collection to database
