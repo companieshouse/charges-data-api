@@ -58,8 +58,8 @@ public class CompanyMetricsApiService {
         } catch (ApiErrorResponseException exp) {
             if (exp.getStatusCode() == 410) {
                 logger.info(String.format(
-                        "Error occurred while calling getCompanyMetrics endpoint "
-                        + "not found for %s.", companyNumber));
+                        "Error occurred while calling getCompanyMetrics endpoint. "
+                                + "Status Code: 410 - GONE for %s.", companyNumber));
             } else {
                 logger.error("Error occurred while calling getCompanyMetrics endpoint. ", exp);
                 throw new ResponseStatusException(exp.getStatusCode(),
