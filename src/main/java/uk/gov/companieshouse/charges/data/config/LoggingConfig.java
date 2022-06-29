@@ -12,6 +12,8 @@ import uk.gov.companieshouse.logging.LoggerFactory;
 @Configuration
 public class LoggingConfig {
 
+    private static Logger staticLogger;
+
     @Value("${logger.namespace}")
     private String loggerNamespace;
 
@@ -22,6 +24,12 @@ public class LoggingConfig {
      */
     @Bean
     public Logger logger() {
-        return LoggerFactory.getLogger(loggerNamespace);
+        Logger loggerBean = LoggerFactory.getLogger(loggerNamespace);
+        staticLogger = loggerBean;
+        return loggerBean;
+    }
+
+    public static Logger getLogger() {
+        return staticLogger;
     }
 }
