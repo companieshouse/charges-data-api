@@ -154,9 +154,9 @@ public class ChargesController {
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (ResponseStatusException responseStatusException) {
             logger.error(String.format("Unexpected error occurred "
-                            + "while processing DELETE request with contextId %s:"
-                    + responseStatusException.getMessage(),
-                    contextId));
+                    + "while processing DELETE request with contextId %s. "
+                    + "Response Status Exception: %s.",
+                    contextId, responseStatusException.getStatus().value()));
             return ResponseEntity.status(responseStatusException.getStatus()).build();
         } catch (Exception exception) {
             logger.error(String.format("Unexpected error occurred "
