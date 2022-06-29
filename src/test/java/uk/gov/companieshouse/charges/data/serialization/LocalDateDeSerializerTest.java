@@ -19,7 +19,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class LocalDateDeSerializerTest {
+class LocalDateDeSerializerTest {
 
     private static final String DATE_STRING = "2015-06-26T08:31:35.058Z";
 
@@ -49,7 +49,6 @@ public class LocalDateDeSerializerTest {
 
     @Test
     void testDeserializeJsonNodeTextualValue() throws IOException {
-        when(jsonNode.get(any())).thenReturn(jsonNode);
         when(jsonNode.getNodeType()).thenReturn(JsonNodeType.STRING);
         when(jsonNode.textValue()).thenReturn(DATE_STRING);
         LocalDate localDate = deserializer.deserialize(jsonParser, deserializationContext);
