@@ -192,7 +192,7 @@ public class ChargesService {
                     chargesRepository.findById(chargeId);
 
             if (chargesDocumentOptional.isEmpty()) {
-                throw new ResponseStatusException(HttpStatus.GONE, String.format(
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(
                         "Company charge doesn't exist in company mortgages"
                                 + " with %s header x-request-id %s",
                         chargeId, contextId));
