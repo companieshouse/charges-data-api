@@ -65,12 +65,12 @@ Feature: Process company charges (Happy path)
       | data                              | company_number  |   charge_id                                              |  result                                    |
       | Insolvency_cases_Happy_Path_input | 70242180        |   OzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng |  Insolvency_Company_Metrics_abent_output   |
 
-  Scenario Outline: Get endpoint returns 404 when company number not found in DB
+  Scenario Outline: Get endpoint returns 410 when company number not found in DB
 
     Given Charges data api service is running
     And  the company charge exists for charge id "<charge_id>"
     When I send GET request with company number "<company_number>" and charge id "<charge_id>"
-    Then I should receive 404 status code
+    Then I should receive 410 status code
 
     Examples:
        | company_number  |   charge_id                                                |
