@@ -163,7 +163,7 @@ public class ChargesServiceTest {
             chargesService.deleteCharge("x-request-id", chargeId);
         });
 
-        assertEquals(HttpStatus.NOT_FOUND, ((ResponseStatusException)exception).getStatus());
+        assertEquals(HttpStatus.GONE, ((ResponseStatusException)exception).getStatus());
         verify(chargesRepository, Mockito.times(0)).deleteById(Mockito.any());
         verify(chargesRepository, Mockito.times(1)).findById(Mockito.eq(chargeId));
     }
