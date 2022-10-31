@@ -55,7 +55,7 @@ public class CompanyMetricsApiService {
             ApiResponse<MetricsApi> execute = companyMetrics.execute();
             return Optional.ofNullable(execute.getData());
         } catch (URIValidationException exp) {
-            logger.error("Error occurred while calling getCompanyMetrics endpoint. ");
+            logger.error("Error occurred while calling getCompanyMetrics endpoint.");
 
         } catch (ApiErrorResponseException exp) {
             if (exp.getStatusCode() == 404) {
@@ -63,7 +63,7 @@ public class CompanyMetricsApiService {
                         "Error occurred while calling getCompanyMetrics endpoint. "
                                 + "Status Code: 404 - NOT FOUND for %s.", companyNumber));
             } else {
-                logger.error("Error occurred while calling getCompanyMetrics endpoint. ");
+                logger.error("Error occurred while calling getCompanyMetrics endpoint.");
                 throw new ResponseStatusException(exp.getStatusCode(),
                     exp.getStatusMessage(), exp);
             }
