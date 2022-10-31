@@ -24,6 +24,10 @@ public class ApiClientServiceImpl implements ApiClientService {
         return internalApiClient;
     }
 
+    @Override
+    public String getInternalApiUrl() {
+        return internalApiUrl;
+    }
 
     private HttpClient getHttpClient() {
         ApiKeyHttpClient httpClient = new ApiKeyHttpClient(apiKey);
