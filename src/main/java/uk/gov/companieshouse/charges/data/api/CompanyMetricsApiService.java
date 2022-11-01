@@ -44,7 +44,7 @@ public class CompanyMetricsApiService {
         logger.debug(String.format("Started : getCompanyMetrics for Company Number %s ",
                 companyNumber
         ));
-        logger.debug(String.format("CompanyMetricsApiService API URL: [ %s ]",
+        logger.debug(String.format("CompanyMetricsApiService API URL: [%s]",
                 apiClientService.getInternalApiUrl()));
         final InternalApiClient internalApiClient = this.apiClientService.getInternalApiClient();
         PrivateCompanyMetricsGet companyMetrics =
@@ -63,9 +63,11 @@ public class CompanyMetricsApiService {
                         "Error occurred while calling getCompanyMetrics endpoint. "
                                 + "Status Code: 404 - NOT FOUND for %s.", companyNumber));
             } else {
-                logger.error("Error occurred while calling getCompanyMetrics endpoint.");
+                logger.error(String.format("Error calling getCompanyMetrics endpoint. "
+                        + "Status code [%s] + message [%s]", exp.getStatusCode(),
+                        exp.getStatusMessage()));
                 throw new ResponseStatusException(exp.getStatusCode(),
-                    exp.getStatusMessage(), exp);
+                    exp.getStatusMessage(), null);
             }
         }
         logger.debug(String.format("Finished : getCompanyMetrics for Company Number %s ",
