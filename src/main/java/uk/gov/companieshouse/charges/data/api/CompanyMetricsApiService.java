@@ -41,10 +41,10 @@ public class CompanyMetricsApiService {
      * @return company metrics.
      */
     public Optional<MetricsApi> getCompanyMetrics(final String companyNumber) {
-        logger.debug(String.format("Started : getCompanyMetrics for Company Number %s ",
+        logger.info(String.format("Started : getCompanyMetrics for Company Number %s ",
                 companyNumber
         ));
-        logger.debug(String.format("CompanyMetricsApiService API URL: [%s]",
+        logger.info(String.format("CompanyMetricsApiService API URL: [%s]",
                 apiClientService.getInternalApiUrl()));
         final InternalApiClient internalApiClient = this.apiClientService.getInternalApiClient();
         PrivateCompanyMetricsGet companyMetrics =
@@ -59,7 +59,7 @@ public class CompanyMetricsApiService {
 
         } catch (ApiErrorResponseException exp) {
             if (exp.getStatusCode() == 404) {
-                logger.info(String.format(
+                logger.error(String.format(
                         "Error occurred while calling getCompanyMetrics endpoint. "
                                 + "Status Code: 404 - NOT FOUND for %s.", companyNumber));
             } else {
