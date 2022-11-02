@@ -44,8 +44,6 @@ public class CompanyMetricsApiService {
         logger.info(String.format("Started : getCompanyMetrics for Company Number %s ",
                 companyNumber
         ));
-        logger.info(String.format("CompanyMetricsApiService API URL: [%s]",
-                apiClientService.getInternalApiUrl()));
         final InternalApiClient internalApiClient = this.apiClientService.getInternalApiClient();
         PrivateCompanyMetricsGet companyMetrics =
                 internalApiClient.privateCompanyMetricsResourceHandler()
@@ -64,7 +62,7 @@ public class CompanyMetricsApiService {
                                 + "Status Code: 404 - NOT FOUND for %s.", companyNumber));
             } else {
                 logger.error(String.format("Error calling getCompanyMetrics endpoint. "
-                        + "Status code [%s] + message [%s]", exp.getStatusCode(),
+                        + "Status Code: [%s] - message [%s]", exp.getStatusCode(),
                         exp.getStatusMessage()));
                 throw new ResponseStatusException(exp.getStatusCode(),
                     exp.getStatusMessage(), null);

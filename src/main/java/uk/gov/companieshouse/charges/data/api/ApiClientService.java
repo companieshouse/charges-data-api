@@ -10,6 +10,4 @@ import uk.gov.companieshouse.api.InternalApiClient;
 public interface ApiClientService {
 
     InternalApiClient getInternalApiClient();
-
-    String getInternalApiUrl();
 }
