@@ -1,8 +1,6 @@
 package uk.gov.companieshouse.charges.data.api;
 
 import java.time.OffsetDateTime;
-import java.util.Arrays;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.companieshouse.api.charges.ChargeApi;
 import uk.gov.companieshouse.api.charges.ChargeLink;
@@ -25,7 +24,6 @@ import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 
 @DataMongoTest
 @ExtendWith(SpringExtension.class)
-@TestPropertySource(properties = "spring.mongodb.embedded.version=3.5.5")
 class ChargesRepositoryTest {
 
     @Autowired
@@ -80,7 +78,6 @@ class ChargesRepositoryTest {
         assertEquals(chargesPartSatisfied.getData().getStatus(), chargesList.get(0).getData().getStatus());
         assertEquals(chargesOutstanding.getId(), chargesList.get(1).getId());
         assertEquals(chargesOutstanding.getData().getStatus(), chargesList.get(1).getData().getStatus());
-
     }
 
     private ChargesDocument getCharges(String id, ChargeApi.StatusEnum status) {
