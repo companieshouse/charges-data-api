@@ -112,7 +112,7 @@ public class ChargesControllerTest {
     @DisplayName("Retrieve company charges for a given company number")
     void getCharges() throws Exception {
         var charges = new ChargesApi();
-        when(chargesService.findCharges(any(), any(), any())).thenReturn(Optional.of(charges));
+        when(chargesService.findCharges(any(), any())).thenReturn(Optional.of(charges));
         mockMvc.perform(get(CHARGES_GET_URL))
                 .andExpect(status().isOk());
     }

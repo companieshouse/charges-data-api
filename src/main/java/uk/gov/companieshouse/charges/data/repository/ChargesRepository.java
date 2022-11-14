@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -20,4 +21,7 @@ public interface ChargesRepository extends MongoRepository<ChargesDocument, Stri
     Page<ChargesDocument> findCharges(final String companyNumber,
             final List<ChargeApi.StatusEnum> filter, final Pageable pageable);
 
+    @Query("{'company_number': ?0, 'data.status': { $nin: ?1 } }, { $set: { exclude: true }")
+    List<ChargesDocument> findChargesUnpaged(final String companyNumber,
+                                      final List<ChargeApi.StatusEnum> filter, final Sort sort);
 }

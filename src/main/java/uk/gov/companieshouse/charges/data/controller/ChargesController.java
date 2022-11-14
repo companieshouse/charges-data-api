@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.charges.data.controller;
 
 import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 import uk.gov.companieshouse.api.charges.ChargeApi;
 import uk.gov.companieshouse.api.charges.ChargesApi;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
+import uk.gov.companieshouse.charges.data.model.RequestCriteria;
 import uk.gov.companieshouse.charges.data.service.ChargesService;
 import uk.gov.companieshouse.logging.Logger;
 
@@ -115,29 +117,24 @@ public class ChargesController {
                 companyNumber
         ));
 
-        Pageable pageable = Pageable.unpaged();
-        if (itemsPerPage != null && startIndex != null) {
-            pageable = PageRequest.of(startIndex, itemsPerPage);
-        }
-
         ResponseEntity<ChargesApi> chargeApiResponse = chargesService.findCharges(companyNumber,
-                                pageable, filter).map(charges -> new ResponseEntity<>(
-                                        charges,
-                                        HttpStatus.OK))
-                        .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+                        new RequestCriteria()
+                                .setItemsPerPage(itemsPerPage)
+                                .setStartIndex(startIndex)
+                                .setFilter(filter))
+                .map(charges -> new ResponseEntity<>(charges, HttpStatus.OK))
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 
         logger.debug(
-                String.format("Finished : getCompanyCharges Charges found for Company Number %s ",
-                        companyNumber
-                ));
+                String.format("Finished : getCompanyCharges Charges found for Company Number %s ", companyNumber));
         return chargeApiResponse;
     }
 
     /**
      * Delete a company charge id from company charges.
      *
-     * @param  companyNumber  the company number for charges
-     * @param  chargeId the charge information for a company
+     * @param companyNumber the company number for charges
+     * @param chargeId      the charge information for a company
      */
     @DeleteMapping("/company/{company_number}/charges/{charge_id}")
     public ResponseEntity<Void> deleteCharge(
@@ -148,21 +145,21 @@ public class ChargesController {
                 "Payload Successfully received on DELETE with contextId %s and company number %s",
                 contextId,
                 companyNumber
-                ));
+        ));
 
         try {
             chargesService.deleteCharge(contextId, chargeId);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (ResponseStatusException responseStatusException) {
             logger.error(String.format("Unexpected error occurred "
-                    + "while processing DELETE request with contextId %s. "
-                    + "Response Status Exception: %s.",
+                            + "while processing DELETE request with contextId %s. "
+                            + "Response Status Exception: %s.",
                     contextId, responseStatusException.getStatus().value()));
             return ResponseEntity.status(responseStatusException.getStatus()).build();
         } catch (Exception exception) {
             logger.error(String.format("Unexpected error occurred "
                             + "while processing DELETE request with contextId %s:"
-                    + exception.getMessage(),
+                            + exception.getMessage(),
                     contextId));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

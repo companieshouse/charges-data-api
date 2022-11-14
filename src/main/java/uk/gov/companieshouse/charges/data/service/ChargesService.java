@@ -8,7 +8,9 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -21,6 +23,7 @@ import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.charges.data.api.ChargesApiService;
 import uk.gov.companieshouse.charges.data.api.CompanyMetricsApiService;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
+import uk.gov.companieshouse.charges.data.model.RequestCriteria;
 import uk.gov.companieshouse.charges.data.repository.ChargesRepository;
 import uk.gov.companieshouse.charges.data.transform.ChargesTransformer;
 import uk.gov.companieshouse.logging.Logger;
@@ -113,16 +116,28 @@ public class ChargesService {
      * @param companyNumber company Number.
      * @return charges.
      */
-    public Optional<ChargesApi> findCharges(final String companyNumber, final Pageable pageable,
-            final String filter) {
+    public Optional<ChargesApi> findCharges(final String companyNumber, final RequestCriteria requestCriteria) {
         List<ChargeApi.StatusEnum> statusFilter = new ArrayList<>();
-        if ("outstanding".equals(filter)) {
+        if ("outstanding".equals(requestCriteria.getFilter())) {
             statusFilter.add(ChargeApi.StatusEnum.SATISFIED);
             statusFilter.add(ChargeApi.StatusEnum.FULLY_SATISFIED);
         }
-        Page<ChargesDocument> page = chargesRepository.findCharges(
-                companyNumber, statusFilter, pageable);
-        List<ChargesDocument> charges = page == null ? Collections.emptyList() : page.getContent();
+
+        Pageable pageable = Pageable.unpaged();
+        List<ChargesDocument> charges;
+        if (requestCriteria.getItemsPerPage() != null && requestCriteria.getStartIndex() != null) {
+            pageable = PageRequest.of(requestCriteria.getStartIndex(), requestCriteria.getItemsPerPage(),
+                    Sort.by(Sort.Order.desc("data.created_on"),
+                    Sort.Order.desc("data.charge_number")));
+
+            Page<ChargesDocument> page = chargesRepository.findCharges(
+                    companyNumber, statusFilter, pageable);
+            charges = page == null ? Collections.emptyList() : page.getContent();
+        } else {
+            charges = chargesRepository.findChargesUnpaged(companyNumber, statusFilter,
+                    Sort.by(Sort.Order.desc("data.created_on"),
+                    Sort.Order.desc("data.charge_number")));
+        }
 
         Optional<MetricsApi> companyMetrics =
                 companyMetricsApiService.getCompanyMetrics(companyNumber);
