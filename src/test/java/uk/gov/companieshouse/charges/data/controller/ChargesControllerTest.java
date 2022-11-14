@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.FileCopyUtils;
@@ -45,6 +46,7 @@ import uk.gov.companieshouse.charges.data.transform.ChargesTransformer;
 import uk.gov.companieshouse.logging.Logger;
 
 @SpringBootTest
+@TestPropertySource(properties = "spring.mongodb.embedded.version=3.5.5")
 public class ChargesControllerTest {
     private final String companyNumber = "02588581";
     private final String chargeId = "18588520";
@@ -119,7 +121,7 @@ public class ChargesControllerTest {
     @DisplayName("Retrieve company charges for a given company number")
     void getCharges() throws Exception {
         var charges = new ChargesApi();
-        when(chargesService.findCharges(any(), any())).thenReturn(Optional.of(charges));
+        when(chargesService.findCharges(any(), any(), any())).thenReturn(Optional.of(charges));
         mockMvc.perform(get(CHARGES_GET_URL))
                 .andExpect(status().isOk());
     }

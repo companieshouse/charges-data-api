@@ -13,11 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.util.FileCopyUtils;
 import uk.gov.companieshouse.api.charges.ChargeApi.StatusEnum;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 
 @SpringBootTest
+@TestPropertySource(properties = "spring.mongodb.embedded.version=3.5.5")
 class ChargesConverterTest {
     String chargesData;
     String chargesData1;
