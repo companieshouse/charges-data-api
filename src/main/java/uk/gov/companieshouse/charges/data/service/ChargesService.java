@@ -120,7 +120,8 @@ public class ChargesService {
             statusFilter.add(ChargeApi.StatusEnum.SATISFIED);
             statusFilter.add(ChargeApi.StatusEnum.FULLY_SATISFIED);
         }
-        Page<ChargesDocument> page = chargesRepository.findCharges(companyNumber, statusFilter, pageable);
+        Page<ChargesDocument> page = chargesRepository.findCharges(
+                companyNumber, statusFilter, pageable);
         List<ChargesDocument> charges = page == null ? Collections.emptyList() : page.getContent();
 
         Optional<MetricsApi> companyMetrics =
