@@ -214,6 +214,46 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
         assertEquals(chargeOne.getId(), chargesList.get(3).getId());
     }
 
+    @DisplayName("Repository returns filtered charges first sorted by created_on or delivered_on if null and second sorted by charge_number")
+    @Test
+    void findChargesSortedDeliveredOnWithFilter() throws IOException {
+        // given
+        ChargesDocument chargeOne = createChargesDocument("00006400", UUID.randomUUID().toString(),
+                "charge-api-request-data-1.json");
+        chargeOne.getData().chargeNumber(1).createdOn(LocalDate.of(2017, 7, 10));
+        chargeOne.getData().setStatus(ChargeApi.StatusEnum.FULLY_SATISFIED);
+
+        ChargesDocument chargeTwo = createChargesDocument("00006400", UUID.randomUUID().toString(),
+                "charge-api-request-data-1.json");
+        chargeTwo.getData().chargeNumber(2).createdOn(LocalDate.of(2017, 7, 10));
+        chargeTwo.getData().setStatus(ChargeApi.StatusEnum.OUTSTANDING);
+
+        ChargesDocument chargeThree = createChargesDocument("00006400", UUID.randomUUID().toString(),
+                "charge-api-request-data-1.json");
+        chargeThree.getData().chargeNumber(1).createdOn(LocalDate.of(2018, 7, 10));
+        chargeThree.getData().setStatus(ChargeApi.StatusEnum.OUTSTANDING);
+
+        ChargesDocument chargeFour = createChargesDocument("00006400", UUID.randomUUID().toString(),
+                "charge-api-request-data-1.json");
+        chargeFour.getData().chargeNumber(1).createdOn(null);
+        chargeFour.getData().chargeNumber(1).deliveredOn(LocalDate.of(2017, 10, 10));
+        chargeFour.getData().setStatus(ChargeApi.StatusEnum.OUTSTANDING);
+
+        chargesRepository.saveAll(
+                Arrays.asList(chargeOne, chargeTwo,
+                        chargeThree, chargeFour));
+
+        // when
+        List<ChargesDocument> chargesList = chargesRepository.findChargesAggregate("00006400",
+                Arrays.asList(ChargeApi.StatusEnum.SATISFIED, ChargeApi.StatusEnum.FULLY_SATISFIED));
+
+        // then
+        assertEquals(3, chargesList.size());
+        assertEquals(chargeThree.getId(), chargesList.get(0).getId());
+        assertEquals(chargeFour.getId(), chargesList.get(1).getId());
+        assertEquals(chargeTwo.getId(), chargesList.get(2).getId());
+    }
+
     private ChargesDocument createChargesDocument(String companyNumber, String chargeId, String filename) throws IOException {
         String incomingData = loadInputFile(filename);
         ObjectMapper mapper = new ObjectMapper();

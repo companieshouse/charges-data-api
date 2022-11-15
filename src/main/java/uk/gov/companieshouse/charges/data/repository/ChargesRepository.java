@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -24,4 +25,12 @@ public interface ChargesRepository extends MongoRepository<ChargesDocument, Stri
     @Query("{'company_number': ?0, 'data.status': { $nin: ?1 } }, { $set: { exclude: true }")
     List<ChargesDocument> findChargesUnpaged(final String companyNumber,
                                       final List<ChargeApi.StatusEnum> filter, final Sort sort);
+
+    @Aggregation(pipeline = {
+            "{ '$match': { 'company_number': ?0, 'data.status': { $nin: ?1 } } }",
+            "{ '$addFields': { 'sort_date': { $ifNull: [ '$data.created_on', '$data.delivered_on' ] } } }",
+            "{ '$sort': { 'sort_date': -1, 'data.charge_number': -1 } }"
+            })
+    List<ChargesDocument> findChargesAggregate(final String companyNumber,
+            final List<ChargeApi.StatusEnum> filter);
 }
