@@ -116,27 +116,29 @@ public class ChargesService {
      * @param companyNumber company Number.
      * @return charges.
      */
-    public Optional<ChargesApi> findCharges(final String companyNumber, final RequestCriteria requestCriteria) {
+    public Optional<ChargesApi> findCharges(final String companyNumber,
+            final RequestCriteria requestCriteria) {
         List<ChargeApi.StatusEnum> statusFilter = new ArrayList<>();
         if ("outstanding".equals(requestCriteria.getFilter())) {
             statusFilter.add(ChargeApi.StatusEnum.SATISFIED);
             statusFilter.add(ChargeApi.StatusEnum.FULLY_SATISFIED);
         }
 
-        Pageable pageable = Pageable.unpaged();
         List<ChargesDocument> charges;
-        if (requestCriteria.getItemsPerPage() != null && requestCriteria.getStartIndex() != null) {
-            pageable = PageRequest.of(requestCriteria.getStartIndex(), requestCriteria.getItemsPerPage(),
+        if (requestCriteria.getItemsPerPage() == null || requestCriteria.getStartIndex() == null) {
+            charges = chargesRepository.findChargesUnpaged(companyNumber, statusFilter,
                     Sort.by(Sort.Order.desc("data.created_on"),
-                    Sort.Order.desc("data.charge_number")));
+                            Sort.Order.desc("data.charge_number")));
+        } else {
+            Pageable pageable = PageRequest.of(requestCriteria.getStartIndex(),
+                    requestCriteria.getItemsPerPage(),
+                    Sort.by(Sort.Order.desc("data.created_on"),
+                            Sort.Order.desc("data.charge_number")));
 
             Page<ChargesDocument> page = chargesRepository.findCharges(
                     companyNumber, statusFilter, pageable);
+
             charges = page == null ? Collections.emptyList() : page.getContent();
-        } else {
-            charges = chargesRepository.findChargesUnpaged(companyNumber, statusFilter,
-                    Sort.by(Sort.Order.desc("data.created_on"),
-                    Sort.Order.desc("data.charge_number")));
         }
 
         Optional<MetricsApi> companyMetrics =

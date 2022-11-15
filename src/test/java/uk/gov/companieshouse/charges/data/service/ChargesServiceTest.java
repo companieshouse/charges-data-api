@@ -53,6 +53,7 @@ import uk.gov.companieshouse.logging.Logger;
 public class ChargesServiceTest {
 
     private static final String companyNumber = "NI622400";
+    private static final Sort sort = Sort.by(Sort.Order.desc("data.created_on"), Sort.Order.desc("data.charge_number"));
 
     @Autowired
     private ObjectMapper mongoCustomConversions;
@@ -80,7 +81,6 @@ public class ChargesServiceTest {
     @Mock
     private ChargesTransformer chargesTransformer;
 
-
     /**
      * Reset the mocks so defaults are returned and invocation counters cleared.
      */
@@ -92,14 +92,13 @@ public class ChargesServiceTest {
 
    @Test
     public void find_charges_should_return_charges() throws IOException {
-        final PageImpl<ChargesDocument> page = new PageImpl<>(
-                List.of(createCharges()));
         when(chargesRepository.findCharges(eq(companyNumber), any(), any(Pageable.class)))
-                .thenReturn(page);
+                .thenReturn(new PageImpl<>(Collections.singletonList(createCharges())));
 
         when(companyMetricsApiService.getCompanyMetrics(companyNumber))
                 .thenReturn(Optional.ofNullable(createMetrics()));
-        Optional<ChargesApi> charges = chargesService.findCharges(companyNumber, new RequestCriteria());
+        Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,
+                new RequestCriteria().setItemsPerPage(1).setStartIndex(0));
         assertThat(charges.isPresent()).isTrue();
         assertThat(charges.get().getItems().isEmpty()).isFalse();
         assertThat(charges.get().getTotalCount()).isEqualTo(1);
@@ -110,21 +109,41 @@ public class ChargesServiceTest {
 
     @Test
     void findChargesWithFilter() throws IOException {
-        final PageImpl<ChargesDocument> page = new PageImpl<>(
-                List.of(createCharges()));
         when(chargesRepository.findCharges(eq(companyNumber), any(), any(Pageable.class)))
-                .thenReturn(page);
+                .thenReturn(new PageImpl<>(Collections.singletonList(createCharges())));
 
         when(companyMetricsApiService.getCompanyMetrics(companyNumber))
                 .thenReturn(Optional.ofNullable(createMetrics()));
-        Optional<ChargesApi> charges = chargesService.findCharges(companyNumber, new RequestCriteria().setFilter("outstanding"));
+        Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,
+                new RequestCriteria().setFilter("outstanding").setStartIndex(0).setItemsPerPage(1));
         assertThat(charges.isPresent()).isTrue();
         assertThat(charges.get().getItems().isEmpty()).isFalse();
         assertThat(charges.get().getTotalCount()).isEqualTo(1);
         assertThat(charges.get().getSatisfiedCount()).isEqualTo(1);
         assertThat(charges.get().getPartSatisfiedCount()).isEqualTo(2);
         assertThat(charges.get().getUnfilteredCount()).isEqualTo(14);
-        verify(chargesRepository).findCharges(companyNumber, Arrays.asList(ChargeApi.StatusEnum.SATISFIED, ChargeApi.StatusEnum.FULLY_SATISFIED), Pageable.unpaged());
+        verify(chargesRepository).findCharges(companyNumber,
+                Arrays.asList(ChargeApi.StatusEnum.SATISFIED, ChargeApi.StatusEnum.FULLY_SATISFIED),
+                PageRequest.of(0,1, sort));
+    }
+
+    @Test
+    void findChargesWithFilterUnpaged() throws IOException {
+        when(chargesRepository.findChargesUnpaged(eq(companyNumber), any(), any(Sort.class)))
+                .thenReturn(Collections.singletonList(createCharges()));
+
+        when(companyMetricsApiService.getCompanyMetrics(companyNumber))
+                .thenReturn(Optional.ofNullable(createMetrics()));
+        Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,
+                new RequestCriteria().setFilter("outstanding"));
+        assertThat(charges.isPresent()).isTrue();
+        assertThat(charges.get().getItems().isEmpty()).isFalse();
+        assertThat(charges.get().getTotalCount()).isEqualTo(1);
+        assertThat(charges.get().getSatisfiedCount()).isEqualTo(1);
+        assertThat(charges.get().getPartSatisfiedCount()).isEqualTo(2);
+        assertThat(charges.get().getUnfilteredCount()).isEqualTo(14);
+        verify(chargesRepository).findChargesUnpaged(companyNumber,
+                Arrays.asList(ChargeApi.StatusEnum.SATISFIED, ChargeApi.StatusEnum.FULLY_SATISFIED), sort);
     }
 
     @Test
@@ -136,16 +155,16 @@ public class ChargesServiceTest {
 
         when(companyMetricsApiService.getCompanyMetrics(companyNumber))
                 .thenReturn(Optional.ofNullable(createMetrics()));
-        Optional<ChargesApi> charges = chargesService.findCharges(companyNumber, new RequestCriteria().setItemsPerPage(1).setStartIndex(0));
+        Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,
+                new RequestCriteria().setItemsPerPage(1).setStartIndex(0));
         assertThat(charges.isPresent()).isTrue();
         assertThat(charges.get().getItems().isEmpty()).isFalse();
         assertThat(charges.get().getTotalCount()).isEqualTo(1);
         assertThat(charges.get().getSatisfiedCount()).isEqualTo(1);
         assertThat(charges.get().getPartSatisfiedCount()).isEqualTo(2);
         assertThat(charges.get().getUnfilteredCount()).isEqualTo(14);
-        verify(chargesRepository).findCharges(companyNumber, Collections.emptyList(), PageRequest.of(0, 1,
-                Sort.by(Sort.Order.desc("data.created_on"),
-                        Sort.Order.desc("data.charge_number"))));
+        verify(chargesRepository).findCharges(companyNumber, Collections.emptyList(),
+                PageRequest.of(0, 1, sort));
     }
 
     @Test
@@ -162,9 +181,7 @@ public class ChargesServiceTest {
         assertThat(charges.get().getSatisfiedCount()).isEqualTo(1);
         assertThat(charges.get().getPartSatisfiedCount()).isEqualTo(2);
         assertThat(charges.get().getUnfilteredCount()).isEqualTo(14);
-        verify(chargesRepository).findChargesUnpaged(companyNumber, Collections.emptyList(),
-                Sort.by(Sort.Order.desc("data.created_on"),
-                        Sort.Order.desc("data.charge_number")));
+        verify(chargesRepository).findChargesUnpaged(companyNumber, Collections.emptyList(), sort);
     }
 
     @Test
@@ -178,12 +195,11 @@ public class ChargesServiceTest {
 
     @Test
     public void empty_charges_when_company_metrics_returns_no_result() throws IOException {
-        var page = new PageImpl<>(
-                List.of(createCharges()));
         when(chargesRepository.findCharges(eq(companyNumber), any(), any(Pageable.class)))
-                .thenReturn(page);
+                .thenReturn(new PageImpl<>(Collections.singletonList(createCharges())));
 
-        Optional<ChargesApi> charges = chargesService.findCharges(companyNumber, new RequestCriteria());
+        Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,
+                new RequestCriteria().setItemsPerPage(1).setStartIndex(0));
         assertThat(charges.isPresent()).isTrue();
         //assert no metrics
         assertThat(charges.get().getPartSatisfiedCount()).isEqualTo(0);

@@ -126,7 +126,8 @@ public class ChargesController {
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 
         logger.debug(
-                String.format("Finished : getCompanyCharges Charges found for Company Number %s ", companyNumber));
+                String.format("Finished : getCompanyCharges Charges found for Company Number %s ",
+                        companyNumber));
         return chargeApiResponse;
     }
 
