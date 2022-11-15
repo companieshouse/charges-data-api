@@ -25,11 +25,13 @@ public interface ChargesRepository extends MongoRepository<ChargesDocument, Stri
      * @param companyNumber The company number to match on.
      * @param filter The list of charge statuses to filter out.
      * @param pageable The start index and page size to be returned.
-     * @return
+     * @return The list of charges documents to be returned.
      */
     @Aggregation(pipeline = {
             "{ '$match': { 'company_number': ?0, 'data.status': { $nin: ?1 } } }",
-            "{ '$addFields': { 'sort_date': { $ifNull: [ '$data.created_on', '$data.delivered_on' ] } } }",
+            "{ '$addFields': "
+                    + "{ 'sort_date': "
+                        + "{ $ifNull: [ '$data.created_on', '$data.delivered_on' ] } } }",
             "{ '$sort': { 'sort_date': -1, 'data.charge_number': -1 } }"
             })
     List<ChargesDocument> findCharges(final String companyNumber,
