@@ -103,9 +103,8 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
                         chargesPartSatisfied, chargesOutstanding));
 
         // when
-        Page<ChargesDocument> chargesPage = chargesRepository.findCharges(
+        List<ChargesDocument> chargesList = chargesRepository.findCharges(
                 "00006400", Collections.emptyList(), PageRequest.ofSize(4));
-        List<ChargesDocument> chargesList = chargesPage.toList();
 
         // then
         assertEquals(4, chargesList.size());
@@ -132,9 +131,8 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
                         chargesPartSatisfied, chargesOutstanding));
 
         // when
-        Page<ChargesDocument> chargesPage = chargesRepository.findCharges(
+        List<ChargesDocument> chargesList = chargesRepository.findCharges(
                 "00006400", Arrays.asList(ChargeApi.StatusEnum.SATISFIED, ChargeApi.StatusEnum.FULLY_SATISFIED), PageRequest.ofSize(4));
-        List<ChargesDocument> chargesList = chargesPage.toList();
 
         // then
         assertEquals(2, chargesList.size());
@@ -165,12 +163,11 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
                         chargeThree, chargeFour));
 
         // when
-        Page<ChargesDocument> chargesPage = chargesRepository.findCharges("00006400",
+        List<ChargesDocument> chargesList = chargesRepository.findCharges("00006400",
                 Collections.emptyList(),
                 PageRequest.of(0, 4,
                         Sort.by(Sort.Order.desc("data.created_on"),
                                 Sort.Order.desc("data.charge_number"))));
-        List<ChargesDocument> chargesList = chargesPage.toList();
 
         // then
         assertEquals(4, chargesList.size());
@@ -201,10 +198,9 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
                         chargeThree, chargeFour));
 
         // when
-        List<ChargesDocument> chargesList = chargesRepository.findChargesUnpaged("00006400",
+        List<ChargesDocument> chargesList = chargesRepository.findCharges("00006400",
                 Collections.emptyList(),
-                Sort.by(Sort.Order.desc("data.created_on"),
-                        Sort.Order.desc("data.charge_number")));
+                PageRequest.of(0, 4));
 
         // then
         assertEquals(4, chargesList.size());
@@ -243,9 +239,11 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
                 Arrays.asList(chargeOne, chargeTwo,
                         chargeThree, chargeFour));
 
+        List<ChargeApi.StatusEnum> filter = Arrays.asList(ChargeApi.StatusEnum.SATISFIED, ChargeApi.StatusEnum.FULLY_SATISFIED);
+
         // when
-        List<ChargesDocument> chargesList = chargesRepository.findChargesAggregate("00006400",
-                Arrays.asList(ChargeApi.StatusEnum.SATISFIED, ChargeApi.StatusEnum.FULLY_SATISFIED));
+
+        List<ChargesDocument> chargesList = chargesRepository.findCharges("00006400", filter, PageRequest.of(0, 4));
 
         // then
         assertEquals(3, chargesList.size());
