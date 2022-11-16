@@ -2,13 +2,10 @@ package uk.gov.companieshouse.charges.data.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.doThrow;
@@ -17,12 +14,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.OffsetDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.bson.Document;
 import org.junit.Assert;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -97,12 +94,12 @@ public class ChargesServiceTest {
         Pageable pageable = Pageable.ofSize(1);
         final PageImpl<ChargesDocument> page = new PageImpl<>(
                 List.of(createCharges()));
-        when(chargesRepository.findCharges(eq(companyNumber), any(Pageable.class)))
+        when(chargesRepository.findCharges(eq(companyNumber), any(), any(Pageable.class)))
                 .thenReturn(page);
 
         when(companyMetricsApiService.getCompanyMetrics(companyNumber))
                 .thenReturn(Optional.ofNullable(createMetrics()));
-        Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,pageable);
+        Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,pageable, "");
         assertThat(charges.isPresent()).isTrue();
         assertThat(charges.get().getItems().isEmpty()).isFalse();
         assertThat(charges.get().getTotalCount()).isEqualTo(1);
@@ -112,9 +109,29 @@ public class ChargesServiceTest {
     }
 
     @Test
+    void findChargesWithFilter() throws IOException {
+        Pageable pageable = Pageable.ofSize(1);
+        final PageImpl<ChargesDocument> page = new PageImpl<>(
+                List.of(createCharges()));
+        when(chargesRepository.findCharges(eq(companyNumber), any(), any(Pageable.class)))
+                .thenReturn(page);
+
+        when(companyMetricsApiService.getCompanyMetrics(companyNumber))
+                .thenReturn(Optional.ofNullable(createMetrics()));
+        Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,pageable, "outstanding");
+        assertThat(charges.isPresent()).isTrue();
+        assertThat(charges.get().getItems().isEmpty()).isFalse();
+        assertThat(charges.get().getTotalCount()).isEqualTo(1);
+        assertThat(charges.get().getSatisfiedCount()).isEqualTo(1);
+        assertThat(charges.get().getPartSatisfiedCount()).isEqualTo(2);
+        assertThat(charges.get().getUnfilteredCount()).isEqualTo(14);
+        verify(chargesRepository).findCharges(companyNumber, Arrays.asList(ChargeApi.StatusEnum.SATISFIED, ChargeApi.StatusEnum.FULLY_SATISFIED), Pageable.ofSize(1));
+    }
+
+    @Test
     public void empty_charges_when_repository_returns_empty_result() {
         var pageable = Pageable.ofSize(1);
-        Optional<ChargesApi> charges = chargesService.findCharges(companyNumber, pageable);
+        Optional<ChargesApi> charges = chargesService.findCharges(companyNumber, pageable, "");
         assertThat(charges.isPresent()).isTrue();
         assertThat(charges.get().getTotalCount()).isEqualTo(0);
         verify(companyMetricsApiService, times(1))
@@ -126,10 +143,10 @@ public class ChargesServiceTest {
         var pageable = Pageable.ofSize(1);
         var page = new PageImpl<>(
                 List.of(createCharges()));
-        when(chargesRepository.findCharges(eq(companyNumber), any(Pageable.class)))
+        when(chargesRepository.findCharges(eq(companyNumber), any(), any(Pageable.class)))
                 .thenReturn(page);
 
-        Optional<ChargesApi> charges = chargesService.findCharges(companyNumber, pageable);
+        Optional<ChargesApi> charges = chargesService.findCharges(companyNumber, pageable, "");
         assertThat(charges.isPresent()).isTrue();
         //assert no metrics
         assertThat(charges.get().getPartSatisfiedCount()).isEqualTo(0);

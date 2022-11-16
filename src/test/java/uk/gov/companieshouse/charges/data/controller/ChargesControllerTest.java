@@ -1,29 +1,22 @@
 package uk.gov.companieshouse.charges.data.controller;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.doThrow;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.github.dockerjava.api.exception.InternalServerErrorException;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -119,7 +112,7 @@ public class ChargesControllerTest {
     @DisplayName("Retrieve company charges for a given company number")
     void getCharges() throws Exception {
         var charges = new ChargesApi();
-        when(chargesService.findCharges(any(), any())).thenReturn(Optional.of(charges));
+        when(chargesService.findCharges(any(), any(), any())).thenReturn(Optional.of(charges));
         mockMvc.perform(get(CHARGES_GET_URL))
                 .andExpect(status().isOk());
     }

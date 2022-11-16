@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.charges.data.service;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -112,8 +113,15 @@ public class ChargesService {
      * @param companyNumber company Number.
      * @return charges.
      */
-    public Optional<ChargesApi> findCharges(final String companyNumber, final Pageable pageable) {
-        Page<ChargesDocument> page = chargesRepository.findCharges(companyNumber, pageable);
+    public Optional<ChargesApi> findCharges(final String companyNumber, final Pageable pageable,
+            final String filter) {
+        List<ChargeApi.StatusEnum> statusFilter = new ArrayList<>();
+        if ("outstanding".equals(filter)) {
+            statusFilter.add(ChargeApi.StatusEnum.SATISFIED);
+            statusFilter.add(ChargeApi.StatusEnum.FULLY_SATISFIED);
+        }
+        Page<ChargesDocument> page = chargesRepository.findCharges(
+                companyNumber, statusFilter, pageable);
         List<ChargesDocument> charges = page == null ? Collections.emptyList() : page.getContent();
 
         Optional<MetricsApi> companyMetrics =

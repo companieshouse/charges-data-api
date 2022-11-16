@@ -1,6 +1,5 @@
 package uk.gov.companieshouse.charges.data.controller;
 
-import java.util.Optional;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import uk.gov.companieshouse.api.charges.ChargeApi;
@@ -109,7 +109,8 @@ public class ChargesController {
     public ResponseEntity<ChargesApi> getCompanyCharges(
             @PathVariable("company_number") final String companyNumber,
             @PathVariable(value = "items_per_page", required = false) final Integer itemsPerPage,
-            @PathVariable(value = "start_index", required = false) final Integer startIndex) {
+            @PathVariable(value = "start_index", required = false) final Integer startIndex,
+            @RequestParam(value = "filter", required = false) final String filter) {
         logger.debug(String.format("Started : getCompanyCharges Charges for Company Number %s ",
                 companyNumber
         ));
@@ -120,7 +121,7 @@ public class ChargesController {
         }
 
         ResponseEntity<ChargesApi> chargeApiResponse = chargesService.findCharges(companyNumber,
-                                pageable).map(charges -> new ResponseEntity<>(
+                                pageable, filter).map(charges -> new ResponseEntity<>(
                                         charges,
                                         HttpStatus.OK))
                         .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
