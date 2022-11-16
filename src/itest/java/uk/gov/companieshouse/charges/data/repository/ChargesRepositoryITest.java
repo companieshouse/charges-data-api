@@ -2,6 +2,7 @@ package uk.gov.companieshouse.charges.data.repository;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -20,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.util.ResourceUtils;
 import uk.gov.companieshouse.api.charges.ChargeApi;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
@@ -142,6 +144,76 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
         assertEquals(chargesOutstanding.getData().getStatus(), chargesList.get(1).getData().getStatus());
     }
 
+    @DisplayName("Repository returns charges first sorted by created_on and second sorted by charge_number with a pageable")
+    @Test
+    void findChargesSortedPageable() throws IOException {
+        // given
+        ChargesDocument chargeOne = createChargesDocument("00006400", UUID.randomUUID().toString(),
+                "charge-api-request-data-1.json");
+        chargeOne.getData().chargeNumber(1).createdOn(LocalDate.of(2017, 7, 10));
+        ChargesDocument chargeTwo = createChargesDocument("00006400", UUID.randomUUID().toString(),
+                "charge-api-request-data-1.json");
+        chargeTwo.getData().chargeNumber(2).createdOn(LocalDate.of(2017, 7, 10));
+        ChargesDocument chargeThree = createChargesDocument("00006400", UUID.randomUUID().toString(),
+                "charge-api-request-data-1.json");
+        chargeThree.getData().chargeNumber(1).createdOn(LocalDate.of(2018, 7, 10));
+        ChargesDocument chargeFour = createChargesDocument("00006400", UUID.randomUUID().toString(),
+                "charge-api-request-data-1.json");
+        chargeFour.getData().chargeNumber(1).createdOn(LocalDate.of(2017, 10, 10));
+        chargesRepository.saveAll(
+                Arrays.asList(chargeOne, chargeTwo,
+                        chargeThree, chargeFour));
+
+        // when
+        Page<ChargesDocument> chargesPage = chargesRepository.findCharges("00006400",
+                Collections.emptyList(),
+                PageRequest.of(0, 4,
+                        Sort.by(Sort.Order.desc("data.created_on"),
+                                Sort.Order.desc("data.charge_number"))));
+        List<ChargesDocument> chargesList = chargesPage.toList();
+
+        // then
+        assertEquals(4, chargesList.size());
+        assertEquals(chargeThree.getId(), chargesList.get(0).getId());
+        assertEquals(chargeFour.getId(), chargesList.get(1).getId());
+        assertEquals(chargeTwo.getId(), chargesList.get(2).getId());
+        assertEquals(chargeOne.getId(), chargesList.get(3).getId());
+    }
+
+    @DisplayName("Repository returns charges first sorted by created_on and second sorted by charge_number")
+    @Test
+    void findChargesSorted() throws IOException {
+        // given
+        ChargesDocument chargeOne = createChargesDocument("00006400", UUID.randomUUID().toString(),
+                "charge-api-request-data-1.json");
+        chargeOne.getData().chargeNumber(1).createdOn(LocalDate.of(2017, 7, 10));
+        ChargesDocument chargeTwo = createChargesDocument("00006400", UUID.randomUUID().toString(),
+                "charge-api-request-data-1.json");
+        chargeTwo.getData().chargeNumber(2).createdOn(LocalDate.of(2017, 7, 10));
+        ChargesDocument chargeThree = createChargesDocument("00006400", UUID.randomUUID().toString(),
+                "charge-api-request-data-1.json");
+        chargeThree.getData().chargeNumber(1).createdOn(LocalDate.of(2018, 7, 10));
+        ChargesDocument chargeFour = createChargesDocument("00006400", UUID.randomUUID().toString(),
+                "charge-api-request-data-1.json");
+        chargeFour.getData().chargeNumber(1).createdOn(LocalDate.of(2017, 10, 10));
+        chargesRepository.saveAll(
+                Arrays.asList(chargeOne, chargeTwo,
+                        chargeThree, chargeFour));
+
+        // when
+        List<ChargesDocument> chargesList = chargesRepository.findChargesUnpaged("00006400",
+                Collections.emptyList(),
+                Sort.by(Sort.Order.desc("data.created_on"),
+                        Sort.Order.desc("data.charge_number")));
+
+        // then
+        assertEquals(4, chargesList.size());
+        assertEquals(chargeThree.getId(), chargesList.get(0).getId());
+        assertEquals(chargeFour.getId(), chargesList.get(1).getId());
+        assertEquals(chargeTwo.getId(), chargesList.get(2).getId());
+        assertEquals(chargeOne.getId(), chargesList.get(3).getId());
+    }
+
     private ChargesDocument createChargesDocument(String companyNumber, String chargeId, String filename) throws IOException {
         String incomingData = loadInputFile(filename);
         ObjectMapper mapper = new ObjectMapper();
@@ -156,7 +228,7 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
     }
 
     public ChargesDocument transform(String companyNumber, String chargeId,
-            InternalChargeApi requestBody) {
+                                     InternalChargeApi requestBody) {
         OffsetDateTime deltaAt = requestBody.getInternalData().getDeltaAt();
         String type = "mortgage_delta";
 
