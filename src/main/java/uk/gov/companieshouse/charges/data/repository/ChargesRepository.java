@@ -37,5 +37,4 @@ public interface ChargesRepository extends MongoRepository<ChargesDocument, Stri
     List<ChargesDocument> findCharges(final String companyNumber,
                                       final List<ChargeApi.StatusEnum> filter,
                                       final Pageable pageable);
-
 }
