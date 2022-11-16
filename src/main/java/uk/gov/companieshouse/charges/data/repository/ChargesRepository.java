@@ -16,7 +16,7 @@ public interface ChargesRepository extends MongoRepository<ChargesDocument, Stri
     @Query("{'company_number': ?0, '_id': ?1 }")
     Optional<ChargesDocument> findChargeDetails(final String companyNumber, final String chargeId);
 
-    @Query("{'company_number': ?0, 'data.status': { $nin: ?1 } }, { $set: { exclude: true }")
+    @Query("{'company_number': ?0, 'data.status': { $nin: ?1 } }")
     Page<ChargesDocument> findCharges(final String companyNumber,
             final List<ChargeApi.StatusEnum> filter, final Pageable pageable);
 
