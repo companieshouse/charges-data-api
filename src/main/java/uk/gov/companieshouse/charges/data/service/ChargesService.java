@@ -11,6 +11,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.MatchOperation;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -124,22 +127,16 @@ public class ChargesService {
             statusFilter.add(ChargeApi.StatusEnum.FULLY_SATISFIED);
         }
 
-        List<ChargesDocument> charges;
+        Pageable pageable;
         if (requestCriteria.getItemsPerPage() == null || requestCriteria.getStartIndex() == null) {
-            charges = chargesRepository.findChargesUnpaged(companyNumber, statusFilter,
-                    Sort.by(Sort.Order.desc("data.created_on"),
-                            Sort.Order.desc("data.charge_number")));
+            pageable = Pageable.unpaged();
         } else {
-            Pageable pageable = PageRequest.of(requestCriteria.getStartIndex(),
-                    requestCriteria.getItemsPerPage(),
-                    Sort.by(Sort.Order.desc("data.created_on"),
-                            Sort.Order.desc("data.charge_number")));
-
-            Page<ChargesDocument> page = chargesRepository.findCharges(
-                    companyNumber, statusFilter, pageable);
-
-            charges = page == null ? Collections.emptyList() : page.getContent();
+            pageable = PageRequest.of(requestCriteria.getStartIndex(),
+                    requestCriteria.getItemsPerPage());
         }
+
+        List<ChargesDocument> charges = chargesRepository.findCharges(companyNumber, statusFilter,
+                pageable);
 
         Optional<MetricsApi> companyMetrics =
                 companyMetricsApiService.getCompanyMetrics(companyNumber);
