@@ -1,19 +1,6 @@
 package uk.gov.companieshouse.charges.data.service;
 
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Predicate;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.MatchOperation;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -30,6 +17,12 @@ import uk.gov.companieshouse.charges.data.model.RequestCriteria;
 import uk.gov.companieshouse.charges.data.repository.ChargesRepository;
 import uk.gov.companieshouse.charges.data.transform.ChargesTransformer;
 import uk.gov.companieshouse.logging.Logger;
+
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 
 @Service
@@ -120,23 +113,16 @@ public class ChargesService {
      * @return charges.
      */
     public Optional<ChargesApi> findCharges(final String companyNumber,
-            final RequestCriteria requestCriteria) {
+                                            final RequestCriteria requestCriteria) {
         List<ChargeApi.StatusEnum> statusFilter = new ArrayList<>();
         if ("outstanding".equals(requestCriteria.getFilter())) {
             statusFilter.add(ChargeApi.StatusEnum.SATISFIED);
             statusFilter.add(ChargeApi.StatusEnum.FULLY_SATISFIED);
         }
 
-        Pageable pageable;
-        if (requestCriteria.getItemsPerPage() == null || requestCriteria.getStartIndex() == null) {
-            pageable = Pageable.unpaged();
-        } else {
-            pageable = PageRequest.of(requestCriteria.getStartIndex(),
-                    requestCriteria.getItemsPerPage());
-        }
-
         List<ChargesDocument> charges = chargesRepository.findCharges(companyNumber, statusFilter,
-                pageable);
+                Optional.ofNullable(requestCriteria.getStartIndex()).orElse(0),
+                Optional.ofNullable(requestCriteria.getItemsPerPage()).orElse(25));
 
         Optional<MetricsApi> companyMetrics =
                 companyMetricsApiService.getCompanyMetrics(companyNumber);

@@ -1,27 +1,7 @@
 package uk.gov.companieshouse.charges.data.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.times;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.time.OffsetDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-
 import org.bson.Document;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,10 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
 import org.springframework.dao.DataAccessResourceFailureException;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.server.ResponseStatusException;
@@ -51,6 +27,26 @@ import uk.gov.companieshouse.charges.data.model.RequestCriteria;
 import uk.gov.companieshouse.charges.data.repository.ChargesRepository;
 import uk.gov.companieshouse.charges.data.transform.ChargesTransformer;
 import uk.gov.companieshouse.logging.Logger;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.time.OffsetDateTime;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -95,11 +91,7 @@ public class ChargesServiceTest {
 
    @Test
     public void find_charges_should_return_charges() throws IOException {
-        when(chargesRepository.findCharges(eq(companyNumber), any(), any(Pageable.class)))
-                .thenReturn(Collections.singletonList(createCharges()));
-
-        when(companyMetricsApiService.getCompanyMetrics(companyNumber))
-                .thenReturn(Optional.ofNullable(createMetrics()));
+        trainMocks();
         Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,
                 new RequestCriteria().setItemsPerPage(1).setStartIndex(0));
         assertThat(charges.isPresent()).isTrue();
@@ -112,11 +104,7 @@ public class ChargesServiceTest {
 
     @Test
     void findChargesWithFilter() throws IOException {
-        when(chargesRepository.findCharges(eq(companyNumber), any(), any(Pageable.class)))
-                .thenReturn(Collections.singletonList(createCharges()));
-
-        when(companyMetricsApiService.getCompanyMetrics(companyNumber))
-                .thenReturn(Optional.ofNullable(createMetrics()));
+        trainMocks();
         Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,
                 new RequestCriteria().setFilter("outstanding").setStartIndex(0).setItemsPerPage(1));
         assertThat(charges.isPresent()).isTrue();
@@ -126,17 +114,12 @@ public class ChargesServiceTest {
         assertThat(charges.get().getPartSatisfiedCount()).isEqualTo(2);
         assertThat(charges.get().getUnfilteredCount()).isEqualTo(14);
         verify(chargesRepository).findCharges(companyNumber,
-                Arrays.asList(ChargeApi.StatusEnum.SATISFIED, ChargeApi.StatusEnum.FULLY_SATISFIED),
-                PageRequest.of(0,1));
+                Arrays.asList(ChargeApi.StatusEnum.SATISFIED, ChargeApi.StatusEnum.FULLY_SATISFIED), 0, 1);
     }
 
     @Test
     void findChargesWithFilterUnpaged() throws IOException {
-        when(chargesRepository.findCharges(eq(companyNumber), any(), any(Pageable.class)))
-                .thenReturn(Collections.singletonList(createCharges()));
-
-        when(companyMetricsApiService.getCompanyMetrics(companyNumber))
-                .thenReturn(Optional.ofNullable(createMetrics()));
+        trainMocks();
         Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,
                 new RequestCriteria().setFilter("outstanding"));
         assertThat(charges.isPresent()).isTrue();
@@ -146,16 +129,12 @@ public class ChargesServiceTest {
         assertThat(charges.get().getPartSatisfiedCount()).isEqualTo(2);
         assertThat(charges.get().getUnfilteredCount()).isEqualTo(14);
         verify(chargesRepository).findCharges(companyNumber,
-                Arrays.asList(ChargeApi.StatusEnum.SATISFIED, ChargeApi.StatusEnum.FULLY_SATISFIED), Pageable.unpaged());
+                Arrays.asList(ChargeApi.StatusEnum.SATISFIED, ChargeApi.StatusEnum.FULLY_SATISFIED), 0, 25);
     }
 
     @Test
     void findChargesWithSortedPageable() throws IOException {
-        when(chargesRepository.findCharges(eq(companyNumber), any(), any(Pageable.class)))
-                .thenReturn(Collections.singletonList(createCharges()));
-
-        when(companyMetricsApiService.getCompanyMetrics(companyNumber))
-                .thenReturn(Optional.ofNullable(createMetrics()));
+        trainMocks();
         Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,
                 new RequestCriteria().setItemsPerPage(1).setStartIndex(0));
         assertThat(charges.isPresent()).isTrue();
@@ -164,17 +143,12 @@ public class ChargesServiceTest {
         assertThat(charges.get().getSatisfiedCount()).isEqualTo(1);
         assertThat(charges.get().getPartSatisfiedCount()).isEqualTo(2);
         assertThat(charges.get().getUnfilteredCount()).isEqualTo(14);
-        verify(chargesRepository).findCharges(companyNumber, Collections.emptyList(),
-                PageRequest.of(0, 1));
+        verify(chargesRepository).findCharges(companyNumber, Collections.emptyList(), 0, 1);
     }
 
     @Test
     void findChargesSortedWithoutPageable() throws IOException {
-        when(chargesRepository.findCharges(eq(companyNumber), any(), any(Pageable.class)))
-                .thenReturn(Collections.singletonList(createCharges()));
-
-        when(companyMetricsApiService.getCompanyMetrics(companyNumber))
-                .thenReturn(Optional.ofNullable(createMetrics()));
+        trainMocks();
         Optional<ChargesApi> charges = chargesService.findCharges(companyNumber, new RequestCriteria());
         assertThat(charges.isPresent()).isTrue();
         assertThat(charges.get().getItems().isEmpty()).isFalse();
@@ -182,7 +156,7 @@ public class ChargesServiceTest {
         assertThat(charges.get().getSatisfiedCount()).isEqualTo(1);
         assertThat(charges.get().getPartSatisfiedCount()).isEqualTo(2);
         assertThat(charges.get().getUnfilteredCount()).isEqualTo(14);
-        verify(chargesRepository).findCharges(companyNumber, Collections.emptyList(), Pageable.unpaged());
+        verify(chargesRepository).findCharges(companyNumber, Collections.emptyList(), 0, 25);
     }
 
     @Test
@@ -195,10 +169,7 @@ public class ChargesServiceTest {
     }
 
     @Test
-    public void empty_charges_when_company_metrics_returns_no_result() throws IOException {
-        when(chargesRepository.findCharges(eq(companyNumber), any(), any(Pageable.class)))
-                .thenReturn(Collections.singletonList(createCharges()));
-
+    public void empty_charges_when_company_metrics_returns_no_result() {
         Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,
                 new RequestCriteria().setItemsPerPage(1).setStartIndex(0));
         assertThat(charges.isPresent()).isTrue();
@@ -248,7 +219,7 @@ public class ChargesServiceTest {
             chargesService.deleteCharge( "x-request-id", chargeId);
         }
         catch (ResponseStatusException statusException)  {
-            Assert.assertEquals(HttpStatus.NOT_FOUND, statusException.getStatus());
+            assertEquals(HttpStatus.NOT_FOUND, statusException.getStatus());
         }
 
         verify(chargesRepository, Mockito.times(0)).deleteById(Mockito.any());
@@ -256,7 +227,7 @@ public class ChargesServiceTest {
     }
 
     @Test
-    void delete_charge_id_and_check_it_does_not_exist_in_database() throws Exception {
+    void delete_charge_id_and_check_it_does_not_exist_in_database() {
         String chargeId = "123456789";
         Mockito.when(chargesApiService.invokeChsKafkaApiWithDeleteEvent(anyString(), anyString(), anyString(), any())).thenReturn(new ApiResponse<>(200, null));
         Mockito.when(chargesRepository.findById(chargeId)).thenReturn(
@@ -300,7 +271,7 @@ public class ChargesServiceTest {
                 chargesService.deleteCharge("x-request-id", chargeId);
         }
         catch (ResponseStatusException statusException)  {
-            Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, statusException.getStatus());
+            assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, statusException.getStatus());
         }
     }
 
@@ -315,7 +286,7 @@ public class ChargesServiceTest {
             chargesService.deleteCharge( "x-request-id", chargeId);
         }
         catch (ResponseStatusException statusException)  {
-            Assert.assertEquals(HttpStatus.SERVICE_UNAVAILABLE, statusException.getStatus());
+            assertEquals(HttpStatus.SERVICE_UNAVAILABLE, statusException.getStatus());
         }
 
     }
@@ -343,7 +314,7 @@ public class ChargesServiceTest {
         Mockito.when(chargesRepository.findById(chargeId)).thenReturn(
                 populateChargesDocument(chargeId,populateCharge()));
 
-        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> chargesService.deleteCharge(contextId, chargeId));
+        assertThrows(ResponseStatusException.class, () -> chargesService.deleteCharge(contextId, chargeId));
 
         verify(logger, Mockito.times(1)).info(
                 "ChsKafka api DELETED invoked successfully for contextId "  + contextId + " and company number " + companyNumber
@@ -353,5 +324,12 @@ public class ChargesServiceTest {
         verify(chargesApiService, times(1)).
                 invokeChsKafkaApiWithDeleteEvent(eq(contextId), eq(chargeId), eq(companyNumber),eq(populateCharge()));
 
+    }
+
+    private void trainMocks() throws IOException {
+        when(chargesRepository.findCharges(eq(companyNumber), any(), anyInt(), anyInt()))
+                .thenReturn(Collections.singletonList(createCharges()));
+        when(companyMetricsApiService.getCompanyMetrics(companyNumber))
+                .thenReturn(Optional.ofNullable(createMetrics()));
     }
 }
