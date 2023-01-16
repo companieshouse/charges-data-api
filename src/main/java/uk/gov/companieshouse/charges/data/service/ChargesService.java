@@ -1,6 +1,13 @@
 package uk.gov.companieshouse.charges.data.service;
 
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
+
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Example;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -17,13 +24,6 @@ import uk.gov.companieshouse.charges.data.model.RequestCriteria;
 import uk.gov.companieshouse.charges.data.repository.ChargesRepository;
 import uk.gov.companieshouse.charges.data.transform.ChargesTransformer;
 import uk.gov.companieshouse.logging.Logger;
-
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Predicate;
-
 
 @Service
 public class ChargesService {
@@ -119,7 +119,6 @@ public class ChargesService {
             statusFilter.add(ChargeApi.StatusEnum.SATISFIED);
             statusFilter.add(ChargeApi.StatusEnum.FULLY_SATISFIED);
         }
-
         List<ChargesDocument> charges = chargesRepository.findCharges(companyNumber, statusFilter,
                 Optional.ofNullable(requestCriteria.getStartIndex()).orElse(0),
                 Optional.ofNullable(requestCriteria.getItemsPerPage()).orElse(25));

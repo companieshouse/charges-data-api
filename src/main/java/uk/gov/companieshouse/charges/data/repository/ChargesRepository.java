@@ -31,15 +31,16 @@ public interface ChargesRepository extends MongoRepository<ChargesDocument, Stri
      */
     @Aggregation(pipeline = {
             "{ '$match': { 'company_number': ?0, 'data.status': { $nin: ?1 } } }",
+            "{ '$facet': { 'count': [{ '$count': 'count' }], 'sample': [ { '$skip': ?2 }, "
+                    + "{ '$limit': ?3 } ] }}",
             "{ '$addFields': "
                     + "{ 'sort_date': "
                         + "{ $ifNull: [ '$data.created_on', '$data.delivered_on' ] } } }",
-            "{ '$sort': { 'sort_date': -1, 'data.charge_number': -1 } }",
-            "{ '$skip': ?2 }",
-            "{ '$limit': ?3 }"
+            "{ '$sort': { 'sort_date': -1, 'data.charge_number': -1 } }"
             })
     List<ChargesDocument> findCharges(final String companyNumber,
                                       final List<ChargeApi.StatusEnum> filter,
                                       final int startIndex,
                                       final int pageSize);
+
 }
