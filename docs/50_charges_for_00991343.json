@@ -1,0 +1,2285 @@
+{
+  "_id" : "-2fKXGvnKr6KrEbl0ftzq-Mvo6w",
+  "data" : {
+    "delivered_on" : ISODate("1985-02-28T00:00:00.000Z"),
+    "particulars" : {
+      "description" : "L/H 182/188 hoylake road, moreton wirral. T/n MS210426.",
+      "type" : "short-particulars"
+    },
+    "status" : "fully-satisfied",
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "created_on" : ISODate("1985-02-27T00:00:00.000Z"),
+    "charge_number" : 30,
+    "secured_details" : {
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever",
+      "type" : "amount-secured"
+    },
+    "etag" : "c4f9cf71ac865170668d710f6dd44c56d04348a2",
+    "transactions" : [
+      {
+        "delivered_on" : ISODate("1985-02-28T00:00:00.000Z"),
+        "filing_type" : "create-charge"
+      },
+      {
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act",
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z"),
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        }
+      }
+    ],
+    "classification" : {
+      "type" : "charge-description",
+      "description" : "Legal charge"
+    },
+    "links" : {
+      "self" : "/company/00991343/charges/-2fKXGvnKr6KrEbl0ftzq-Mvo6w"
+    }
+  },
+  "updated" : {
+    "type" : "mortgage_delta",
+    "by" : "5b55969640ac2e5fdc1c1b9a",
+    "at" : ISODate("2018-07-23T16:47:58.612Z")
+  },
+  "company_number" : "00991343"
+}
+
+
+{
+  "_id" : "-5JwTUXki0W51mtyUj6qCty6ZME",
+  "company_number" : "00991343",
+  "data" : {
+    "etag" : "cf79bb57afcd2a120e4e73b06f2f9f8776483e94",
+    "id" : "2563129",
+    "classification" : {
+      "type" : "charge-description",
+      "description" : "LEGAL CHARGE"
+    },
+    "charge_number" : 63,
+    "status" : "fully-satisfied",
+    "delivered_on" : ISODate("1987-07-15T00:00:00.000Z"),
+    "created_on" : ISODate("1987-07-14T00:00:00.000Z"),
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "particulars" : {
+      "type" : "short-particulars",
+      "description" : "LAND & BUILDINGS ON THE WEST SIDE OF BLACKBURN ROAD AND ON THE N/E SIDE OF HALLIWELL ROAD, BOLTON, GREATER MANCHESTER   ",
+      "contains_floating_charge" : false,
+      "contains_fixed_charge" : false,
+      "floating_charge_covers_all" : false,
+      "contains_negative_pledge" : false,
+      "chargor_acting_as_bare_trustee" : false
+    },
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "ALL MONIES DUE OR TO BECOME DUE FROM THE COMPANY TO THE CHARGEE ON ANY ACCOUNT WHATSOEVER"
+    },
+    "scottish_alterations" : {
+      "has_alterations_to_order" : false,
+      "has_alterations_to_prohibitions" : false,
+      "has_restricting_provisions" : false
+    },
+    "more_than_four_persons_entitled" : false,
+    "transactions" : [
+      {
+        "filing_type" : "",
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z"),
+        "links" : {
+          "filing" : "/company/00991343/filing-history/"
+        }
+      },
+      {
+        "filing_type" : "create-charge",
+        "delivered_on" : ISODate("1987-07-15T00:00:00.000Z"),
+        "links" : {}
+      }
+    ],
+    "links" : {
+      "self" : "/company/00991343/charges/-5JwTUXki0W51mtyUj6qCty6ZME"
+    }
+  },
+  "delta_at" : ISODate("2022-05-27T09:51:43.432Z"),
+  "updated" : {
+    "at" : ISODate("2022-05-27T09:54:45.640Z"),
+    "type" : "mortgage_delta",
+    "by" : "charges-delta-0-2573"
+  },
+  "_class" : "uk.gov.companieshouse.charges.data.model.ChargesDocument"
+}
+
+
+{
+  "_id" : "-tQbxMHtmnyJA8tqgykKSAVedU4",
+  "company_number" : "00991343",
+  "updated" : {
+    "type" : "mortgage_delta",
+    "by" : "5b559a0d40ac2e5fdc61599a",
+    "at" : ISODate("2018-07-23T19:19:50.014Z")
+  },
+  "data" : {
+    "particulars" : {
+      "type" : "short-particulars",
+      "description" : "L/H 134 & 136 beverley road kingston-upon hull humberside."
+    },
+    "delivered_on" : ISODate("1985-08-29T00:00:00.000Z"),
+    "charge_number" : 53,
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
+    },
+    "created_on" : ISODate("1985-08-28T00:00:00.000Z"),
+    "satisfied_on" : ISODate("1988-04-11T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "etag" : "9be2deb7b972877ef36d4d2bacc8a91bf8806b26",
+    "classification" : {
+      "description" : "Legal charge",
+      "type" : "charge-description"
+    },
+    "transactions" : [
+      {
+        "delivered_on" : ISODate("1985-08-29T00:00:00.000Z"),
+        "filing_type" : "create-charge"
+      }
+    ],
+    "links" : {
+      "self" : "/company/00991343/charges/-tQbxMHtmnyJA8tqgykKSAVedU4"
+    }
+  }
+}
+
+
+{
+  "_id" : "02C2jL5nruGYFpzNTHJs1efd7No",
+  "company_number" : "00991343",
+  "updated" : {
+    "by" : "5b5596c440ac2e5fdc201f9a",
+    "type" : "mortgage_delta",
+    "at" : ISODate("2018-07-23T16:57:18.049Z")
+  },
+  "data" : {
+    "links" : {
+      "self" : "/company/00991343/charges/02C2jL5nruGYFpzNTHJs1efd7No"
+    },
+    "classification" : {
+      "type" : "charge-description",
+      "description" : "Legal charge"
+    },
+    "etag" : "23df4a6a2f49a3275ce52f413cc11b0b4c357d4c",
+    "transactions" : [
+      {
+        "delivered_on" : ISODate("1987-09-28T00:00:00.000Z"),
+        "filing_type" : "create-charge"
+      },
+      {
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        },
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z"),
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act"
+      }
+    ],
+    "delivered_on" : ISODate("1987-09-28T00:00:00.000Z"),
+    "particulars" : {
+      "type" : "short-particulars",
+      "description" : "F/H 63A westgate end, wakefield, west yorkshire."
+    },
+    "status" : "fully-satisfied",
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "created_on" : ISODate("1987-09-25T00:00:00.000Z"),
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
+    },
+    "charge_number" : 65
+  }
+}
+
+
+{
+  "_id" : "0999DgraGcnxSQ3lwBqADWRzEdw",
+  "company_number" : "00991343",
+  "updated" : {
+    "by" : "5b5596c640ac2e5fdc5b1f9a",
+    "type" : "mortgage_delta",
+    "at" : ISODate("2018-07-23T16:57:50.301Z")
+  },
+  "data" : {
+    "delivered_on" : ISODate("1982-06-04T00:00:00.000Z"),
+    "particulars" : {
+      "description" : "L/H lands & premises 72/76 albion street leeds west yorkshire.",
+      "type" : "short-particulars"
+    },
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "created_on" : ISODate("1982-05-26T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "charge_number" : 16,
+    "secured_details" : {
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever",
+      "type" : "amount-secured"
+    },
+    "etag" : "c9049b8f46a53bf8d8859819d375af0d56f65908",
+    "transactions" : [
+      {
+        "delivered_on" : ISODate("1982-06-04T00:00:00.000Z"),
+        "filing_type" : "create-charge"
+      },
+      {
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        },
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z"),
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act"
+      }
+    ],
+    "classification" : {
+      "description" : "Legal charge",
+      "type" : "charge-description"
+    },
+    "links" : {
+      "self" : "/company/00991343/charges/0999DgraGcnxSQ3lwBqADWRzEdw"
+    }
+  }
+}
+
+
+{
+  "_id" : "0BMGl0MLhuPIykiGMiuyImk1a7Y",
+  "updated" : {
+    "at" : ISODate("2018-07-23T16:56:25.545Z"),
+    "type" : "mortgage_delta",
+    "by" : "5b5596c240ac2e5fdcc01e9a"
+  },
+  "data" : {
+    "etag" : "1172df065837e25ef91cc58facc77bd220b7d4b8",
+    "transactions" : [
+      {
+        "filing_type" : "create-charge-pre-2006-companies-act",
+        "delivered_on" : ISODate("1991-12-06T00:00:00.000Z")
+      },
+      {
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act",
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        },
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z")
+      }
+    ],
+    "classification" : {
+      "description" : "Legal charge",
+      "type" : "charge-description"
+    },
+    "links" : {
+      "self" : "/company/00991343/charges/0BMGl0MLhuPIykiGMiuyImk1a7Y"
+    },
+    "delivered_on" : ISODate("1991-12-06T00:00:00.000Z"),
+    "particulars" : {
+      "description" : "Warehouse, gas street, newtown powys.",
+      "type" : "short-particulars"
+    },
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "created_on" : ISODate("1991-11-18T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "secured_details" : {
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever",
+      "type" : "amount-secured"
+    },
+    "charge_number" : 86
+  },
+  "company_number" : "00991343"
+}
+
+
+{
+  "_id" : "0QpfobZWDPxrfcLkmXmZu1sac0k",
+  "data" : {
+    "status" : "fully-satisfied",
+    "satisfied_on" : ISODate("1988-04-11T00:00:00.000Z"),
+    "created_on" : ISODate("1985-10-02T00:00:00.000Z"),
+    "charge_number" : 58,
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
+    },
+    "delivered_on" : ISODate("1985-10-10T00:00:00.000Z"),
+    "particulars" : {
+      "description" : "L/H property on the ground floor of 2, hainton square gremsby humberside t/n hs 392149.",
+      "type" : "short-particulars"
+    },
+    "etag" : "09b4e230242e7390e5c354b99e554c33c8d29999",
+    "transactions" : [
+      {
+        "delivered_on" : ISODate("1985-10-10T00:00:00.000Z"),
+        "filing_type" : "create-charge"
+      }
+    ],
+    "classification" : {
+      "description" : "Legal charge",
+      "type" : "charge-description"
+    },
+    "links" : {
+      "self" : "/company/00991343/charges/0QpfobZWDPxrfcLkmXmZu1sac0k"
+    }
+  },
+  "updated" : {
+    "type" : "mortgage_delta",
+    "by" : "5b5596c440ac2e5fdc1d1f9a",
+    "at" : ISODate("2018-07-23T16:57:16.412Z")
+  },
+  "company_number" : "00991343"
+}
+
+
+{
+  "_id" : "0tb_VqhKSWbVh3hGu2hoQIUhJ38",
+  "data" : {
+    "links" : {
+      "self" : "/company/00991343/charges/0tb_VqhKSWbVh3hGu2hoQIUhJ38"
+    },
+    "transactions" : [
+      {
+        "delivered_on" : ISODate("1976-12-29T00:00:00.000Z"),
+        "filing_type" : "create-charge"
+      },
+      {
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        },
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z"),
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act"
+      }
+    ],
+    "etag" : "f2ee00c4e8467754413dd453d939a7863dff277b",
+    "classification" : {
+      "type" : "charge-description",
+      "description" : "Mortgage"
+    },
+    "delivered_on" : ISODate("1976-12-29T00:00:00.000Z"),
+    "particulars" : {
+      "type" : "short-particulars",
+      "description" : "F/Hold: 45 acklam road middlesborough cleveland tog. With all fixtures (see doc M22)."
+    },
+    "charge_number" : 6,
+    "secured_details" : {
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever",
+      "type" : "amount-secured"
+    },
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "created_on" : ISODate("1976-12-22T00:00:00.000Z"),
+    "status" : "fully-satisfied"
+  },
+  "updated" : {
+    "at" : ISODate("2018-07-23T16:58:10.552Z"),
+    "by" : "5b5596c740ac2e5fdc801f9a",
+    "type" : "mortgage_delta"
+  },
+  "company_number" : "00991343"
+}
+
+
+{
+  "_id" : "17lq1CgCecCYttHpjyhCXWlzl54",
+  "updated" : {
+    "by" : "5b55977840ac2e5fdc562a9a",
+    "type" : "mortgage_delta",
+    "at" : ISODate("2018-07-23T17:23:42.159Z")
+  },
+  "data" : {
+    "etag" : "38f763d87b3e5545455dc96e152d956f44efe2d3",
+    "classification" : {
+      "description" : "Legal charge",
+      "type" : "charge-description"
+    },
+    "transactions" : [
+      {
+        "filing_type" : "create-charge",
+        "delivered_on" : ISODate("1982-09-22T00:00:00.000Z")
+      }
+    ],
+    "links" : {
+      "self" : "/company/00991343/charges/17lq1CgCecCYttHpjyhCXWlzl54"
+    },
+    "delivered_on" : ISODate("1982-09-22T00:00:00.000Z"),
+    "particulars" : {
+      "description" : "L/H land & premises known as 5 high street whitchurch salop.",
+      "type" : "short-particulars"
+    },
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
+    },
+    "charge_number" : 22,
+    "satisfied_on" : ISODate("1988-04-11T00:00:00.000Z"),
+    "created_on" : ISODate("1982-09-15T00:00:00.000Z"),
+    "status" : "fully-satisfied"
+  },
+  "company_number" : "00991343"
+}
+
+
+{
+  "_id" : "2YoURzB__Ut8A3F_6MrNXsGsSHg",
+  "data" : {
+    "delivered_on" : ISODate("1976-12-29T00:00:00.000Z"),
+    "particulars" : {
+      "description" : "F/Hold: 74 wolviston road billingham stockton-on-tees cleveland tog with all fixtures see doc (M23).",
+      "type" : "short-particulars"
+    },
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
+    },
+    "charge_number" : 7,
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "created_on" : ISODate("1976-12-22T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "links" : {
+      "self" : "/company/00991343/charges/2YoURzB__Ut8A3F_6MrNXsGsSHg"
+    },
+    "classification" : {
+      "description" : "Mortgage",
+      "type" : "charge-description"
+    },
+    "etag" : "72fb891de990db94996dc56b164d5d66bb5e9822",
+    "transactions" : [
+      {
+        "filing_type" : "create-charge",
+        "delivered_on" : ISODate("1976-12-29T00:00:00.000Z")
+      },
+      {
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act",
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        },
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z")
+      }
+    ]
+  },
+  "updated" : {
+    "by" : "5b55952540ac2e5fdc24029a",
+    "type" : "mortgage_delta",
+    "at" : ISODate("2018-07-23T15:51:06.996Z")
+  },
+  "company_number" : "00991343"
+}
+
+
+{
+  "_id" : "2_ONgsvQH2sK6JEI4VR2VVIxJEc",
+  "data" : {
+    "etag" : "93b3d1f3302f7b3ec01bcc3d83cbd8ae1120d05a",
+    "classification" : {
+      "type" : "charge-description",
+      "description" : "Legal charge"
+    },
+    "transactions" : [
+      {
+        "filing_type" : "create-charge",
+        "delivered_on" : ISODate("1987-08-11T00:00:00.000Z")
+      },
+      {
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z"),
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        },
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act"
+      }
+    ],
+    "links" : {
+      "self" : "/company/00991343/charges/2_ONgsvQH2sK6JEI4VR2VVIxJEc"
+    },
+    "particulars" : {
+      "description" : "53 high street connahs quay clwyd.",
+      "type" : "short-particulars"
+    },
+    "delivered_on" : ISODate("1987-08-11T00:00:00.000Z"),
+    "charge_number" : 64,
+    "secured_details" : {
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever",
+      "type" : "amount-secured"
+    },
+    "created_on" : ISODate("1987-08-01T00:00:00.000Z"),
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "status" : "fully-satisfied"
+  },
+  "updated" : {
+    "type" : "mortgage_delta",
+    "by" : "5b55977540ac2e5fdc012a9a",
+    "at" : ISODate("2018-07-23T17:22:54.543Z")
+  },
+  "company_number" : "00991343"
+}
+
+
+{
+  "_id" : "31U0eUF9doUVuqyabNz-zjUuXMg",
+  "data" : {
+    "links" : {
+      "self" : "/company/00991343/charges/31U0eUF9doUVuqyabNz-zjUuXMg"
+    },
+    "transactions" : [
+      {
+        "filing_type" : "create-charge-pre-2006-companies-act",
+        "delivered_on" : ISODate("1997-02-19T00:00:00.000Z")
+      },
+      {
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        },
+        "delivered_on" : ISODate("1998-04-22T00:00:00.000Z"),
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act"
+      }
+    ],
+    "etag" : "c56696859f7c5491f9a6a32c16c44de4e7b0b14b",
+    "classification" : {
+      "description" : "Mortgage debenture",
+      "type" : "charge-description"
+    },
+    "particulars" : {
+      "description" : ".. a specific equitable charge over all freehold and leasehold properties and/or the proceeds of sale thereof fixed and floating charges over undertaking and all property and assets present and future including goodwill bookdebts and the benefits of any licences. See the mortgage charge document for full details.",
+      "type" : "short-particulars"
+    },
+    "delivered_on" : ISODate("1997-02-19T00:00:00.000Z"),
+    "satisfied_on" : ISODate("1998-04-22T00:00:00.000Z"),
+    "created_on" : ISODate("1997-02-03T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "charge_number" : 95,
+    "secured_details" : {
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever",
+      "type" : "amount-secured"
+    }
+  },
+  "updated" : {
+    "at" : ISODate("2018-07-23T15:50:33.294Z"),
+    "by" : "5b55952340ac2e5fdce4019a",
+    "type" : "mortgage_delta"
+  },
+  "company_number" : "00991343"
+}
+
+
+{
+  "_id" : "36zt5dCXjhBgJYTeeJf9t2yrRzE",
+  "data" : {
+    "delivered_on" : ISODate("1985-08-02T00:00:00.000Z"),
+    "particulars" : {
+      "type" : "short-particulars",
+      "description" : "L/H unit no.6 Jubilee house, york road hartlepool, cleveland."
+    },
+    "created_on" : ISODate("1985-07-25T00:00:00.000Z"),
+    "satisfied_on" : ISODate("1988-04-11T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "charge_number" : 51,
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
+    },
+    "links" : {
+      "self" : "/company/00991343/charges/36zt5dCXjhBgJYTeeJf9t2yrRzE"
+    },
+    "classification" : {
+      "description" : "Legal charge",
+      "type" : "charge-description"
+    },
+    "etag" : "c5a2b99ae74b235b3816f34afd779a7e9f477b58",
+    "transactions" : [
+      {
+        "filing_type" : "create-charge",
+        "delivered_on" : ISODate("1985-08-02T00:00:00.000Z")
+      }
+    ]
+  },
+  "updated" : {
+    "at" : ISODate("2018-07-23T16:57:52.483Z"),
+    "type" : "mortgage_delta",
+    "by" : "5b5596c640ac2e5fdc5f1f9a"
+  },
+  "company_number" : "00991343"
+}
+
+
+{
+  "_id" : "39qCsqDkOxfKV1HWcbSGCemlA9s",
+  "data" : {
+    "insolvency_cases" : [
+      {
+        "links" : {
+          "case" : "/company/00991343/insolvency#case-1"
+        },
+        "case_number" : "1"
+      }
+    ],
+    "etag" : "b52296f0abb75f1a9afcfeb2f52d3bd064082072",
+    "transactions" : [
+      {
+        "delivered_on" : ISODate("2000-07-24T00:00:00.000Z"),
+        "links" : {
+          "filing" : "/company/00991343/filing-history/MDA4NzEzMzE2NWFkaXF6a2N4"
+        },
+        "filing_type" : "create-charge-pre-2006-companies-act"
+      },
+      {
+        "links" : {
+          "filing" : "/company/00991343/filing-history/MDAxNjMwMzE0NGFkaXF6a2N4"
+        },
+        "delivered_on" : ISODate("2000-10-13T00:00:00.000Z"),
+        "filing_type" : "liquidation-appointment-of-receiver-pre-2006-companies-act"
+      },
+      {
+        "filing_type" : "liquidation-cease-to-act-receiver-pre-2006-companies-act",
+        "delivered_on" : ISODate("2004-09-24T00:00:00.000Z"),
+        "links" : {
+          "filing" : "/company/00991343/filing-history/MDA3ODMzNzQzNWFkaXF6a2N4"
+        }
+      }
+    ],
+    "classification" : {
+      "description" : "Debenture",
+      "type" : "charge-description"
+    },
+    "links" : {
+      "self" : "/company/00991343/charges/39qCsqDkOxfKV1HWcbSGCemlA9s"
+    },
+    "secured_details" : {
+      "description" : "All money and liabilities due or to become due by any obligor to any secured party under any finance document and all costs charges and expenses incurred in connection therewith (all terms as defined)",
+      "type" : "amount-secured"
+    },
+    "charge_number" : 98,
+    "created_on" : ISODate("2000-07-05T00:00:00.000Z"),
+    "status" : "outstanding",
+    "delivered_on" : ISODate("2000-07-24T00:00:00.000Z"),
+    "particulars" : {
+      "description" : "Fixed and floating charges over the undertaking and all property and assets present and future including goodwill bookdebts uncalled capital buildings fixtures fixed plant and machinery. See the mortgage charge document for full details.",
+      "type" : "short-particulars"
+    }
+  },
+  "updated" : {
+    "at" : ISODate("2018-07-23T19:21:00.205Z"),
+    "type" : "mortgage_delta",
+    "by" : "5b559a1140ac2e5fdcd6599a"
+  },
+  "company_number" : "00991343"
+}
+
+
+{
+  "_id" : "3LyfHzr1D0iJFKRqrI22sV6l32A",
+  "data" : {
+    "links" : {
+      "self" : "/company/00991343/charges/3LyfHzr1D0iJFKRqrI22sV6l32A"
+    },
+    "transactions" : [
+      {
+        "filing_type" : "create-charge",
+        "delivered_on" : ISODate("1990-08-29T00:00:00.000Z")
+      },
+      {
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act",
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z"),
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        }
+      }
+    ],
+    "etag" : "acc35a4f3b675b93b12db9b51e2af0c04427b5b5",
+    "classification" : {
+      "type" : "charge-description",
+      "description" : "Collateral legal charge"
+    },
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "All monies due or to become due from the company and/or motor world group LTD to the chargee on any account whatsoever."
+    },
+    "charge_number" : 3,
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "created_on" : ISODate("1990-08-23T00:00:00.000Z"),
+    "delivered_on" : ISODate("1990-08-29T00:00:00.000Z"),
+    "particulars" : {
+      "type" : "short-particulars",
+      "description" : "L/H property land & buildings north east side of halliwell road t/n la 250253."
+    }
+  },
+  "updated" : {
+    "at" : ISODate("2018-07-23T16:46:57.604Z"),
+    "by" : "5b55969240ac2e5fdcac1a9a",
+    "type" : "mortgage_delta"
+  },
+  "company_number" : "00991343"
+}
+
+
+{
+  "_id" : "4iOOfABVclnoUc8x1_ESC6v8RMQ",
+  "company_number" : "00991343",
+  "updated" : {
+    "at" : ISODate("2018-07-23T16:47:56.978Z"),
+    "by" : "5b55969640ac2e5fdc191b9a",
+    "type" : "mortgage_delta"
+  },
+  "data" : {
+    "delivered_on" : ISODate("1982-06-04T00:00:00.000Z"),
+    "particulars" : {
+      "description" : "L/H lands & premises 48 middleton grange hartlepool.",
+      "type" : "short-particulars"
+    },
+    "status" : "fully-satisfied",
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "created_on" : ISODate("1982-05-26T00:00:00.000Z"),
+    "charge_number" : 15,
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
+    },
+    "etag" : "9387a5396e3902d0a433ee68303174fe133fdccd",
+    "classification" : {
+      "description" : "Legal charge",
+      "type" : "charge-description"
+    },
+    "transactions" : [
+      {
+        "delivered_on" : ISODate("1982-06-04T00:00:00.000Z"),
+        "filing_type" : "create-charge"
+      },
+      {
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act",
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z"),
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        }
+      }
+    ],
+    "links" : {
+      "self" : "/company/00991343/charges/4iOOfABVclnoUc8x1_ESC6v8RMQ"
+    }
+  }
+}
+
+
+{
+  "_id" : "5OFnANB4ZCy9HGdMqLszRe-rqqQ",
+  "data" : {
+    "etag" : "c9f58631d250bcb57f27a15a4efbe91e9a9947cd",
+    "classification" : {
+      "description" : "Legal charge",
+      "type" : "charge-description"
+    },
+    "transactions" : [
+      {
+        "delivered_on" : ISODate("1985-03-20T00:00:00.000Z"),
+        "filing_type" : "create-charge"
+      },
+      {
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act",
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        },
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z")
+      }
+    ],
+    "links" : {
+      "self" : "/company/00991343/charges/5OFnANB4ZCy9HGdMqLszRe-rqqQ"
+    },
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "created_on" : ISODate("1985-03-06T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "charge_number" : 39,
+    "secured_details" : {
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever",
+      "type" : "amount-secured"
+    },
+    "delivered_on" : ISODate("1985-03-20T00:00:00.000Z"),
+    "particulars" : {
+      "description" : "F/H 64 & 66 hinckley road leicester t/n lt 14926 & lt 30155.",
+      "type" : "short-particulars"
+    }
+  },
+  "updated" : {
+    "at" : ISODate("2018-07-23T16:58:31.392Z"),
+    "type" : "mortgage_delta",
+    "by" : "5b5596c840ac2e5fdca61f9a"
+  },
+  "company_number" : "00991343"
+}
+
+
+{
+  "_id" : "5WqSTH0KVzcQNSndq8m3hQRzkrE",
+  "updated" : {
+    "type" : "mortgage_delta",
+    "by" : "5b5596c640ac2e5fdc561f9a",
+    "at" : ISODate("2018-07-23T16:57:47.568Z")
+  },
+  "data" : {
+    "links" : {
+      "self" : "/company/00991343/charges/5WqSTH0KVzcQNSndq8m3hQRzkrE"
+    },
+    "classification" : {
+      "type" : "charge-description",
+      "description" : "Legal charge"
+    },
+    "etag" : "54bead4b70d85bef33f26bef281ea3f58c582503",
+    "transactions" : [
+      {
+        "filing_type" : "create-charge-pre-2006-companies-act",
+        "delivered_on" : ISODate("1991-12-06T00:00:00.000Z")
+      },
+      {
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z"),
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        },
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act"
+      }
+    ],
+    "delivered_on" : ISODate("1991-12-06T00:00:00.000Z"),
+    "particulars" : {
+      "type" : "short-particulars",
+      "description" : "Land and buildings on north east side of croft road, neath, west glamorgan."
+    },
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "created_on" : ISODate("1991-11-18T00:00:00.000Z"),
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
+    },
+    "charge_number" : 87
+  },
+  "company_number" : "00991343"
+}
+
+
+{
+  "_id" : "5wiqa68MTQzfLFz-K_YDCENqKII",
+  "company_number" : "00991343",
+  "data" : {
+    "links" : {
+      "self" : "/company/00991343/charges/5wiqa68MTQzfLFz-K_YDCENqKII"
+    },
+    "classification" : {
+      "description" : "Legal charge",
+      "type" : "charge-description"
+    },
+    "etag" : "dab42a6e8382d14d651c79f4c9b50b150e7d7c51",
+    "transactions" : [
+      {
+        "delivered_on" : ISODate("1988-06-17T00:00:00.000Z"),
+        "filing_type" : "create-charge"
+      },
+      {
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act",
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        },
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z")
+      }
+    ],
+    "delivered_on" : ISODate("1988-06-17T00:00:00.000Z"),
+    "particulars" : {
+      "description" : "F/H 11 hull road, york.",
+      "type" : "short-particulars"
+    },
+    "charge_number" : 75,
+    "secured_details" : {
+      "description" : "All monies due or to become due from the company and/or lightset LTD to the chargee on any account whatsoever.",
+      "type" : "amount-secured"
+    },
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "created_on" : ISODate("1988-06-10T00:00:00.000Z"),
+    "status" : "fully-satisfied"
+  },
+  "updated" : {
+    "type" : "mortgage_delta",
+    "by" : "5b55973740ac2e5fdc88259a",
+    "at" : ISODate("2018-07-23T17:12:18.989Z")
+  }
+}
+
+
+{
+  "_id" : "6OKvMyhZloktpHXsR0Ogs_E5FDw",
+  "company_number" : "00991343",
+  "data" : {
+    "created_on" : ISODate("1985-03-06T00:00:00.000Z"),
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "secured_details" : {
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever",
+      "type" : "amount-secured"
+    },
+    "charge_number" : 38,
+    "delivered_on" : ISODate("1985-03-20T00:00:00.000Z"),
+    "particulars" : {
+      "type" : "short-particulars",
+      "description" : "F/H 72, 74 & 76 queens road nuneaton warwickshire t/n wk 250960."
+    },
+    "etag" : "83f036b783ad871ad9938f2c719df8b874b70af7",
+    "classification" : {
+      "type" : "charge-description",
+      "description" : "Legal charge"
+    },
+    "transactions" : [
+      {
+        "filing_type" : "create-charge",
+        "delivered_on" : ISODate("1985-03-20T00:00:00.000Z")
+      },
+      {
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act",
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        },
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z")
+      }
+    ],
+    "links" : {
+      "self" : "/company/00991343/charges/6OKvMyhZloktpHXsR0Ogs_E5FDw"
+    }
+  },
+  "updated" : {
+    "type" : "mortgage_delta",
+    "by" : "5b55969940ac2e5fdc761b9a",
+    "at" : ISODate("2018-07-23T16:48:47.578Z")
+  }
+}
+
+
+{
+  "_id" : "6dveSvAut0ifs1hhftqmMUIbNf4",
+  "company_number" : "00991343",
+  "updated" : {
+    "by" : "5b55977a40ac2e5fdc952a9a",
+    "type" : "mortgage_delta",
+    "at" : ISODate("2018-07-23T17:24:17.337Z")
+  },
+  "data" : {
+    "delivered_on" : ISODate("1979-05-09T00:00:00.000Z"),
+    "particulars" : {
+      "type" : "short-particulars",
+      "description" : "F/H land & premises 367 thornton road bradford west yorkshire together with all fixtures title number wyk 101668."
+    },
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "created_on" : ISODate("1979-05-02T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "charge_number" : 9,
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
+    },
+    "links" : {
+      "self" : "/company/00991343/charges/6dveSvAut0ifs1hhftqmMUIbNf4"
+    },
+    "classification" : {
+      "type" : "charge-description",
+      "description" : "Mortgage"
+    },
+    "etag" : "447edd9421972d3e54393b466300b1cd34553321",
+    "transactions" : [
+      {
+        "delivered_on" : ISODate("1979-05-09T00:00:00.000Z"),
+        "filing_type" : "create-charge"
+      },
+      {
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        },
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z"),
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act"
+      }
+    ]
+  }
+}
+
+
+{
+  "_id" : "8kPf3Bj3wV_aH6XTtN2c-0sjetU",
+  "company_number" : "00991343",
+  "updated" : {
+    "by" : "5b559a0d40ac2e5fdc63599a",
+    "type" : "mortgage_delta",
+    "at" : ISODate("2018-07-23T19:19:51.215Z")
+  },
+  "data" : {
+    "etag" : "b0152927541102bfedf29204d7da5fe894cd5b59",
+    "classification" : {
+      "type" : "charge-description",
+      "description" : "Mortgage"
+    },
+    "transactions" : [
+      {
+        "filing_type" : "create-charge",
+        "delivered_on" : ISODate("1979-09-05T00:00:00.000Z")
+      },
+      {
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act",
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z"),
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        }
+      }
+    ],
+    "links" : {
+      "self" : "/company/00991343/charges/8kPf3Bj3wV_aH6XTtN2c-0sjetU"
+    },
+    "created_on" : ISODate("1979-05-02T00:00:00.000Z"),
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "charge_number" : 12,
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
+    },
+    "delivered_on" : ISODate("1979-09-05T00:00:00.000Z"),
+    "particulars" : {
+      "description" : "F/H land & premises 17 ingleby road bradford west yorkshire together with all fixtures title number wyk 115213.",
+      "type" : "short-particulars"
+    }
+  }
+}
+
+
+{
+  "_id" : "948ploDZTlZJszBKD7op-7ekRzo",
+  "data" : {
+    "etag" : "6587980dc71eaf5c1cd3d53111095aa7b149511c",
+    "classification" : {
+      "type" : "charge-description",
+      "description" : "Legal charge"
+    },
+    "transactions" : [
+      {
+        "delivered_on" : ISODate("1985-03-20T00:00:00.000Z"),
+        "filing_type" : "create-charge"
+      },
+      {
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act",
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z"),
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        }
+      }
+    ],
+    "links" : {
+      "self" : "/company/00991343/charges/948ploDZTlZJszBKD7op-7ekRzo"
+    },
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "created_on" : ISODate("1985-03-06T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "charge_number" : 34,
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
+    },
+    "delivered_on" : ISODate("1985-03-20T00:00:00.000Z"),
+    "particulars" : {
+      "description" : "97, wallasey village, wallasey merseyside t/n ch 28022.",
+      "type" : "short-particulars"
+    }
+  },
+  "updated" : {
+    "type" : "mortgage_delta",
+    "by" : "5b559a0f40ac2e5fdca6599a",
+    "at" : ISODate("2018-07-23T19:20:31.414Z")
+  },
+  "company_number" : "00991343"
+}
+
+
+{
+  "_id" : "9DlOZq6goC129NejduULaaKHXPI",
+  "data" : {
+    "delivered_on" : ISODate("1985-12-30T00:00:00.000Z"),
+    "particulars" : {
+      "description" : "L/H no. 82, wolveston road, billingham, cleveland.",
+      "type" : "short-particulars"
+    },
+    "status" : "fully-satisfied",
+    "satisfied_on" : ISODate("1988-04-11T00:00:00.000Z"),
+    "created_on" : ISODate("1985-12-18T00:00:00.000Z"),
+    "charge_number" : 60,
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
+    },
+    "etag" : "8a6e5e096333816ddac4e49fe541610d7b342609",
+    "classification" : {
+      "type" : "charge-description",
+      "description" : "Legal charge"
+    },
+    "transactions" : [
+      {
+        "filing_type" : "create-charge",
+        "delivered_on" : ISODate("1985-12-30T00:00:00.000Z")
+      }
+    ],
+    "links" : {
+      "self" : "/company/00991343/charges/9DlOZq6goC129NejduULaaKHXPI"
+    }
+  },
+  "updated" : {
+    "by" : "5b5596c740ac2e5fdc821f9a",
+    "type" : "mortgage_delta",
+    "at" : ISODate("2018-07-23T16:58:11.644Z")
+  },
+  "company_number" : "00991343"
+}
+
+
+{
+  "_id" : "9d5Fn95dzXnVC4oY0szhlyV06dc",
+  "data" : {
+    "etag" : "e147b3b27ae4bdff754d7270aedfc9914405ca40",
+    "classification" : {
+      "description" : "Legal charge",
+      "type" : "charge-description"
+    },
+    "transactions" : [
+      {
+        "delivered_on" : ISODate("1985-06-15T00:00:00.000Z"),
+        "filing_type" : "create-charge"
+      }
+    ],
+    "links" : {
+      "self" : "/company/00991343/charges/9d5Fn95dzXnVC4oY0szhlyV06dc"
+    },
+    "delivered_on" : ISODate("1985-06-15T00:00:00.000Z"),
+    "particulars" : {
+      "description" : "L/H premises known as numbers 8 & 8A st anne's road west and 347 clifton drive south st. Annes on sea lancashire.",
+      "type" : "short-particulars"
+    },
+    "secured_details" : {
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever",
+      "type" : "amount-secured"
+    },
+    "charge_number" : 47,
+    "satisfied_on" : ISODate("1988-04-11T00:00:00.000Z"),
+    "created_on" : ISODate("1985-06-11T00:00:00.000Z"),
+    "status" : "fully-satisfied"
+  },
+  "updated" : {
+    "at" : ISODate("2018-07-23T19:29:57.801Z"),
+    "by" : "5b559a4840ac2e5fdc555d9a",
+    "type" : "mortgage_delta"
+  },
+  "company_number" : "00991343"
+}
+
+
+{
+  "_id" : "BRd1_ByNR0e5zVYU3p5E4AyrJvU",
+  "company_number" : "00991343",
+  "data" : {
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "created_on" : ISODate("1988-06-10T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "charge_number" : 73,
+    "secured_details" : {
+      "description" : "All monies due or to become due from the company and/or lightset LTD to the chargee on any account whatsoever.",
+      "type" : "amount-secured"
+    },
+    "delivered_on" : ISODate("1988-06-17T00:00:00.000Z"),
+    "particulars" : {
+      "type" : "short-particulars",
+      "description" : "F/H 6 & 8 saville street, north shields, north tyne side t/n ty 198480."
+    },
+    "links" : {
+      "self" : "/company/00991343/charges/BRd1_ByNR0e5zVYU3p5E4AyrJvU"
+    },
+    "transactions" : [
+      {
+        "delivered_on" : ISODate("1988-06-17T00:00:00.000Z"),
+        "filing_type" : "create-charge"
+      },
+      {
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act",
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z"),
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        }
+      }
+    ],
+    "etag" : "2c62a13c13c7c09e29965b2be814442fd23ab56b",
+    "classification" : {
+      "type" : "charge-description",
+      "description" : "Legal charge"
+    }
+  },
+  "updated" : {
+    "at" : ISODate("2018-07-23T19:29:31.319Z"),
+    "by" : "5b559a4640ac2e5fdc295d9a",
+    "type" : "mortgage_delta"
+  }
+}
+
+
+{
+  "_id" : "BflfkPFR1qgcLlxVQ_BBMVZa4E4",
+  "company_number" : "00991343",
+  "updated" : {
+    "by" : "5b559a0d40ac2e5fdc76599a",
+    "type" : "mortgage_delta",
+    "at" : ISODate("2018-07-23T19:20:02.599Z")
+  },
+  "data" : {
+    "links" : {
+      "self" : "/company/00991343/charges/BflfkPFR1qgcLlxVQ_BBMVZa4E4"
+    },
+    "classification" : {
+      "description" : "Debenture",
+      "type" : "charge-description"
+    },
+    "etag" : "433f8cc29121610075b886a141dd96bf341d73b4",
+    "transactions" : [
+      {
+        "filing_type" : "create-charge",
+        "delivered_on" : ISODate("1988-06-14T00:00:00.000Z")
+      },
+      {
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act",
+        "delivered_on" : ISODate("1994-03-22T00:00:00.000Z"),
+        "links" : {
+          "filing" : "/company/00991343/filing-history/MDEwNjM3NDA1NWFkaXF6a2N4"
+        }
+      }
+    ],
+    "delivered_on" : ISODate("1988-06-14T00:00:00.000Z"),
+    "particulars" : {
+      "type" : "short-particulars",
+      "description" : "Fixed and floating charges over the undertaking and all property and assets present and future including goodwill bookdebts uncalled capital buildings fixtures fixed plant and machinery."
+    },
+    "satisfied_on" : ISODate("1994-03-22T00:00:00.000Z"),
+    "created_on" : ISODate("1988-06-10T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "charge_number" : 72,
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
+    }
+  }
+}
+
+
+{
+  "_id" : "Bo7IPd74uJgXIvhNexzw_Fw9aAE",
+  "company_number" : "00991343",
+  "data" : {
+    "etag" : "6f7d52c49fc698ba8348befd53b5743c47c3018e",
+    "transactions" : [
+      {
+        "delivered_on" : ISODate("1987-10-01T00:00:00.000Z"),
+        "filing_type" : "create-charge"
+      },
+      {
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        },
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z"),
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act"
+      }
+    ],
+    "classification" : {
+      "type" : "charge-description",
+      "description" : "Legal charge"
+    },
+    "links" : {
+      "self" : "/company/00991343/charges/Bo7IPd74uJgXIvhNexzw_Fw9aAE"
+    },
+    "created_on" : ISODate("1987-09-30T00:00:00.000Z"),
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "charge_number" : 66,
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
+    },
+    "delivered_on" : ISODate("1987-10-01T00:00:00.000Z"),
+    "particulars" : {
+      "type" : "short-particulars",
+      "description" : "6 and 8 saville street north shields."
+    }
+  },
+  "updated" : {
+    "at" : ISODate("2018-07-23T16:07:46.151Z"),
+    "type" : "mortgage_delta",
+    "by" : "5b55956c40ac2e5fdc89099a"
+  }
+}
+
+
+{
+  "_id" : "BpU6Cd7QkpbwDNkHdqXAoM2JImY",
+  "data" : {
+    "etag" : "660f7379905d1d0563424273c58e926dcaa420f9",
+    "classification" : {
+      "description" : "Legal charge",
+      "type" : "charge-description"
+    },
+    "transactions" : [
+      {
+        "delivered_on" : ISODate("1988-06-17T00:00:00.000Z"),
+        "filing_type" : "create-charge"
+      },
+      {
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z"),
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        },
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act"
+      }
+    ],
+    "links" : {
+      "self" : "/company/00991343/charges/BpU6Cd7QkpbwDNkHdqXAoM2JImY"
+    },
+    "created_on" : ISODate("1988-06-10T00:00:00.000Z"),
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "charge_number" : 83,
+    "secured_details" : {
+      "description" : "All monies due or to become due from the company and/or lightset LTD to the chargee on any account whatsoever.",
+      "type" : "amount-secured"
+    },
+    "delivered_on" : ISODate("1988-06-17T00:00:00.000Z"),
+    "particulars" : {
+      "description" : "F/H 81 & 83 bradshawgate bolton t/n gm 260817.",
+      "type" : "short-particulars"
+    }
+  },
+  "updated" : {
+    "at" : ISODate("2018-07-23T16:57:03.273Z"),
+    "by" : "5b5596c440ac2e5fdc051f9a",
+    "type" : "mortgage_delta"
+  },
+  "company_number" : "00991343"
+}
+
+
+{
+  "_id" : "CFNLSRS27fwNfx9t-q1x0vV1RNU",
+  "updated" : {
+    "by" : "5b559a0d40ac2e5fdc74599a",
+    "type" : "mortgage_delta",
+    "at" : ISODate("2018-07-23T19:20:01.397Z")
+  },
+  "data" : {
+    "links" : {
+      "self" : "/company/00991343/charges/CFNLSRS27fwNfx9t-q1x0vV1RNU"
+    },
+    "transactions" : [
+      {
+        "filing_type" : "create-charge",
+        "delivered_on" : ISODate("1985-11-07T00:00:00.000Z")
+      }
+    ],
+    "etag" : "6f7664ab1612e4190490620b76f2ff2c28630685",
+    "classification" : {
+      "type" : "charge-description",
+      "description" : "Legal charge"
+    },
+    "delivered_on" : ISODate("1985-11-07T00:00:00.000Z"),
+    "particulars" : {
+      "type" : "short-particulars",
+      "description" : "L/H property on the ground floor of 273/275 bury new road. Whitefield greater manchester."
+    },
+    "satisfied_on" : ISODate("1988-04-11T00:00:00.000Z"),
+    "created_on" : ISODate("1985-11-04T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "charge_number" : 59,
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
+    }
+  },
+  "company_number" : "00991343"
+}
+
+
+{
+  "_id" : "CXn7FGB8XX7603GdS_8sCRd_Gus",
+  "data" : {
+    "links" : {
+      "self" : "/company/00991343/charges/CXn7FGB8XX7603GdS_8sCRd_Gus"
+    },
+    "classification" : {
+      "description" : "Legal charge",
+      "type" : "charge-description"
+    },
+    "etag" : "275551e4ad6cae46d73e97a184aead00c11d1495",
+    "transactions" : [
+      {
+        "delivered_on" : ISODate("1988-03-22T00:00:00.000Z"),
+        "filing_type" : "create-charge"
+      },
+      {
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z"),
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        },
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act"
+      }
+    ],
+    "status" : "fully-satisfied",
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "created_on" : ISODate("1988-03-18T00:00:00.000Z"),
+    "charge_number" : 71,
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
+    },
+    "delivered_on" : ISODate("1988-03-22T00:00:00.000Z"),
+    "particulars" : {
+      "type" : "short-particulars",
+      "description" : "F/H lands hereditaments and premises being 64 gateford road worksop nottinghamshire & 40 overend road worksop nottinghamshire."
+    }
+  },
+  "updated" : {
+    "at" : ISODate("2018-07-23T16:11:32.059Z"),
+    "by" : "5b55957940ac2e5fdc310b9a",
+    "type" : "mortgage_delta"
+  },
+  "company_number" : "00991343"
+}
+
+
+{
+  "_id" : "Ce2p8mnPkFPnHGdg0FDCbW0TT8k",
+  "company_number" : "00991343",
+  "data" : {
+    "links" : {
+      "self" : "/company/00991343/charges/Ce2p8mnPkFPnHGdg0FDCbW0TT8k"
+    },
+    "transactions" : [
+      {
+        "delivered_on" : ISODate("1976-12-29T00:00:00.000Z"),
+        "filing_type" : "create-charge"
+      },
+      {
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act",
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        },
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z")
+      }
+    ],
+    "etag" : "f9dcfa60bd77d9126d26a3725f999d529418e9ac",
+    "classification" : {
+      "description" : "Mortgage",
+      "type" : "charge-description"
+    },
+    "delivered_on" : ISODate("1976-12-29T00:00:00.000Z"),
+    "particulars" : {
+      "type" : "short-particulars",
+      "description" : "F/Hold: 11 hull road york tog with all fix see doc (M21)."
+    },
+    "charge_number" : 5,
+    "secured_details" : {
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever",
+      "type" : "amount-secured"
+    },
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "created_on" : ISODate("1976-12-22T00:00:00.000Z"),
+    "status" : "fully-satisfied"
+  },
+  "updated" : {
+    "by" : "5b5596c440ac2e5fdc231f9a",
+    "type" : "mortgage_delta",
+    "at" : ISODate("2018-07-23T16:57:19.688Z")
+  }
+}
+
+
+{
+  "_id" : "DJJ0e98hrs3z1eCSGqmLeahdkPA",
+  "company_number" : "00991343",
+  "data" : {
+    "links" : {
+      "self" : "/company/00991343/charges/DJJ0e98hrs3z1eCSGqmLeahdkPA"
+    },
+    "classification" : {
+      "description" : "Mortgage",
+      "type" : "charge-description"
+    },
+    "etag" : "208bdeff865d06a71dbf73c61af8f373866faf28",
+    "transactions" : [
+      {
+        "filing_type" : "create-charge",
+        "delivered_on" : ISODate("1979-05-09T00:00:00.000Z")
+      },
+      {
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z"),
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        },
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act"
+      }
+    ],
+    "delivered_on" : ISODate("1979-05-09T00:00:00.000Z"),
+    "particulars" : {
+      "description" : "F/H land & premises:- 33 birmingham street oldbury sandwell west midlands together with all fixtures title number WM104112.",
+      "type" : "short-particulars"
+    },
+    "charge_number" : 11,
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
+    },
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "created_on" : ISODate("1979-05-02T00:00:00.000Z"),
+    "status" : "fully-satisfied"
+  },
+  "updated" : {
+    "at" : ISODate("2018-07-23T16:48:00.791Z"),
+    "by" : "5b55969640ac2e5fdc201b9a",
+    "type" : "mortgage_delta"
+  }
+}
+
+
+{
+  "_id" : "EGqQeDU6uuwg8kHzDZ0Xb1Kqnls",
+  "updated" : {
+    "at" : ISODate("2018-07-23T16:47:16.703Z"),
+    "by" : "5b55969340ac2e5fdccf1a9a",
+    "type" : "mortgage_delta"
+  },
+  "data" : {
+    "etag" : "077239841c30b94f2b954100db1b3ddac3748f28",
+    "classification" : {
+      "description" : "Legal charge",
+      "type" : "charge-description"
+    },
+    "transactions" : [
+      {
+        "delivered_on" : ISODate("1985-05-31T00:00:00.000Z"),
+        "filing_type" : "create-charge"
+      },
+      {
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z"),
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        },
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act"
+      }
+    ],
+    "links" : {
+      "self" : "/company/00991343/charges/EGqQeDU6uuwg8kHzDZ0Xb1Kqnls"
+    },
+    "delivered_on" : ISODate("1985-05-31T00:00:00.000Z"),
+    "particulars" : {
+      "type" : "short-particulars",
+      "description" : "L/H property situate at 117A queens street, morley leeds west yorkshire t/n wyk 159120."
+    },
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
+    },
+    "charge_number" : 45,
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "created_on" : ISODate("1985-05-23T00:00:00.000Z"),
+    "status" : "fully-satisfied"
+  },
+  "company_number" : "00991343"
+}
+
+
+{
+  "_id" : "EQDssGTZeMTDy5oSLDRVaEWS1TU",
+  "company_number" : "00991343",
+  "data" : {
+    "links" : {
+      "self" : "/company/00991343/charges/EQDssGTZeMTDy5oSLDRVaEWS1TU"
+    },
+    "classification" : {
+      "type" : "charge-description",
+      "description" : "Legal charge"
+    },
+    "etag" : "432899646ea446168f714df921943b5643c85670",
+    "transactions" : [
+      {
+        "delivered_on" : ISODate("1985-03-20T00:00:00.000Z"),
+        "filing_type" : "create-charge"
+      },
+      {
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z"),
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        },
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act"
+      }
+    ],
+    "charge_number" : 31,
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
+    },
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "created_on" : ISODate("1985-03-06T00:00:00.000Z"),
+    "delivered_on" : ISODate("1985-03-20T00:00:00.000Z"),
+    "particulars" : {
+      "description" : "L/H 578, 580, 582 ashton road, oldham greater manchester t/n ln 13329 ol 4884 la 14939.",
+      "type" : "short-particulars"
+    }
+  },
+  "updated" : {
+    "type" : "mortgage_delta",
+    "by" : "5b55969940ac2e5fdc731b9a",
+    "at" : ISODate("2018-07-23T16:48:45.948Z")
+  }
+}
+
+
+{
+  "_id" : "F1F_Ya9ItmOpXPGk71amx-_dHIU",
+  "company_number" : "00991343",
+  "data" : {
+    "links" : {
+      "self" : "/company/00991343/charges/F1F_Ya9ItmOpXPGk71amx-_dHIU"
+    },
+    "transactions" : [
+      {
+        "delivered_on" : ISODate("1988-06-17T00:00:00.000Z"),
+        "filing_type" : "create-charge"
+      },
+      {
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act",
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z"),
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        }
+      }
+    ],
+    "etag" : "2cd8203ce3e6c52e8b5bb9dcc9013756d33f7859",
+    "classification" : {
+      "type" : "charge-description",
+      "description" : "Legal charge"
+    },
+    "particulars" : {
+      "description" : "F/H 551 west derby road, west derby liverpool t/n ms 59671.",
+      "type" : "short-particulars"
+    },
+    "delivered_on" : ISODate("1988-06-17T00:00:00.000Z"),
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "created_on" : ISODate("1988-06-10T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "charge_number" : 79,
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "All monies due or to become due from the company and/or lightset LTD to the chargee on any account whatsoever."
+    }
+  },
+  "updated" : {
+    "type" : "mortgage_delta",
+    "by" : "5b55952e40ac2e5fdc96039a",
+    "at" : ISODate("2018-07-23T15:54:21.013Z")
+  }
+}
+
+
+{
+  "_id" : "FRxu0o1Q2kesBBQU4j1IgEXEk9Q",
+  "company_number" : "00991343",
+  "updated" : {
+    "at" : ISODate("2018-07-23T16:46:59.785Z"),
+    "type" : "mortgage_delta",
+    "by" : "5b55969240ac2e5fdcb01a9a"
+  },
+  "data" : {
+    "particulars" : {
+      "description" : "F/H 429 and 433/435 hessle road kingston upon hull humberside H.s 81945.",
+      "type" : "short-particulars"
+    },
+    "delivered_on" : ISODate("1985-03-20T00:00:00.000Z"),
+    "charge_number" : 37,
+    "secured_details" : {
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever",
+      "type" : "amount-secured"
+    },
+    "created_on" : ISODate("1985-03-06T00:00:00.000Z"),
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "links" : {
+      "self" : "/company/00991343/charges/FRxu0o1Q2kesBBQU4j1IgEXEk9Q"
+    },
+    "transactions" : [
+      {
+        "delivered_on" : ISODate("1985-03-20T00:00:00.000Z"),
+        "filing_type" : "create-charge"
+      },
+      {
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act",
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        },
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z")
+      }
+    ],
+    "etag" : "9b1ac8de9c0387806fd721cbf2ad8ba4c6ea46d8",
+    "classification" : {
+      "type" : "charge-description",
+      "description" : "Legal charge"
+    }
+  }
+}
+
+
+{
+  "_id" : "IVY_pREtDHLSS1o7T52KVXH7QWM",
+  "company_number" : "00991343",
+  "updated" : {
+    "at" : ISODate("2018-07-23T16:48:17.668Z"),
+    "type" : "mortgage_delta",
+    "by" : "5b55969740ac2e5fdc3f1b9a"
+  },
+  "data" : {
+    "delivered_on" : ISODate("1979-11-29T00:00:00.000Z"),
+    "particulars" : {
+      "type" : "short-particulars",
+      "description" : "L/H lands & premises being warehouse at cemetery road bradford together with all fixtures."
+    },
+    "charge_number" : 13,
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
+    },
+    "created_on" : ISODate("1979-11-23T00:00:00.000Z"),
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "links" : {
+      "self" : "/company/00991343/charges/IVY_pREtDHLSS1o7T52KVXH7QWM"
+    },
+    "transactions" : [
+      {
+        "delivered_on" : ISODate("1979-11-29T00:00:00.000Z"),
+        "filing_type" : "create-charge"
+      },
+      {
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z"),
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        },
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act"
+      }
+    ],
+    "etag" : "9164af7d96af3521721557f48622bde30d55964e",
+    "classification" : {
+      "type" : "charge-description",
+      "description" : "Mortgage"
+    }
+  }
+}
+
+
+{
+  "_id" : "IoxPBA_RHzK5Ea2sl_rt881Te98",
+  "company_number" : "00991343",
+  "updated" : {
+    "at" : ISODate("2018-07-23T16:48:20.932Z"),
+    "by" : "5b55969740ac2e5fdc451b9a",
+    "type" : "mortgage_delta"
+  },
+  "data" : {
+    "particulars" : {
+      "type" : "short-particulars",
+      "description" : "5 & 6 market place chorley lancashire."
+    },
+    "delivered_on" : ISODate("1987-10-07T00:00:00.000Z"),
+    "charge_number" : 67,
+    "secured_details" : {
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever",
+      "type" : "amount-secured"
+    },
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "created_on" : ISODate("1987-10-01T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "links" : {
+      "self" : "/company/00991343/charges/IoxPBA_RHzK5Ea2sl_rt881Te98"
+    },
+    "transactions" : [
+      {
+        "filing_type" : "create-charge",
+        "delivered_on" : ISODate("1987-10-07T00:00:00.000Z")
+      },
+      {
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act",
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        },
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z")
+      }
+    ],
+    "etag" : "c0df5f48c61b41ab21f9ce628d3feeecf07f8eba",
+    "classification" : {
+      "type" : "charge-description",
+      "description" : "Legal charge"
+    }
+  }
+}
+
+
+{
+  "_id" : "K9DRhJbeiFYk_kpa2N4UOPuvnRE",
+  "company_number" : "00991343",
+  "data" : {
+    "delivered_on" : ISODate("1985-07-15T00:00:00.000Z"),
+    "particulars" : {
+      "description" : "L/H property 3 priory street, wrexham clwyd.",
+      "type" : "short-particulars"
+    },
+    "charge_number" : 49,
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
+    },
+    "satisfied_on" : ISODate("1988-04-11T00:00:00.000Z"),
+    "created_on" : ISODate("1985-06-28T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "links" : {
+      "self" : "/company/00991343/charges/K9DRhJbeiFYk_kpa2N4UOPuvnRE"
+    },
+    "classification" : {
+      "description" : "Legal charge",
+      "type" : "charge-description"
+    },
+    "etag" : "1f619ce63966ec238c7055cefe4474656ad80d12",
+    "transactions" : [
+      {
+        "filing_type" : "create-charge",
+        "delivered_on" : ISODate("1985-07-15T00:00:00.000Z")
+      }
+    ]
+  },
+  "updated" : {
+    "by" : "5b55973c40ac2e5fdc01269a",
+    "type" : "mortgage_delta",
+    "at" : ISODate("2018-07-23T17:13:25.988Z")
+  }
+}
+
+
+{
+  "_id" : "M7AoTip_zQOulVKe0eQ7XkBgSa0",
+  "company_number" : "00991343",
+  "data" : {
+    "delivered_on" : ISODate("1985-01-22T00:00:00.000Z"),
+    "particulars" : {
+      "description" : "378/380 norton road, stockton-on-tees. T/n ce 28117.",
+      "type" : "short-particulars"
+    },
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "created_on" : ISODate("1985-01-17T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "charge_number" : 28,
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
+    },
+    "links" : {
+      "self" : "/company/00991343/charges/M7AoTip_zQOulVKe0eQ7XkBgSa0"
+    },
+    "classification" : {
+      "description" : "Legal charge",
+      "type" : "charge-description"
+    },
+    "etag" : "68109210e3a82eae03035c565e9b216aeb4aab3d",
+    "transactions" : [
+      {
+        "filing_type" : "create-charge",
+        "delivered_on" : ISODate("1985-01-22T00:00:00.000Z")
+      },
+      {
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        },
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z"),
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act"
+      }
+    ]
+  },
+  "updated" : {
+    "at" : ISODate("2018-07-23T15:52:02.006Z"),
+    "by" : "5b55952840ac2e5fdc8d029a",
+    "type" : "mortgage_delta"
+  }
+}
+
+
+{
+  "_id" : "MdUgQbV5SdlvZoAakkt_U6u4-ng",
+  "updated" : {
+    "by" : "5b5596c240ac2e5fdcbb1e9a",
+    "type" : "mortgage_delta",
+    "at" : ISODate("2018-07-23T16:56:22.812Z")
+  },
+  "data" : {
+    "links" : {
+      "self" : "/company/00991343/charges/MdUgQbV5SdlvZoAakkt_U6u4-ng"
+    },
+    "classification" : {
+      "description" : "Legal charge",
+      "type" : "charge-description"
+    },
+    "etag" : "07942be54e5801077859e21fafccba6d87a3e2e9",
+    "transactions" : [
+      {
+        "delivered_on" : ISODate("1987-11-17T00:00:00.000Z"),
+        "filing_type" : "create-charge"
+      }
+    ],
+    "created_on" : ISODate("1987-11-16T00:00:00.000Z"),
+    "satisfied_on" : ISODate("1988-04-11T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "charge_number" : 69,
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
+    },
+    "particulars" : {
+      "description" : "L/H property k/a 18 princes street salford.",
+      "type" : "short-particulars"
+    },
+    "delivered_on" : ISODate("1987-11-17T00:00:00.000Z")
+  },
+  "company_number" : "00991343"
+}
+
+
+{
+  "_id" : "NJ3cQhYFhFxilkfGTKqO_64oyEE",
+  "company_number" : "00991343",
+  "data" : {
+    "delivered_on" : ISODate("1985-06-05T00:00:00.000Z"),
+    "particulars" : {
+      "description" : "L/H property situate & known as 4/6 church lane pudsey west yorkshire.",
+      "type" : "short-particulars"
+    },
+    "secured_details" : {
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever",
+      "type" : "amount-secured"
+    },
+    "charge_number" : 46,
+    "satisfied_on" : ISODate("1988-04-11T00:00:00.000Z"),
+    "created_on" : ISODate("1985-05-29T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "etag" : "c5e4f942704045463cc2930e7c240ca591c85d40",
+    "transactions" : [
+      {
+        "delivered_on" : ISODate("1985-06-05T00:00:00.000Z"),
+        "filing_type" : "create-charge"
+      }
+    ],
+    "classification" : {
+      "type" : "charge-description",
+      "description" : "Legal charge"
+    },
+    "links" : {
+      "self" : "/company/00991343/charges/NJ3cQhYFhFxilkfGTKqO_64oyEE"
+    }
+  },
+  "updated" : {
+    "at" : ISODate("2018-07-23T17:23:15.272Z"),
+    "by" : "5b55977740ac2e5fdc262a9a",
+    "type" : "mortgage_delta"
+  }
+}
+
+
+{
+  "_id" : "NM7B9UV7U67_uUsIpCSTQR2yFPA",
+  "data" : {
+    "etag" : "2b05fae6dacca1cac136e71c24ca415029f10001",
+    "classification" : {
+      "type" : "charge-description",
+      "description" : "Legal charge"
+    },
+    "transactions" : [
+      {
+        "filing_type" : "create-charge",
+        "delivered_on" : ISODate("1985-09-13T00:00:00.000Z")
+      }
+    ],
+    "links" : {
+      "self" : "/company/00991343/charges/NM7B9UV7U67_uUsIpCSTQR2yFPA"
+    },
+    "particulars" : {
+      "description" : "L/H property situate & numbered 9/11 burnley road brierfield nelson lancs.",
+      "type" : "short-particulars"
+    },
+    "delivered_on" : ISODate("1985-09-13T00:00:00.000Z"),
+    "created_on" : ISODate("1985-09-04T00:00:00.000Z"),
+    "satisfied_on" : ISODate("1988-04-11T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "charge_number" : 57,
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
+    }
+  },
+  "updated" : {
+    "type" : "mortgage_delta",
+    "by" : "5b55969740ac2e5fdc431b9a",
+    "at" : ISODate("2018-07-23T16:48:19.844Z")
+  },
+  "company_number" : "00991343"
+}
+
+
+{
+  "_id" : "NQd1QjOv7uUbBZsunvxpT_kFr_s",
+  "data" : {
+    "delivered_on" : ISODate("1992-02-25T00:00:00.000Z"),
+    "particulars" : {
+      "description" : "55 and 57 wind street ammanford dyfed.",
+      "type" : "short-particulars"
+    },
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "created_on" : ISODate("1992-02-10T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
+    },
+    "charge_number" : 91,
+    "links" : {
+      "self" : "/company/00991343/charges/NQd1QjOv7uUbBZsunvxpT_kFr_s"
+    },
+    "transactions" : [
+      {
+        "filing_type" : "create-charge-pre-2006-companies-act",
+        "links" : {
+          "filing" : "/company/00991343/filing-history/MDEwNTI5OTA1OGFkaXF6a2N4"
+        },
+        "delivered_on" : ISODate("1992-02-25T00:00:00.000Z")
+      },
+      {
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        },
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z"),
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act"
+      }
+    ],
+    "etag" : "fb7ffab74c91e9888c34ca398e64f37d1790fac4",
+    "classification" : {
+      "description" : "Legal charge",
+      "type" : "charge-description"
+    }
+  },
+  "updated" : {
+    "at" : ISODate("2018-07-23T19:31:10.826Z"),
+    "type" : "mortgage_delta",
+    "by" : "5b559a4c40ac2e5fdcce5d9a"
+  },
+  "company_number" : "00991343"
+}
+
+
+{
+  "_id" : "PLSVZ4Chq2PKvu3ZhSHIf_Tyj5o",
+  "updated" : {
+    "type" : "mortgage_delta",
+    "by" : "5b5596c740ac2e5fdc841f9a",
+    "at" : ISODate("2018-07-23T16:58:12.736Z")
+  },
+  "data" : {
+    "links" : {
+      "self" : "/company/00991343/charges/PLSVZ4Chq2PKvu3ZhSHIf_Tyj5o"
+    },
+    "classification" : {
+      "description" : "Legal charge",
+      "type" : "charge-description"
+    },
+    "etag" : "53bc6e2e83a88abfbc51b98196adb484600438a2",
+    "transactions" : [
+      {
+        "filing_type" : "create-charge",
+        "delivered_on" : ISODate("1982-09-22T00:00:00.000Z")
+      }
+    ],
+    "particulars" : {
+      "description" : "L/H land & premises known as 18 brooke street neston wirral.",
+      "type" : "short-particulars"
+    },
+    "delivered_on" : ISODate("1982-09-22T00:00:00.000Z"),
+    "satisfied_on" : ISODate("1988-04-11T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "created_on" : ISODate("1982-09-15T00:00:00.000Z"),
+    "charge_number" : 24,
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
+    }
+  },
+  "company_number" : "00991343"
+}
+
+
+{
+  "_id" : "PTUNsCQgUT2WfiMRPXK2NPihigc",
+  "company_number" : "00991343",
+  "updated" : {
+    "type" : "mortgage_delta",
+    "by" : "5b55957740ac2e5fdce80a9a",
+    "at" : ISODate("2018-07-23T16:10:53.200Z")
+  },
+  "data" : {
+    "etag" : "b449553e6de7c2426243b0350064e144a2c71566",
+    "transactions" : [
+      {
+        "delivered_on" : ISODate("1985-09-13T00:00:00.000Z"),
+        "filing_type" : "create-charge"
+      }
+    ],
+    "classification" : {
+      "type" : "charge-description",
+      "description" : "Legal charge"
+    },
+    "links" : {
+      "self" : "/company/00991343/charges/PTUNsCQgUT2WfiMRPXK2NPihigc"
+    },
+    "charge_number" : 56,
+    "secured_details" : {
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever",
+      "type" : "amount-secured"
+    },
+    "created_on" : ISODate("1985-09-10T00:00:00.000Z"),
+    "satisfied_on" : ISODate("1988-04-11T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "delivered_on" : ISODate("1985-09-13T00:00:00.000Z"),
+    "particulars" : {
+      "type" : "short-particulars",
+      "description" : "L/H property being nos. 54-55 new borough seas borough north yorks."
+    }
+  }
+}
+
+
+{
+  "_id" : "PXXbiIVANJzc55C6mBHxcYT2FP4",
+  "company_number" : "00991343",
+  "data" : {
+    "etag" : "89abcca02558e9fb600057e7c3f95f0810ed333d",
+    "transactions" : [
+      {
+        "delivered_on" : ISODate("1988-06-17T00:00:00.000Z"),
+        "filing_type" : "create-charge"
+      },
+      {
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act",
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z"),
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        }
+      }
+    ],
+    "classification" : {
+      "type" : "charge-description",
+      "description" : "Legal charge"
+    },
+    "links" : {
+      "self" : "/company/00991343/charges/PXXbiIVANJzc55C6mBHxcYT2FP4"
+    },
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "created_on" : ISODate("1988-06-10T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "charge_number" : 80,
+    "secured_details" : {
+      "description" : "All monies due or to become due from the company and/or lightset LTD to the chargee on any account whatsoever.",
+      "type" : "amount-secured"
+    },
+    "delivered_on" : ISODate("1988-06-17T00:00:00.000Z"),
+    "particulars" : {
+      "description" : "F/H 37/39 whitby road ellesmere t/n ch 131527.",
+      "type" : "short-particulars"
+    }
+  },
+  "updated" : {
+    "at" : ISODate("2018-07-23T16:58:16.575Z"),
+    "by" : "5b5596c840ac2e5fdc8b1f9a",
+    "type" : "mortgage_delta"
+  }
+}
+
+
+{
+  "_id" : "Pmb1S44KH9FywKmRSFpDK1EbTdQ",
+  "updated" : {
+    "type" : "mortgage_delta",
+    "by" : "5b559a0c40ac2e5fdc45599a",
+    "at" : ISODate("2018-07-23T19:19:33.226Z")
+  },
+  "data" : {
+    "etag" : "e7d768df3fd5cd3423f19267a074c022751fa86b",
+    "classification" : {
+      "type" : "charge-description",
+      "description" : "Legal charge"
+    },
+    "transactions" : [
+      {
+        "filing_type" : "create-charge",
+        "delivered_on" : ISODate("1982-09-22T00:00:00.000Z")
+      }
+    ],
+    "links" : {
+      "self" : "/company/00991343/charges/Pmb1S44KH9FywKmRSFpDK1EbTdQ"
+    },
+    "charge_number" : 27,
+    "secured_details" : {
+      "type" : "amount-secured",
+      "description" : "All monies due or to become due from the company to the chargee on any account whatsoever"
+    },
+    "created_on" : ISODate("1982-09-15T00:00:00.000Z"),
+    "satisfied_on" : ISODate("1988-04-11T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "delivered_on" : ISODate("1982-09-22T00:00:00.000Z"),
+    "particulars" : {
+      "type" : "short-particulars",
+      "description" : "L/H land & premises known as shop premises adjoining the junction of smithfield road and crescent road wrexham clwyd."
+    }
+  },
+  "company_number" : "00991343"
+}
+
+
+{
+  "_id" : "RYof21NYMXrJe6sDJ9GaszqP6rM",
+  "data" : {
+    "etag" : "abde3d6d5c4b68a93e3a98d37bfaa1351cdf8d05",
+    "classification" : {
+      "description" : "Legal charge",
+      "type" : "charge-description"
+    },
+    "transactions" : [
+      {
+        "delivered_on" : ISODate("1988-06-17T00:00:00.000Z"),
+        "filing_type" : "create-charge"
+      },
+      {
+        "filing_type" : "charge-satisfaction-pre-2006-companies-act",
+        "delivered_on" : ISODate("1993-08-18T00:00:00.000Z"),
+        "links" : {
+          "filing" : "/company/00991343/filing-history/YWRpcXprY3g"
+        }
+      }
+    ],
+    "links" : {
+      "self" : "/company/00991343/charges/RYof21NYMXrJe6sDJ9GaszqP6rM"
+    },
+    "delivered_on" : ISODate("1988-06-17T00:00:00.000Z"),
+    "particulars" : {
+      "description" : "F/H 143 & 145 stamford street and land & buildings on the east side of grey street, ashford under-lyne, lancashire t/n gm 83925.",
+      "type" : "short-particulars"
+    },
+    "satisfied_on" : ISODate("1993-08-18T00:00:00.000Z"),
+    "created_on" : ISODate("1988-06-10T00:00:00.000Z"),
+    "status" : "fully-satisfied",
+    "charge_number" : 76,
+    "secured_details" : {
+      "description" : "All monies due or to become due from the company and/or lightset LTD to the chargee on any account whatsoever.",
+      "type" : "amount-secured"
+    }
+  },
+  "updated" : {
+    "type" : "mortgage_delta",
+    "by" : "5b55955c40ac2e5fdc6c079a",
+    "at" : ISODate("2018-07-23T16:02:59.198Z")
+  },
+  "company_number" : "00991343"
+}

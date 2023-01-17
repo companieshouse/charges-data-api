@@ -19,6 +19,7 @@ import uk.gov.companieshouse.api.metrics.MortgageApi;
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.charges.data.api.ChargesApiService;
 import uk.gov.companieshouse.charges.data.api.CompanyMetricsApiService;
+import uk.gov.companieshouse.charges.data.model.ChargesAggregate;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.model.RequestCriteria;
 import uk.gov.companieshouse.charges.data.repository.ChargesRepository;
@@ -119,7 +120,8 @@ public class ChargesService {
             statusFilter.add(ChargeApi.StatusEnum.SATISFIED);
             statusFilter.add(ChargeApi.StatusEnum.FULLY_SATISFIED);
         }
-        List<ChargesDocument> charges = chargesRepository.findCharges(companyNumber, statusFilter,
+        ChargesAggregate chargesAggregate =
+                chargesRepository.findCharges(companyNumber, statusFilter,
                 Optional.ofNullable(requestCriteria.getStartIndex()).orElse(0),
                 Optional.ofNullable(requestCriteria.getItemsPerPage()).orElse(25));
 
@@ -130,14 +132,15 @@ public class ChargesService {
             logger.error(String.format("No company metrics data found for company %s ",
                     companyNumber));
         }
-        return Optional.of(createChargesApi(charges, companyMetrics));
+        return Optional.of(createChargesApi(chargesAggregate, companyMetrics));
     }
 
-    private ChargesApi createChargesApi(List<ChargesDocument> charges,
+    private ChargesApi createChargesApi(ChargesAggregate chargesAggregate,
                                         Optional<MetricsApi> metrics) {
         var chargesApi = new ChargesApi();
-        charges.forEach(charge -> chargesApi.addItemsItem(charge.getData()));
-        chargesApi.setTotalCount(charges.size());
+        chargesAggregate.getChargesDocuments().forEach(
+                charge -> chargesApi.addItemsItem(charge.getData()));
+        chargesApi.setTotalCount(chargesAggregate.getCount().get(0).intValue());
         MortgageApi mortgage = null;
 
         if (metrics.isPresent()) {

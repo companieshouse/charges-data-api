@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 import uk.gov.companieshouse.api.charges.ChargeApi;
+import uk.gov.companieshouse.charges.data.model.ChargesAggregate;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 
 @Repository
@@ -31,16 +32,15 @@ public interface ChargesRepository extends MongoRepository<ChargesDocument, Stri
      */
     @Aggregation(pipeline = {
             "{ '$match': { 'company_number': ?0, 'data.status': { $nin: ?1 } } }",
-            "{ '$facet': { 'count': [{ '$count': 'count' }], 'sample': [ { '$skip': ?2 }, "
-                    + "{ '$limit': ?3 } ] }}",
+            "{ '$facet': { 'count': [{ '$count': 'count' }], "
+                    + "'charges_documents': [ { '$skip': ?2 }, { '$limit': ?3 } ] }}",
             "{ '$addFields': "
                     + "{ 'sort_date': "
                         + "{ $ifNull: [ '$data.created_on', '$data.delivered_on' ] } } }",
             "{ '$sort': { 'sort_date': -1, 'data.charge_number': -1 } }"
             })
-    List<ChargesDocument> findCharges(final String companyNumber,
-                                      final List<ChargeApi.StatusEnum> filter,
-                                      final int startIndex,
-                                      final int pageSize);
-
+    ChargesAggregate findCharges(final String companyNumber,
+                                   final List<ChargeApi.StatusEnum> filter,
+                                   final int startIndex,
+                                   final int pageSize);
 }
