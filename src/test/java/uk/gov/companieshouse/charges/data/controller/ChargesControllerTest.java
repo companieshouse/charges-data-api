@@ -41,11 +41,9 @@ import uk.gov.companieshouse.logging.Logger;
 public class ChargesControllerTest {
     private final String companyNumber = "02588581";
     private final String chargeId = "18588520";
-    private final int itemsPerPage = 1;
-    private final int startIndex = 0;
     private final String CHARGES_PUT_URL = "/company/" + companyNumber + "/charge/" + chargeId + "/internal";
     private final String CHARGE_DETAILS_GET_URL = "/company/" + companyNumber + "/charges/" + chargeId;
-    private final String CHARGES_GET_URL = "/company/" + companyNumber + "/charges/" + itemsPerPage + "/" + startIndex;
+    private final String CHARGES_GET_URL = "/company/" + companyNumber + "/charges";
     private final String CHARGES_DELETE_URL = String.format("/company/%s/charges/%s", companyNumber, chargeId);
 
 

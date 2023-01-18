@@ -140,7 +140,7 @@ public class ChargesService {
         var chargesApi = new ChargesApi();
         chargesAggregate.getChargesDocuments().forEach(
                 charge -> chargesApi.addItemsItem(charge.getData()));
-        chargesApi.setTotalCount(chargesAggregate.getCount().get(0).intValue());
+        chargesApi.setTotalCount(chargesAggregate.getCount().get(0).getCount().intValue());
         MortgageApi mortgage = null;
 
         if (metrics.isPresent()) {

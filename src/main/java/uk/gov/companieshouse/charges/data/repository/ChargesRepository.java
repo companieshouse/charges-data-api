@@ -3,8 +3,6 @@ package uk.gov.companieshouse.charges.data.repository;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -32,12 +30,12 @@ public interface ChargesRepository extends MongoRepository<ChargesDocument, Stri
      */
     @Aggregation(pipeline = {
             "{ '$match': { 'company_number': ?0, 'data.status': { $nin: ?1 } } }",
-            "{ '$facet': { 'count': [{ '$count': 'count' }], "
-                    + "'charges_documents': [ { '$skip': ?2 }, { '$limit': ?3 } ] }}",
             "{ '$addFields': "
                     + "{ 'sort_date': "
                         + "{ $ifNull: [ '$data.created_on', '$data.delivered_on' ] } } }",
-            "{ '$sort': { 'sort_date': -1, 'data.charge_number': -1 } }"
+            "{ '$sort': { 'sort_date': -1, 'data.charge_number': -1 } }",
+            "{ '$facet': { 'count': [{ '$count': 'count' }], "
+                    + "'charges_documents': [ { '$skip': ?2 }, { '$limit': ?3 } ] }}",
             })
     ChargesAggregate findCharges(final String companyNumber,
                                    final List<ChargeApi.StatusEnum> filter,

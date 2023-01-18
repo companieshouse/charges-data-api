@@ -22,6 +22,8 @@ import uk.gov.companieshouse.api.metrics.MetricsApi;
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.charges.data.api.ChargesApiService;
 import uk.gov.companieshouse.charges.data.api.CompanyMetricsApiService;
+import uk.gov.companieshouse.charges.data.model.ChargesAggregate;
+import uk.gov.companieshouse.charges.data.model.ChargesCount;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.model.RequestCriteria;
 import uk.gov.companieshouse.charges.data.repository.ChargesRepository;
@@ -36,6 +38,7 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -50,7 +53,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-public class ChargesServiceTest {
+class ChargesServiceTest {
 
     private static final String companyNumber = "NI622400";
 
@@ -79,6 +82,12 @@ public class ChargesServiceTest {
 
     @Mock
     private ChargesTransformer chargesTransformer;
+
+    @Mock
+    private ChargesAggregate chargesAggregate;
+
+    @Mock
+    private ChargesDocument document;
 
     /**
      * Reset the mocks so defaults are returned and invocation counters cleared.
@@ -161,6 +170,9 @@ public class ChargesServiceTest {
 
     @Test
     public void empty_charges_when_repository_returns_empty_result() {
+        when(chargesRepository.findCharges(anyString(), any(), anyInt(), anyInt())).thenReturn(chargesAggregate);
+        when(chargesAggregate.getChargesDocuments()).thenReturn(singletonList(document));
+        when(chargesAggregate.getCount()).thenReturn(singletonList(new ChargesCount(0L)));
         Optional<ChargesApi> charges = chargesService.findCharges(companyNumber, new RequestCriteria());
         assertThat(charges.isPresent()).isTrue();
         assertThat(charges.get().getTotalCount()).isEqualTo(0);
@@ -170,6 +182,9 @@ public class ChargesServiceTest {
 
     @Test
     public void empty_charges_when_company_metrics_returns_no_result() {
+        when(chargesRepository.findCharges(anyString(), any(), anyInt(), anyInt())).thenReturn(chargesAggregate);
+        when(chargesAggregate.getChargesDocuments()).thenReturn(singletonList(document));
+        when(chargesAggregate.getCount()).thenReturn(singletonList(new ChargesCount(1L)));
         Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,
                 new RequestCriteria().setItemsPerPage(1).setStartIndex(0));
         assertThat(charges.isPresent()).isTrue();
@@ -328,7 +343,7 @@ public class ChargesServiceTest {
 
     private void trainMocks() throws IOException {
         when(chargesRepository.findCharges(eq(companyNumber), any(), anyInt(), anyInt()))
-                .thenReturn(Collections.singletonList(createCharges()));
+                .thenReturn(new ChargesAggregate(singletonList(new ChargesCount(1L)), singletonList(createCharges())));
         when(companyMetricsApiService.getCompanyMetrics(companyNumber))
                 .thenReturn(Optional.ofNullable(createMetrics()));
     }
