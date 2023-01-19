@@ -2,7 +2,6 @@ db.getCollection('company_mortgages').aggregate ([
     {
         '$match': { 'company_number': '00991343', 'data.status': { $nin: [] } }
     },
-    ,
     {
         '$addFields':
             {
