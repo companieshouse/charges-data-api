@@ -1,13 +1,13 @@
 package uk.gov.companieshouse.charges.data.model;
 
-public class ChargesCount {
+public class TotalCharges {
 
     private Long count;
 
-    public ChargesCount() {
+    public TotalCharges() {
     }
 
-    public ChargesCount(Long count) {
+    public TotalCharges(Long count) {
         this.count = count;
     }
 
@@ -15,7 +15,7 @@ public class ChargesCount {
         return count;
     }
 
-    public ChargesCount setCount(Long count) {
+    public TotalCharges setCount(Long count) {
         this.count = count;
         return this;
     }

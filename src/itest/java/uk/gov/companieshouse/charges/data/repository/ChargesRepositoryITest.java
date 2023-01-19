@@ -81,7 +81,7 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
 
     @DisplayName("Repository returns unfiltered charges when no filter specified")
     @Test
-    void findCharges() throws IOException {
+    void findChargesUnfiltered() throws IOException {
         // given
         ChargesDocument chargesFullySatisfied = createChargesDocument("00006400", UUID.randomUUID().toString(),
                 "charge-api-request-data-1.json");
@@ -140,9 +140,9 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
         assertEquals(chargesOutstanding.getData().getStatus(), chargesAggregate.getChargesDocuments().get(1).getData().getStatus());
     }
 
-    @DisplayName("Repository returns charges first sorted by created_on and second sorted by charge_number with a pageable")
+    @DisplayName("Repository returns charges in order with correct page size")
     @Test
-    void findChargesSortedPageable() throws IOException {
+    void findChargesWithPaging() throws IOException {
         // given
         ChargesDocument chargeOne = createChargesDocument("00006400", UUID.randomUUID().toString(),
                 "charge-api-request-data-1.json");
@@ -160,17 +160,47 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
                 Arrays.asList(chargeOne, chargeTwo,
                         chargeThree, chargeFour));
 
-        // TODO: May not be valid anymore
         // when
         ChargesAggregate chargesAggregate = chargesRepository.findCharges("00006400",
-                Collections.emptyList(), 0, 4);
+                Collections.emptyList(), 0, 3);
 
         // then
-        assertEquals(4, chargesAggregate.getChargesDocuments().size());
+        assertEquals(4L, chargesAggregate.getTotalCharges().get(0).getCount());
+        assertEquals(3, chargesAggregate.getChargesDocuments().size());
         assertEquals(chargeThree.getId(), chargesAggregate.getChargesDocuments().get(0).getId());
         assertEquals(chargeFour.getId(), chargesAggregate.getChargesDocuments().get(1).getId());
         assertEquals(chargeTwo.getId(), chargesAggregate.getChargesDocuments().get(2).getId());
-        assertEquals(chargeOne.getId(), chargesAggregate.getChargesDocuments().get(3).getId());
+    }
+
+    @DisplayName("Repository returns charges in order with start index")
+    @Test
+    void findChargesWithSpecifiedStartIndex() throws IOException {
+        // given
+        ChargesDocument chargeOne = createChargesDocument("00006400", UUID.randomUUID().toString(),
+                "charge-api-request-data-1.json");
+        chargeOne.getData().chargeNumber(1).createdOn(LocalDate.of(2017, 7, 10));
+        ChargesDocument chargeTwo = createChargesDocument("00006400", UUID.randomUUID().toString(),
+                "charge-api-request-data-1.json");
+        chargeTwo.getData().chargeNumber(2).createdOn(LocalDate.of(2017, 7, 10));
+        ChargesDocument chargeThree = createChargesDocument("00006400", UUID.randomUUID().toString(),
+                "charge-api-request-data-1.json");
+        chargeThree.getData().chargeNumber(1).createdOn(LocalDate.of(2018, 7, 10));
+        ChargesDocument chargeFour = createChargesDocument("00006400", UUID.randomUUID().toString(),
+                "charge-api-request-data-1.json");
+        chargeFour.getData().chargeNumber(1).createdOn(LocalDate.of(2017, 10, 10));
+        chargesRepository.saveAll(
+                Arrays.asList(chargeOne, chargeTwo,
+                        chargeThree, chargeFour));
+
+        // when
+        ChargesAggregate chargesAggregate = chargesRepository.findCharges("00006400",
+                Collections.emptyList(), 2, 3);
+
+        // then
+        assertEquals(4L, chargesAggregate.getTotalCharges().get(0).getCount());
+        assertEquals(2, chargesAggregate.getChargesDocuments().size());
+        assertEquals(chargeTwo.getId(), chargesAggregate.getChargesDocuments().get(0).getId());
+        assertEquals(chargeOne.getId(), chargesAggregate.getChargesDocuments().get(1).getId());
     }
 
     @DisplayName("Repository returns charges first sorted by created_on and second sorted by charge_number")

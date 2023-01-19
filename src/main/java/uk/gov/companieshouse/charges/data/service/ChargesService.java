@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.domain.Example;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -123,7 +122,7 @@ public class ChargesService {
         ChargesAggregate chargesAggregate =
                 chargesRepository.findCharges(companyNumber, statusFilter,
                 Optional.ofNullable(requestCriteria.getStartIndex()).orElse(0),
-                Optional.ofNullable(requestCriteria.getItemsPerPage()).orElse(25));
+                Math.min(Optional.ofNullable(requestCriteria.getItemsPerPage()).orElse(25), 100));
 
         Optional<MetricsApi> companyMetrics =
                 companyMetricsApiService.getCompanyMetrics(companyNumber);
@@ -140,7 +139,7 @@ public class ChargesService {
         var chargesApi = new ChargesApi();
         chargesAggregate.getChargesDocuments().forEach(
                 charge -> chargesApi.addItemsItem(charge.getData()));
-        chargesApi.setTotalCount(chargesAggregate.getCount().get(0).getCount().intValue());
+        chargesApi.setTotalCount(chargesAggregate.getTotalCharges().get(0).getCount().intValue());
         MortgageApi mortgage = null;
 
         if (metrics.isPresent()) {

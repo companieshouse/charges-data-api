@@ -23,7 +23,7 @@ import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.charges.data.api.ChargesApiService;
 import uk.gov.companieshouse.charges.data.api.CompanyMetricsApiService;
 import uk.gov.companieshouse.charges.data.model.ChargesAggregate;
-import uk.gov.companieshouse.charges.data.model.ChargesCount;
+import uk.gov.companieshouse.charges.data.model.TotalCharges;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.model.RequestCriteria;
 import uk.gov.companieshouse.charges.data.repository.ChargesRepository;
@@ -142,7 +142,7 @@ class ChargesServiceTest {
     }
 
     @Test
-    void findChargesWithSortedPageable() throws IOException {
+    void findChargesWithPaging() throws IOException {
         trainMocks();
         Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,
                 new RequestCriteria().setItemsPerPage(1).setStartIndex(0));
@@ -156,7 +156,7 @@ class ChargesServiceTest {
     }
 
     @Test
-    void findChargesSortedWithoutPageable() throws IOException {
+    void findChargesWithoutPaging() throws IOException {
         trainMocks();
         Optional<ChargesApi> charges = chargesService.findCharges(companyNumber, new RequestCriteria());
         assertThat(charges.isPresent()).isTrue();
@@ -169,10 +169,17 @@ class ChargesServiceTest {
     }
 
     @Test
+    void findChargesWithPageSizeAboveLimit() throws IOException {
+        trainMocks();
+        chargesService.findCharges(companyNumber, new RequestCriteria().setItemsPerPage(101).setStartIndex(0));
+        verify(chargesRepository).findCharges(companyNumber, Collections.emptyList(), 0, 100);
+    }
+
+    @Test
     public void empty_charges_when_repository_returns_empty_result() {
         when(chargesRepository.findCharges(anyString(), any(), anyInt(), anyInt())).thenReturn(chargesAggregate);
         when(chargesAggregate.getChargesDocuments()).thenReturn(singletonList(document));
-        when(chargesAggregate.getCount()).thenReturn(singletonList(new ChargesCount(0L)));
+        when(chargesAggregate.getTotalCharges()).thenReturn(singletonList(new TotalCharges(0L)));
         Optional<ChargesApi> charges = chargesService.findCharges(companyNumber, new RequestCriteria());
         assertThat(charges.isPresent()).isTrue();
         assertThat(charges.get().getTotalCount()).isEqualTo(0);
@@ -184,7 +191,7 @@ class ChargesServiceTest {
     public void empty_charges_when_company_metrics_returns_no_result() {
         when(chargesRepository.findCharges(anyString(), any(), anyInt(), anyInt())).thenReturn(chargesAggregate);
         when(chargesAggregate.getChargesDocuments()).thenReturn(singletonList(document));
-        when(chargesAggregate.getCount()).thenReturn(singletonList(new ChargesCount(1L)));
+        when(chargesAggregate.getTotalCharges()).thenReturn(singletonList(new TotalCharges(1L)));
         Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,
                 new RequestCriteria().setItemsPerPage(1).setStartIndex(0));
         assertThat(charges.isPresent()).isTrue();
@@ -193,22 +200,6 @@ class ChargesServiceTest {
         assertThat(charges.get().getUnfilteredCount()).isEqualTo(0);
         assertThat(charges.get().getSatisfiedCount()).isEqualTo(0);
         assertEquals(charges.get().getItems().size(), charges.get().getTotalCount());
-    }
-
-    private ChargesDocument createCharges() throws IOException {
-        Document chargesBson = readData(chargesFile);
-        return mongoCustomConversions.convertValue(chargesBson, ChargesDocument.class);
-    }
-
-    private MetricsApi createMetrics() throws IOException {
-        Document chargesBson = readData(metricsFile);
-        return mongoCustomConversions.convertValue(chargesBson, MetricsApi.class);
-    }
-
-    private Document readData(Resource resource) throws IOException {
-        String data = FileCopyUtils.copyToString(new InputStreamReader(Objects.requireNonNull(
-                resource.getInputStream())));
-        return Document.parse(data);
     }
 
     @Test
@@ -306,21 +297,6 @@ class ChargesServiceTest {
 
     }
 
-    private Optional<ChargesDocument> populateChargesDocument(String chargeId, ChargeApi chargeApi) {
-
-        return Optional.of(new ChargesDocument()
-                .setId(chargeId).setCompanyNumber("1234").setData(chargeApi)
-                .setDeltaAt(OffsetDateTime.now()));
-
-    }
-    private ChargeApi populateCharge() {
-
-        ChargeApi chargeApi =  new ChargeApi();
-        chargeApi.setId("12345"); chargeApi.setChargeCode("0");
-        chargeApi.setChargeNumber(123);chargeApi.setEtag("1111111");
-        return chargeApi;
-    }
-
     @Test
     void when_charge_id_exist_ani_invoke_chs_kafka_api_un_successfully_invoked_then_delete_charge() {
         String chargeId = "123456789"; String contextId="1111111"; String companyNumber="1234";
@@ -341,9 +317,40 @@ class ChargesServiceTest {
 
     }
 
+    private Optional<ChargesDocument> populateChargesDocument(String chargeId, ChargeApi chargeApi) {
+
+        return Optional.of(new ChargesDocument()
+                .setId(chargeId).setCompanyNumber("1234").setData(chargeApi)
+                .setDeltaAt(OffsetDateTime.now()));
+
+    }
+    private ChargeApi populateCharge() {
+
+        ChargeApi chargeApi =  new ChargeApi();
+        chargeApi.setId("12345"); chargeApi.setChargeCode("0");
+        chargeApi.setChargeNumber(123);chargeApi.setEtag("1111111");
+        return chargeApi;
+    }
+
+    private ChargesDocument createCharges() throws IOException {
+        Document chargesBson = readData(chargesFile);
+        return mongoCustomConversions.convertValue(chargesBson, ChargesDocument.class);
+    }
+
+    private MetricsApi createMetrics() throws IOException {
+        Document chargesBson = readData(metricsFile);
+        return mongoCustomConversions.convertValue(chargesBson, MetricsApi.class);
+    }
+
+    private Document readData(Resource resource) throws IOException {
+        String data = FileCopyUtils.copyToString(new InputStreamReader(Objects.requireNonNull(
+                resource.getInputStream())));
+        return Document.parse(data);
+    }
+
     private void trainMocks() throws IOException {
         when(chargesRepository.findCharges(eq(companyNumber), any(), anyInt(), anyInt()))
-                .thenReturn(new ChargesAggregate(singletonList(new ChargesCount(1L)), singletonList(createCharges())));
+                .thenReturn(new ChargesAggregate(singletonList(new TotalCharges(1L)), singletonList(createCharges())));
         when(companyMetricsApiService.getCompanyMetrics(companyNumber))
                 .thenReturn(Optional.ofNullable(createMetrics()));
     }

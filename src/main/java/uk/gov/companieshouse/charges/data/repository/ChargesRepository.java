@@ -34,7 +34,7 @@ public interface ChargesRepository extends MongoRepository<ChargesDocument, Stri
                     + "{ 'sort_date': "
                         + "{ $ifNull: [ '$data.created_on', '$data.delivered_on' ] } } }",
             "{ '$sort': { 'sort_date': -1, 'data.charge_number': -1 } }",
-            "{ '$facet': { 'count': [{ '$count': 'count' }], "
+            "{ '$facet': { 'total_charges': [{ '$count': 'count' }], "
                     + "'charges_documents': [ { '$skip': ?2 }, { '$limit': ?3 } ] }}",
             })
     ChargesAggregate findCharges(final String companyNumber,

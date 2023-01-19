@@ -8,25 +8,27 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Document
 public class ChargesAggregate {
 
-    private List<ChargesCount> count;
+    @Field(value = "total_charges")
+    private List<TotalCharges> totalCharges;
 
     @Field(value = "charges_documents")
     private List<ChargesDocument> chargesDocuments;
 
-    public ChargesAggregate(List<ChargesCount> count, List<ChargesDocument> chargesDocuments) {
-        this.count = count;
+    public ChargesAggregate(List<TotalCharges> totalCharges,
+                            List<ChargesDocument> chargesDocuments) {
+        this.totalCharges = totalCharges;
         this.chargesDocuments = chargesDocuments;
     }
 
     public ChargesAggregate() {
     }
 
-    public List<ChargesCount> getCount() {
-        return count;
+    public List<TotalCharges> getTotalCharges() {
+        return totalCharges;
     }
 
-    public ChargesAggregate setCount(List<ChargesCount> count) {
-        this.count = count;
+    public ChargesAggregate setTotalCharges(List<TotalCharges> totalCharges) {
+        this.totalCharges = totalCharges;
         return this;
     }
 
