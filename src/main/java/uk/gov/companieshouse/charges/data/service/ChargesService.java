@@ -2,18 +2,11 @@ package uk.gov.companieshouse.charges.data.service;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.MatchOperation;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -25,12 +18,12 @@ import uk.gov.companieshouse.api.metrics.MortgageApi;
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.charges.data.api.ChargesApiService;
 import uk.gov.companieshouse.charges.data.api.CompanyMetricsApiService;
+import uk.gov.companieshouse.charges.data.model.ChargesAggregate;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.model.RequestCriteria;
 import uk.gov.companieshouse.charges.data.repository.ChargesRepository;
 import uk.gov.companieshouse.charges.data.transform.ChargesTransformer;
 import uk.gov.companieshouse.logging.Logger;
-
 
 @Service
 public class ChargesService {
@@ -120,23 +113,16 @@ public class ChargesService {
      * @return charges.
      */
     public Optional<ChargesApi> findCharges(final String companyNumber,
-            final RequestCriteria requestCriteria) {
+                                            final RequestCriteria requestCriteria) {
         List<ChargeApi.StatusEnum> statusFilter = new ArrayList<>();
         if ("outstanding".equals(requestCriteria.getFilter())) {
             statusFilter.add(ChargeApi.StatusEnum.SATISFIED);
             statusFilter.add(ChargeApi.StatusEnum.FULLY_SATISFIED);
         }
-
-        Pageable pageable;
-        if (requestCriteria.getItemsPerPage() == null || requestCriteria.getStartIndex() == null) {
-            pageable = Pageable.unpaged();
-        } else {
-            pageable = PageRequest.of(requestCriteria.getStartIndex(),
-                    requestCriteria.getItemsPerPage());
-        }
-
-        List<ChargesDocument> charges = chargesRepository.findCharges(companyNumber, statusFilter,
-                pageable);
+        ChargesAggregate chargesAggregate =
+                chargesRepository.findCharges(companyNumber, statusFilter,
+                Optional.ofNullable(requestCriteria.getStartIndex()).orElse(0),
+                Math.min(Optional.ofNullable(requestCriteria.getItemsPerPage()).orElse(25), 100));
 
         Optional<MetricsApi> companyMetrics =
                 companyMetricsApiService.getCompanyMetrics(companyNumber);
@@ -145,14 +131,15 @@ public class ChargesService {
             logger.error(String.format("No company metrics data found for company %s ",
                     companyNumber));
         }
-        return Optional.of(createChargesApi(charges, companyMetrics));
+        return Optional.of(createChargesApi(chargesAggregate, companyMetrics));
     }
 
-    private ChargesApi createChargesApi(List<ChargesDocument> charges,
+    private ChargesApi createChargesApi(ChargesAggregate chargesAggregate,
                                         Optional<MetricsApi> metrics) {
         var chargesApi = new ChargesApi();
-        charges.forEach(charge -> chargesApi.addItemsItem(charge.getData()));
-        chargesApi.setTotalCount(charges.size());
+        chargesAggregate.getChargesDocuments().forEach(
+                charge -> chargesApi.addItemsItem(charge.getData()));
+        chargesApi.setTotalCount(chargesAggregate.getTotalCharges().get(0).getCount().intValue());
         MortgageApi mortgage = null;
 
         if (metrics.isPresent()) {

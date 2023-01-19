@@ -106,12 +106,11 @@ public class ChargesController {
      * @param companyNumber the company number of the company
      * @return company charge api
      */
-    @GetMapping(value = {"/company/{company_number}/charges",
-            "/company/{company_number}/charges/{items_per_page}/{start_index}"})
+    @GetMapping(value = {"/company/{company_number}/charges"})
     public ResponseEntity<ChargesApi> getCompanyCharges(
             @PathVariable("company_number") final String companyNumber,
-            @PathVariable(value = "items_per_page", required = false) final Integer itemsPerPage,
-            @PathVariable(value = "start_index", required = false) final Integer startIndex,
+            @RequestParam(value = "items_per_page", required = false) final Integer itemsPerPage,
+            @RequestParam(value = "start_index", required = false) final Integer startIndex,
             @RequestParam(value = "filter", required = false) final String filter) {
         logger.debug(String.format("Started : getCompanyCharges Charges for Company Number %s ",
                 companyNumber

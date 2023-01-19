@@ -3,12 +3,12 @@ package uk.gov.companieshouse.charges.data.repository;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 import uk.gov.companieshouse.api.charges.ChargeApi;
+import uk.gov.companieshouse.charges.data.model.ChargesAggregate;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 
 @Repository
@@ -24,7 +24,8 @@ public interface ChargesRepository extends MongoRepository<ChargesDocument, Stri
      *
      * @param companyNumber The company number to match on.
      * @param filter The list of charge statuses to filter out.
-     * @param pageable The start index and page size to be returned.
+     * @param startIndex The start index.
+     * @param pageSize The page size to be returned.
      * @return The list of charges documents to be returned.
      */
     @Aggregation(pipeline = {
@@ -32,9 +33,12 @@ public interface ChargesRepository extends MongoRepository<ChargesDocument, Stri
             "{ '$addFields': "
                     + "{ 'sort_date': "
                         + "{ $ifNull: [ '$data.created_on', '$data.delivered_on' ] } } }",
-            "{ '$sort': { 'sort_date': -1, 'data.charge_number': -1 } }"
+            "{ '$sort': { 'sort_date': -1, 'data.charge_number': -1 } }",
+            "{ '$facet': { 'total_charges': [{ '$count': 'count' }], "
+                    + "'charges_documents': [ { '$skip': ?2 }, { '$limit': ?3 } ] }}",
             })
-    List<ChargesDocument> findCharges(final String companyNumber,
-                                      final List<ChargeApi.StatusEnum> filter,
-                                      final Pageable pageable);
+    ChargesAggregate findCharges(final String companyNumber,
+                                   final List<ChargeApi.StatusEnum> filter,
+                                   final int startIndex,
+                                   final int pageSize);
 }

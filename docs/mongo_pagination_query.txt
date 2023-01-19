@@ -1,0 +1,21 @@
+db.getCollection('company_mortgages').aggregate ([
+    {
+        '$match': { 'company_number': '00991343', 'data.status': { $nin: [] } }
+    },
+    {
+        '$addFields':
+            {
+                'sort_date': { $ifNull: [ '$data.created_on', '$data.delivered_on' ] }
+            }
+    },
+    {
+        '$sort': { 'sort_date': -1, 'data.charge_number': -1 }
+    },
+    {
+       '$facet':
+        {
+          'total_charges': [ { '$count': 'count' } ],
+          'charges_documents': [ { '$skip': 0 }, { '$limit': 25 } ]
+        }
+    }
+])

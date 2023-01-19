@@ -19,13 +19,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.util.ResourceUtils;
 import uk.gov.companieshouse.api.charges.ChargeApi;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
 import uk.gov.companieshouse.charges.data.AbstractIntegrationTest;
+import uk.gov.companieshouse.charges.data.model.ChargesAggregate;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument.Updated;
 
@@ -83,7 +81,7 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
 
     @DisplayName("Repository returns unfiltered charges when no filter specified")
     @Test
-    void findCharges() throws IOException {
+    void findChargesUnfiltered() throws IOException {
         // given
         ChargesDocument chargesFullySatisfied = createChargesDocument("00006400", UUID.randomUUID().toString(),
                 "charge-api-request-data-1.json");
@@ -103,11 +101,11 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
                         chargesPartSatisfied, chargesOutstanding));
 
         // when
-        List<ChargesDocument> chargesList = chargesRepository.findCharges(
-                "00006400", Collections.emptyList(), PageRequest.ofSize(4));
+        ChargesAggregate chargesAggregate = chargesRepository.findCharges(
+                "00006400", Collections.emptyList(), 0, 4);
 
         // then
-        assertEquals(4, chargesList.size());
+        assertEquals(4, chargesAggregate.getChargesDocuments().size());
     }
 
     @DisplayName("Repository returns outstanding and part-satisfied charges when filter specified")
@@ -131,20 +129,20 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
                         chargesPartSatisfied, chargesOutstanding));
 
         // when
-        List<ChargesDocument> chargesList = chargesRepository.findCharges(
-                "00006400", Arrays.asList(ChargeApi.StatusEnum.SATISFIED, ChargeApi.StatusEnum.FULLY_SATISFIED), PageRequest.ofSize(4));
+        ChargesAggregate chargesAggregate = chargesRepository.findCharges(
+                "00006400", Arrays.asList(ChargeApi.StatusEnum.SATISFIED, ChargeApi.StatusEnum.FULLY_SATISFIED), 0, 4);
 
         // then
-        assertEquals(2, chargesList.size());
-        assertEquals(chargesPartSatisfied.getId(), chargesList.get(0).getId());
-        assertEquals(chargesPartSatisfied.getData().getStatus(), chargesList.get(0).getData().getStatus());
-        assertEquals(chargesOutstanding.getId(), chargesList.get(1).getId());
-        assertEquals(chargesOutstanding.getData().getStatus(), chargesList.get(1).getData().getStatus());
+        assertEquals(2, chargesAggregate.getChargesDocuments().size());
+        assertEquals(chargesPartSatisfied.getId(), chargesAggregate.getChargesDocuments().get(0).getId());
+        assertEquals(chargesPartSatisfied.getData().getStatus(), chargesAggregate.getChargesDocuments().get(0).getData().getStatus());
+        assertEquals(chargesOutstanding.getId(), chargesAggregate.getChargesDocuments().get(1).getId());
+        assertEquals(chargesOutstanding.getData().getStatus(), chargesAggregate.getChargesDocuments().get(1).getData().getStatus());
     }
 
-    @DisplayName("Repository returns charges first sorted by created_on and second sorted by charge_number with a pageable")
+    @DisplayName("Repository returns charges in order with correct page size")
     @Test
-    void findChargesSortedPageable() throws IOException {
+    void findChargesWithPaging() throws IOException {
         // given
         ChargesDocument chargeOne = createChargesDocument("00006400", UUID.randomUUID().toString(),
                 "charge-api-request-data-1.json");
@@ -163,18 +161,46 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
                         chargeThree, chargeFour));
 
         // when
-        List<ChargesDocument> chargesList = chargesRepository.findCharges("00006400",
-                Collections.emptyList(),
-                PageRequest.of(0, 4,
-                        Sort.by(Sort.Order.desc("data.created_on"),
-                                Sort.Order.desc("data.charge_number"))));
+        ChargesAggregate chargesAggregate = chargesRepository.findCharges("00006400",
+                Collections.emptyList(), 0, 3);
 
         // then
-        assertEquals(4, chargesList.size());
-        assertEquals(chargeThree.getId(), chargesList.get(0).getId());
-        assertEquals(chargeFour.getId(), chargesList.get(1).getId());
-        assertEquals(chargeTwo.getId(), chargesList.get(2).getId());
-        assertEquals(chargeOne.getId(), chargesList.get(3).getId());
+        assertEquals(4L, chargesAggregate.getTotalCharges().get(0).getCount());
+        assertEquals(3, chargesAggregate.getChargesDocuments().size());
+        assertEquals(chargeThree.getId(), chargesAggregate.getChargesDocuments().get(0).getId());
+        assertEquals(chargeFour.getId(), chargesAggregate.getChargesDocuments().get(1).getId());
+        assertEquals(chargeTwo.getId(), chargesAggregate.getChargesDocuments().get(2).getId());
+    }
+
+    @DisplayName("Repository returns charges in order with start index")
+    @Test
+    void findChargesWithSpecifiedStartIndex() throws IOException {
+        // given
+        ChargesDocument chargeOne = createChargesDocument("00006400", UUID.randomUUID().toString(),
+                "charge-api-request-data-1.json");
+        chargeOne.getData().chargeNumber(1).createdOn(LocalDate.of(2017, 7, 10));
+        ChargesDocument chargeTwo = createChargesDocument("00006400", UUID.randomUUID().toString(),
+                "charge-api-request-data-1.json");
+        chargeTwo.getData().chargeNumber(2).createdOn(LocalDate.of(2017, 7, 10));
+        ChargesDocument chargeThree = createChargesDocument("00006400", UUID.randomUUID().toString(),
+                "charge-api-request-data-1.json");
+        chargeThree.getData().chargeNumber(1).createdOn(LocalDate.of(2018, 7, 10));
+        ChargesDocument chargeFour = createChargesDocument("00006400", UUID.randomUUID().toString(),
+                "charge-api-request-data-1.json");
+        chargeFour.getData().chargeNumber(1).createdOn(LocalDate.of(2017, 10, 10));
+        chargesRepository.saveAll(
+                Arrays.asList(chargeOne, chargeTwo,
+                        chargeThree, chargeFour));
+
+        // when
+        ChargesAggregate chargesAggregate = chargesRepository.findCharges("00006400",
+                Collections.emptyList(), 2, 3);
+
+        // then
+        assertEquals(4L, chargesAggregate.getTotalCharges().get(0).getCount());
+        assertEquals(2, chargesAggregate.getChargesDocuments().size());
+        assertEquals(chargeTwo.getId(), chargesAggregate.getChargesDocuments().get(0).getId());
+        assertEquals(chargeOne.getId(), chargesAggregate.getChargesDocuments().get(1).getId());
     }
 
     @DisplayName("Repository returns charges first sorted by created_on and second sorted by charge_number")
@@ -198,16 +224,15 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
                         chargeThree, chargeFour));
 
         // when
-        List<ChargesDocument> chargesList = chargesRepository.findCharges("00006400",
-                Collections.emptyList(),
-                PageRequest.of(0, 4));
+        ChargesAggregate chargesAggregate = chargesRepository.findCharges("00006400",
+                Collections.emptyList(), 0, 4);
 
         // then
-        assertEquals(4, chargesList.size());
-        assertEquals(chargeThree.getId(), chargesList.get(0).getId());
-        assertEquals(chargeFour.getId(), chargesList.get(1).getId());
-        assertEquals(chargeTwo.getId(), chargesList.get(2).getId());
-        assertEquals(chargeOne.getId(), chargesList.get(3).getId());
+        assertEquals(4, chargesAggregate.getChargesDocuments().size());
+        assertEquals(chargeThree.getId(), chargesAggregate.getChargesDocuments().get(0).getId());
+        assertEquals(chargeFour.getId(), chargesAggregate.getChargesDocuments().get(1).getId());
+        assertEquals(chargeTwo.getId(), chargesAggregate.getChargesDocuments().get(2).getId());
+        assertEquals(chargeOne.getId(), chargesAggregate.getChargesDocuments().get(3).getId());
     }
 
     @DisplayName("Repository returns filtered charges first sorted by created_on or delivered_on if null and second sorted by charge_number")
@@ -243,13 +268,13 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
 
         // when
 
-        List<ChargesDocument> chargesList = chargesRepository.findCharges("00006400", filter, PageRequest.of(0, 4));
+        ChargesAggregate chargesAggregate = chargesRepository.findCharges("00006400", filter, 0, 4);
 
         // then
-        assertEquals(3, chargesList.size());
-        assertEquals(chargeThree.getId(), chargesList.get(0).getId());
-        assertEquals(chargeFour.getId(), chargesList.get(1).getId());
-        assertEquals(chargeTwo.getId(), chargesList.get(2).getId());
+        assertEquals(3, chargesAggregate.getChargesDocuments().size());
+        assertEquals(chargeThree.getId(), chargesAggregate.getChargesDocuments().get(0).getId());
+        assertEquals(chargeFour.getId(), chargesAggregate.getChargesDocuments().get(1).getId());
+        assertEquals(chargeTwo.getId(), chargesAggregate.getChargesDocuments().get(2).getId());
     }
 
     private ChargesDocument createChargesDocument(String companyNumber, String chargeId, String filename) throws IOException {
