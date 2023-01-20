@@ -38,6 +38,7 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -173,6 +174,29 @@ class ChargesServiceTest {
         trainMocks();
         chargesService.findCharges(companyNumber, new RequestCriteria().setItemsPerPage(101).setStartIndex(0));
         verify(chargesRepository).findCharges(companyNumber, Collections.emptyList(), 0, 100);
+    }
+
+    @Test
+    void findChargesWithFilterNoResults() throws IOException {
+        when(chargesRepository.findCharges(eq(companyNumber), any(), anyInt(), anyInt()))
+                .thenReturn(new ChargesAggregate());
+        when(companyMetricsApiService.getCompanyMetrics(companyNumber))
+                .thenReturn(Optional.ofNullable(createMetrics()));
+        Optional<ChargesApi> chargeApi = chargesService.findCharges(companyNumber, new RequestCriteria().setFilter("outstanding"));
+        assertEquals(0, chargeApi.get().getTotalCount());
+        verify(chargesRepository).findCharges(companyNumber,
+                Arrays.asList(ChargeApi.StatusEnum.SATISFIED, ChargeApi.StatusEnum.FULLY_SATISFIED), 0, 25);
+    }
+
+    @Test
+    void findChargesWithNoResults() throws IOException {
+        when(chargesRepository.findCharges(eq(companyNumber), any(), anyInt(), anyInt()))
+                .thenReturn(new ChargesAggregate());
+        when(companyMetricsApiService.getCompanyMetrics(companyNumber))
+                .thenReturn(Optional.ofNullable(createMetrics()));
+        Optional<ChargesApi> chargeApi = chargesService.findCharges(companyNumber, new RequestCriteria());
+        assertEquals(0, chargeApi.get().getTotalCount());
+        verify(chargesRepository).findCharges(companyNumber, emptyList(), 0, 25);
     }
 
     @Test

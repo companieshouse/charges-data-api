@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.charges.data.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -21,6 +22,8 @@ public class ChargesAggregate {
     }
 
     public ChargesAggregate() {
+        this.totalCharges = new ArrayList<>();
+        this.chargesDocuments = new ArrayList<>();
     }
 
     public List<TotalCharges> getTotalCharges() {

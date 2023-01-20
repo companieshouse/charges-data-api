@@ -6,7 +6,6 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,6 +26,7 @@ import uk.gov.companieshouse.charges.data.model.ChargesAggregate;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument.Updated;
 
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -102,7 +102,7 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
 
         // when
         ChargesAggregate chargesAggregate = chargesRepository.findCharges(
-                "00006400", Collections.emptyList(), 0, 4);
+                "00006400", emptyList(), 0, 4);
 
         // then
         assertEquals(4, chargesAggregate.getChargesDocuments().size());
@@ -162,7 +162,7 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
 
         // when
         ChargesAggregate chargesAggregate = chargesRepository.findCharges("00006400",
-                Collections.emptyList(), 0, 3);
+                emptyList(), 0, 3);
 
         // then
         assertEquals(4L, chargesAggregate.getTotalCharges().get(0).getCount());
@@ -194,7 +194,7 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
 
         // when
         ChargesAggregate chargesAggregate = chargesRepository.findCharges("00006400",
-                Collections.emptyList(), 2, 3);
+                emptyList(), 2, 3);
 
         // then
         assertEquals(4L, chargesAggregate.getTotalCharges().get(0).getCount());
@@ -225,7 +225,7 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
 
         // when
         ChargesAggregate chargesAggregate = chargesRepository.findCharges("00006400",
-                Collections.emptyList(), 0, 4);
+                emptyList(), 0, 4);
 
         // then
         assertEquals(4, chargesAggregate.getChargesDocuments().size());
@@ -275,6 +275,34 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
         assertEquals(chargeThree.getId(), chargesAggregate.getChargesDocuments().get(0).getId());
         assertEquals(chargeFour.getId(), chargesAggregate.getChargesDocuments().get(1).getId());
         assertEquals(chargeTwo.getId(), chargesAggregate.getChargesDocuments().get(2).getId());
+    }
+
+    @DisplayName("Repository returns no charges when filtered and there are no matches")
+    @Test
+    void findChargesNoResultsWithFilter() {
+        // given
+        List<ChargeApi.StatusEnum> filter = Arrays.asList(ChargeApi.StatusEnum.SATISFIED, ChargeApi.StatusEnum.FULLY_SATISFIED);
+
+        // when
+
+        ChargesAggregate chargesAggregate = chargesRepository.findCharges("00006400", filter, 0, 4);
+
+        // then
+        assertEquals(0, chargesAggregate.getChargesDocuments().size());
+        assertEquals(0, chargesAggregate.getTotalCharges().size());
+    }
+
+    @DisplayName("Repository returns no charges when there are no matches")
+    @Test
+    void findChargesNoResults() {
+        // given
+        // when
+
+        ChargesAggregate chargesAggregate = chargesRepository.findCharges("00006400", emptyList(), 0, 4);
+
+        // then
+        assertEquals(0, chargesAggregate.getChargesDocuments().size());
+        assertEquals(0, chargesAggregate.getTotalCharges().size());
     }
 
     private ChargesDocument createChargesDocument(String companyNumber, String chargeId, String filename) throws IOException {
