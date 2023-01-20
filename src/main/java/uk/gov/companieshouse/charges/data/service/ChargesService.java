@@ -143,7 +143,8 @@ public class ChargesService {
         if (chargesAggregate.getTotalCharges().isEmpty()) {
             chargesApi.setTotalCount(0);
         } else {
-            chargesApi.setTotalCount(chargesAggregate.getTotalCharges().get(0).getCount().intValue());
+            chargesApi.setTotalCount(
+                    chargesAggregate.getTotalCharges().get(0).getCount().intValue());
         }
 
         MortgageApi mortgage = null;
