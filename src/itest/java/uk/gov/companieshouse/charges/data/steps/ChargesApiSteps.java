@@ -135,6 +135,7 @@ public class ChargesApiSteps {
 
         headers.set("ERIC-Identity" , "SOME_IDENTITY");
         headers.set("ERIC-Identity-Type", "key");
+        headers.set("ERIC-Authorised-Key-Privileges", "internal-app");
         return new HttpEntity(body, headers);
     }
 
@@ -358,6 +359,7 @@ public class ChargesApiSteps {
         headers.set(x_request_id, x_request_value);
         headers.set("ERIC-Identity" , "SOME_IDENTITY");
         headers.set("ERIC-Identity-Type", "key");
+        headers.set("ERIC-Authorised-Key-Privileges", "internal-app");
         var request = new HttpEntity<>(null, headers);
 
         ResponseEntity<Void> response = restTemplate.exchange(uri, HttpMethod.DELETE, request, Void.class, companyNumber, chargeId);
