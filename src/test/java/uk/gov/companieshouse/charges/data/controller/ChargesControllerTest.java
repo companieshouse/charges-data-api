@@ -1,12 +1,15 @@
 package uk.gov.companieshouse.charges.data.controller;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,7 +25,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.function.Executable;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,7 +36,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.server.ResponseStatusException;
 import uk.gov.companieshouse.api.charges.ChargesApi;
@@ -283,29 +284,17 @@ public class ChargesControllerTest {
     @Test()
     @DisplayName("When calling get charges - returns a 500 INTERNAL SERVER ERROR")
     void getChargeInternalServerError() throws Exception {
-        doThrow(RuntimeException.class)
-                .when(chargesService).getChargeDetails(any(), any());
+        when(chargesService.getChargeDetails(any(), any()))
+                .thenThrow(new RuntimeException());
 
-        assertThatThrownBy(() ->
-                mockMvc.perform(get(CHARGE_DETAILS_GET_URL)
-                            .contentType(APPLICATION_JSON)
-                            .header("x-request-id", X_REQUEST_ID)
-                            .header("ERIC-Identity" , "SOME_IDENTITY")
-                            .header("ERIC-Identity-Type", "KEY")
-                            .header("ERIC-Authorised-Key-Privileges", "internal-app")
-                            .content(gson.toJson(null)))
-                        .andExpect(status().isInternalServerError())
-                        .andExpect(content().string(""))
-        ).hasCause(new RuntimeException());
-
-//        mockMvc.perform(get(CHARGE_DETAILS_GET_URL)
-//                    .contentType(APPLICATION_JSON)
-//                    .header("x-request-id", X_REQUEST_ID)
-//                    .header("ERIC-Identity" , "SOME_IDENTITY")
-//                    .header("ERIC-Identity-Type", "KEY")
-//                    .header("ERIC-Authorised-Key-Privileges", "internal-app")
-//                    .content(gson.toJson(null)))
-//                .andExpect(status().isInternalServerError());
+        mockMvc.perform(get(CHARGE_DETAILS_GET_URL)
+                    .contentType(APPLICATION_JSON)
+                    .header("x-request-id", X_REQUEST_ID)
+                    .header("ERIC-Identity" , "SOME_IDENTITY")
+                    .header("ERIC-Identity-Type", "KEY")
+                    .header("ERIC-Authorised-Key-Privileges", "internal-app")
+                    .content(gson.toJson(null)))
+                .andExpect(status().isInternalServerError());
     }
 
     @Test
