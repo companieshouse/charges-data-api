@@ -1,10 +1,15 @@
 package uk.gov.companieshouse.charges.data.controller;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,25 +24,34 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.server.ResponseStatusException;
 import uk.gov.companieshouse.api.charges.ChargesApi;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
+import uk.gov.companieshouse.charges.data.config.ExceptionHandlerConfig;
+import uk.gov.companieshouse.charges.data.config.WebSecurityConfig;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument.Updated;
 import uk.gov.companieshouse.charges.data.service.ChargesService;
 import uk.gov.companieshouse.charges.data.transform.ChargesTransformer;
 import uk.gov.companieshouse.logging.Logger;
 
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
+@WebMvcTest(controllers = ChargesController.class)
+@ContextConfiguration(classes = {ChargesController.class, ExceptionHandlerConfig.class})
+@Import({WebSecurityConfig.class})
 public class ChargesControllerTest {
     private final String companyNumber = "02588581";
     private final String chargeId = "18588520";
@@ -45,20 +59,22 @@ public class ChargesControllerTest {
     private final String CHARGE_DETAILS_GET_URL = "/company/" + companyNumber + "/charges/" + chargeId;
     private final String CHARGES_GET_URL = "/company/" + companyNumber + "/charges";
     private final String CHARGES_DELETE_URL = String.format("/company/%s/charges/%s", companyNumber, chargeId);
+    private final String X_REQUEST_ID = "123";
 
 
+    @Autowired
     private MockMvc mockMvc;
 
-    @Mock
+    @MockBean
     private Logger logger;
 
-    @Mock
+    @MockBean
     private ChargesService chargesService;
 
     @InjectMocks
     private ChargesController chargesController;
 
-    @Mock
+    @MockBean
     private ChargesTransformer chargesTransformer;
 
     private final ObjectMapper mapper = new ObjectMapper();
@@ -70,8 +86,6 @@ public class ChargesControllerTest {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(chargesController)
-                .build();
         mapper.registerModule(new JavaTimeModule());
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     }
@@ -80,21 +94,207 @@ public class ChargesControllerTest {
     @DisplayName("Charges PUT request")
     public void callChargesPutRequest() throws Exception {
         InternalChargeApi request = createChargesDocument();
-        mockMvc.perform(put(CHARGES_PUT_URL).contentType(APPLICATION_JSON)
-                .header("x-request-id", companyNumber)
-                .content(gson.toJson(request))).andExpect(status().isOk());
+        mockMvc.perform(put(CHARGES_PUT_URL)
+                .contentType(APPLICATION_JSON)
+                .header("x-request-id", X_REQUEST_ID)
+                .header("ERIC-Identity" , "SOME_IDENTITY")
+                .header("ERIC-Identity-Type", "KEY")
+                .header("ERIC-Authorised-Key-Privileges", "internal-app")
+                .content(gson.toJson(request)))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Charges PUT request fails when Oauth2 has privileges")
+    public void callChargesPutRequestOauth2WithPrivileges() throws Exception {
+        InternalChargeApi request = createChargesDocument();
+        mockMvc.perform(put(CHARGES_PUT_URL)
+                        .contentType(APPLICATION_JSON)
+                        .header("x-request-id", X_REQUEST_ID)
+                        .header("ERIC-Identity" , "SOME_IDENTITY")
+                        .header("ERIC-Identity-Type", "OAUTH2")
+                        .header("ERIC-Authorised-Key-Privileges", "internal-app")
+                        .content(gson.toJson(request)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("Charges PUT request fails when missing privileges for KEY identity type")
+    public void callChargesPutRequestMissingAuthorisationForKeyType() throws Exception {
+        InternalChargeApi request = createChargesDocument();
+        mockMvc.perform(put(CHARGES_PUT_URL)
+                        .contentType(APPLICATION_JSON)
+                        .header("x-request-id", X_REQUEST_ID)
+                        .header("ERIC-Identity" , "SOME_IDENTITY")
+                        .header("ERIC-Identity-Type", "KEY")
+                        .content(gson.toJson(request)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("Charges PUT request fails when missing privileges for OAUTH2 identity type")
+    public void callChargesPutRequestMissingAuthorisationForOauth2Type() throws Exception {
+        InternalChargeApi request = createChargesDocument();
+        mockMvc.perform(put(CHARGES_PUT_URL)
+                        .contentType(APPLICATION_JSON)
+                        .header("x-request-id", X_REQUEST_ID)
+                        .header("ERIC-Identity" , "SOME_IDENTITY")
+                        .header("ERIC-Identity-Type", "OAUTH2")
+                        .content(gson.toJson(request)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("Charges PUT request fails when no ERIC-Identity")
+    public void chargesPutRequestFailsWhenUnauthenticatedWithNoIdentity() throws Exception {
+        InternalChargeApi request = createChargesDocument();
+        mockMvc.perform(put(CHARGES_PUT_URL)
+                        .contentType(APPLICATION_JSON)
+                        .header("x-request-id", X_REQUEST_ID)
+                        .content(gson.toJson(request)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("Charges PUT request fails when no ERIC-Identity-Type")
+    public void chargesPutRequestFailsWhenUnauthenticatedWithNoIdentityType() throws Exception {
+        InternalChargeApi request = createChargesDocument();
+        mockMvc.perform(put(CHARGES_PUT_URL)
+                        .contentType(APPLICATION_JSON)
+                        .header("x-request-id", X_REQUEST_ID)
+                        .header("ERIC-Identity" , "SOME_IDENTITY")
+                        .content(gson.toJson(request)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("Charges PUT request fails when no ERIC-Identity is present but has a valid ERIC-Identity-Type of Key")
+    public void chargesPutRequestFailsWhenUnauthenticatedWithNoIdentityButValidIdentityTypeOfKey() throws Exception {
+        InternalChargeApi request = createChargesDocument();
+        mockMvc.perform(put(CHARGES_PUT_URL)
+                        .contentType(APPLICATION_JSON)
+                        .header("x-request-id", X_REQUEST_ID)
+                        .header("ERIC-Identity-Type", "KEY")
+                        .content(gson.toJson(request)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("Charges PUT request fails when no ERIC-Identity is present but has a valid ERIC-Identity-Type of Oauth2")
+    public void chargesPutRequestFailsWhenUnauthenticatedWithNoIdentityButValidIdentityTypeOfOauth2() throws Exception {
+        InternalChargeApi request = createChargesDocument();
+        mockMvc.perform(put(CHARGES_PUT_URL)
+                        .contentType(APPLICATION_JSON)
+                        .header("x-request-id", X_REQUEST_ID)
+                        .header("ERIC-Identity-Type", "OAUTH2")
+                        .content(gson.toJson(request)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("Charges GET request")
+    public void callChargesGetRequest() throws Exception {
+        ChargesApi charge = new ChargesApi();
+        doReturn(Optional.of(charge))
+                .when(chargesService).findCharges(anyString(), any());
+        mockMvc.perform(get(CHARGES_GET_URL)
+                        .contentType(APPLICATION_JSON)
+                        .header("x-request-id", X_REQUEST_ID)
+                        .header("ERIC-Identity" , "SOME_IDENTITY")
+                        .header("ERIC-Identity-Type", "KEY")
+                        .header("ERIC-Authorised-Key-Privileges", "internal-app")
+                        .content(gson.toJson(null)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Charges GET request success with no privileges for Key ERIC-Identity-Type")
+    public void callChargesGetRequestWithNoPrivilegesForKeyType() throws Exception {
+        ChargesApi charge = new ChargesApi();
+        doReturn(Optional.of(charge))
+                .when(chargesService).findCharges(anyString(), any());
+        mockMvc.perform(get(CHARGES_GET_URL)
+                        .contentType(APPLICATION_JSON)
+                        .header("x-request-id", X_REQUEST_ID)
+                        .header("ERIC-Identity" , "SOME_IDENTITY")
+                        .header("ERIC-Identity-Type", "KEY")
+                        .content(gson.toJson(null)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Charges GET request success with no privileges for Oauth2 ERIC-Identity-Type")
+    public void callChargesGetRequestWithNoPrivilegesForOauth2Type() throws Exception {
+        ChargesApi charge = new ChargesApi();
+        doReturn(Optional.of(charge))
+                .when(chargesService).findCharges(anyString(), any());
+
+        mockMvc.perform(get(CHARGES_GET_URL)
+                        .contentType(APPLICATION_JSON)
+                        .header("x-request-id", X_REQUEST_ID)
+                        .header("ERIC-Identity" , "SOME_IDENTITY")
+                        .header("ERIC-Identity-Type", "OAUTH2")
+                        .content(gson.toJson(null)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Charges GET request fails when no ERIC-Identity")
+    public void chargesGetRequestFailsWhenUnauthenticatedWithNoIdentity() throws Exception {
+        mockMvc.perform(get(CHARGES_GET_URL)
+                        .contentType(APPLICATION_JSON)
+                        .header("x-request-id", X_REQUEST_ID)
+                        .content(gson.toJson(null)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("Charges GET request fails when no ERIC-Identity-Type")
+    public void chargesGetRequestFailsWhenUnauthenticatedWithNoIdentityType() throws Exception {
+        mockMvc.perform(get(CHARGES_GET_URL)
+                        .contentType(APPLICATION_JSON)
+                        .header("x-request-id", X_REQUEST_ID)
+                        .header("ERIC-Identity" , "SOME_IDENTITY")
+                        .content(gson.toJson(null)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("Charges GET request fails when no ERIC-Identity is present but has a valid ERIC-Identity-Type of Key")
+    public void chargesGetRequestFailsWhenUnauthenticatedWithNoIdentityButValidIdentityTypeOfKey() throws Exception {
+        mockMvc.perform(get(CHARGES_GET_URL)
+                        .contentType(APPLICATION_JSON)
+                        .header("x-request-id", X_REQUEST_ID)
+                        .header("ERIC-Identity-Type", "KEY")
+                        .content(gson.toJson(null)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("Charges GET request fails when no ERIC-Identity is present but has a valid ERIC-Identity-Type of Oauth2")
+    public void chargesGetRequestFailsWhenUnauthenticatedWithNoIdentityButValidIdentityTypeOfOauth2() throws Exception {
+        mockMvc.perform(get(CHARGES_GET_URL)
+                        .contentType(APPLICATION_JSON)
+                        .header("x-request-id", X_REQUEST_ID)
+                        .header("ERIC-Identity-Type", "OAUTH2")
+                        .content(gson.toJson(null)))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test()
     @DisplayName("When calling get charges - returns a 500 INTERNAL SERVER ERROR")
-    void getChargeInternalServerError(){
-        when(chargesService.getChargeDetails(any(), any())).thenThrow(RuntimeException.class);
+    void getChargeInternalServerError() throws Exception {
+        when(chargesService.getChargeDetails(any(), any()))
+                .thenThrow(new RuntimeException());
 
-        assertThatThrownBy(() ->
-                mockMvc.perform(get(CHARGE_DETAILS_GET_URL))
-                        .andExpect(status().isInternalServerError())
-                        .andExpect(content().string(""))
-        ).hasCause(new RuntimeException());
+        mockMvc.perform(get(CHARGE_DETAILS_GET_URL)
+                    .contentType(APPLICATION_JSON)
+                    .header("x-request-id", X_REQUEST_ID)
+                    .header("ERIC-Identity" , "SOME_IDENTITY")
+                    .header("ERIC-Identity-Type", "KEY")
+                    .header("ERIC-Authorised-Key-Privileges", "internal-app")
+                    .content(gson.toJson(null)))
+                .andExpect(status().isInternalServerError());
     }
 
     @Test
@@ -103,7 +303,12 @@ public class ChargesControllerTest {
         InternalChargeApi request = createChargesDocument();
         ChargesDocument document = transform(companyNumber, chargeId, request);
         when(chargesService.getChargeDetails(companyNumber, chargeId)).thenReturn(Optional.of(document.getData()));
-        mockMvc.perform(get(CHARGE_DETAILS_GET_URL)).andExpect(status().isOk());
+        mockMvc.perform(get(CHARGE_DETAILS_GET_URL)
+                    .header("x-request-id", X_REQUEST_ID)
+                    .header("ERIC-Identity" , "SOME_IDENTITY")
+                    .header("ERIC-Identity-Type", "KEY")
+                    .header("ERIC-Authorised-Key-Privileges", "internal-app"))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -111,7 +316,11 @@ public class ChargesControllerTest {
     void getCharges() throws Exception {
         var charges = new ChargesApi();
         when(chargesService.findCharges(any(), any())).thenReturn(Optional.of(charges));
-        mockMvc.perform(get(CHARGES_GET_URL))
+        mockMvc.perform(get(CHARGES_GET_URL)
+                        .header("x-request-id", X_REQUEST_ID)
+                        .header("ERIC-Identity" , "SOME_IDENTITY")
+                        .header("ERIC-Identity-Type", "KEY")
+                        .header("ERIC-Authorised-Key-Privileges", "internal-app"))
                 .andExpect(status().isOk());
     }
 
@@ -150,7 +359,10 @@ public class ChargesControllerTest {
 
         mockMvc.perform(delete(CHARGES_DELETE_URL)
                         .contentType(APPLICATION_JSON)
-                        .header("x-request-id", "123456789"))
+                        .header("x-request-id", X_REQUEST_ID)
+                        .header("ERIC-Identity" , "SOME_IDENTITY")
+                        .header("ERIC-Identity-Type", "KEY")
+                        .header("ERIC-Authorised-Key-Privileges", "internal-app"))
                 .andExpect(status().isOk());
     }
 
@@ -162,7 +374,10 @@ public class ChargesControllerTest {
 
         mockMvc.perform(delete(CHARGES_DELETE_URL)
                         .contentType(APPLICATION_JSON)
-                        .header("x-request-id", "123456789"))
+                        .header("x-request-id", X_REQUEST_ID)
+                        .header("ERIC-Identity" , "SOME_IDENTITY")
+                        .header("ERIC-Identity-Type", "KEY")
+                        .header("ERIC-Authorised-Key-Privileges", "internal-app"))
                 .andExpect(status().isNotFound());
     }
 
@@ -174,7 +389,10 @@ public class ChargesControllerTest {
 
         mockMvc.perform(delete(CHARGES_DELETE_URL)
                         .contentType(APPLICATION_JSON)
-                        .header("x-request-id", "123456789"))
+                    .header("x-request-id", X_REQUEST_ID)
+                    .header("ERIC-Identity" , "SOME_IDENTITY")
+                    .header("ERIC-Identity-Type", "KEY")
+                    .header("ERIC-Authorised-Key-Privileges", "internal-app"))
                 .andExpect(status().isBadRequest());
     }
 
@@ -186,7 +404,10 @@ public class ChargesControllerTest {
 
         mockMvc.perform(put(CHARGES_DELETE_URL)
                         .contentType(APPLICATION_JSON)
-                        .header("x-request-id", "123456789"))
+                        .header("x-request-id", X_REQUEST_ID)
+                        .header("ERIC-Identity" , "SOME_IDENTITY")
+                        .header("ERIC-Identity-Type", "KEY")
+                        .header("ERIC-Authorised-Key-Privileges", "internal-app"))
                 .andExpect(status().isMethodNotAllowed());
     }
 
@@ -199,7 +420,10 @@ public class ChargesControllerTest {
 
         mockMvc.perform(delete(CHARGES_DELETE_URL)
                         .contentType(APPLICATION_JSON)
-                        .header("x-request-id", "123456789"))
+                        .header("x-request-id", X_REQUEST_ID)
+                        .header("ERIC-Identity" , "SOME_IDENTITY")
+                        .header("ERIC-Identity-Type", "KEY")
+                        .header("ERIC-Authorised-Key-Privileges", "internal-app"))
                 .andExpect(status().isInternalServerError());
     }
 
@@ -212,7 +436,10 @@ public class ChargesControllerTest {
 
         mockMvc.perform(delete(CHARGES_DELETE_URL)
                         .contentType(APPLICATION_JSON)
-                        .header("x-request-id", "123456789"))
+                        .header("x-request-id", X_REQUEST_ID)
+                        .header("ERIC-Identity" , "SOME_IDENTITY")
+                        .header("ERIC-Identity-Type", "KEY")
+                        .header("ERIC-Authorised-Key-Privileges", "internal-app"))
                 .andExpect(status().isServiceUnavailable());
     }
 
@@ -225,7 +452,10 @@ public class ChargesControllerTest {
 
         mockMvc.perform(delete(CHARGES_DELETE_URL)
                         .contentType(APPLICATION_JSON)
-                        .header("x-request-id", "123456789"))
+                        .header("x-request-id", X_REQUEST_ID)
+                        .header("ERIC-Identity" , "SOME_IDENTITY")
+                        .header("ERIC-Identity-Type", "KEY")
+                        .header("ERIC-Authorised-Key-Privileges", "internal-app"))
                 .andExpect(status().isBadGateway());
     }
 }
