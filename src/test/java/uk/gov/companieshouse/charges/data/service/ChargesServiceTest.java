@@ -2,6 +2,7 @@ package uk.gov.companieshouse.charges.data.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.Document;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -101,6 +102,7 @@ class ChargesServiceTest {
 
    @Test
     public void find_charges_should_return_charges() throws IOException {
+        Assertions.fail();
         trainMocks();
         Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,
                 new RequestCriteria().setItemsPerPage(1).setStartIndex(0));
