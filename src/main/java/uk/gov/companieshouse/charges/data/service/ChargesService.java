@@ -29,7 +29,7 @@ import uk.gov.companieshouse.logging.Logger;
 public class ChargesService {
 
     private final Logger logger;
-    private final ChargesApiService chargesApiService;
+    //private final ChargesApiService chargesApiService;
     private final ChargesTransformer chargesTransformer;
     private final ChargesRepository chargesRepository;
     private final CompanyMetricsApiService companyMetricsApiService;
