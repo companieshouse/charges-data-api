@@ -72,7 +72,8 @@ public class ChargesService {
                 ChargesDocument charges =
                         this.chargesTransformer.transform(companyNumber, chargeId, requestBody);
 
-                saveAndInvokeChsKafkaApi(contextId, companyNumber, chargeId, charges);
+                saveAndInvokeChsKafkaApi(contextId, companyNumber, chargeId, charges,
+                        chargesDocument);
             } else {
                 logger.error("Charge not saved "
                         + "as record provided is older than the one already stored"
@@ -82,7 +83,7 @@ public class ChargesService {
                 () -> {
                     ChargesDocument charges =
                             this.chargesTransformer.transform(companyNumber, chargeId, requestBody);
-                    saveAndInvokeChsKafkaApi(contextId, companyNumber, chargeId, charges);
+                    saveAndInvokeChsKafkaApi(contextId, companyNumber, chargeId, charges, null);
                 });
     }
 
@@ -169,16 +170,26 @@ public class ChargesService {
     }
 
     private void saveAndInvokeChsKafkaApi(String contextId, String companyNumber,
-                                          String chargeId, ChargesDocument charges) {
+                                          String chargeId, ChargesDocument charges,
+                                          ChargesDocument existingCharges) {
 
+        chargesRepository.save(charges);
         logger.debug(
                 String.format("Invoking chs-kafka-api for chargeId %s company number %s ",
                         chargeId,
                         companyNumber));
-        ApiResponse<Void> res = chargesApiService.invokeChsKafkaApi(contextId,
-                companyNumber,
-                chargeId);
-        HttpStatus httpStatus = HttpStatus.resolve(res.getStatusCode());
+        ApiResponse<Void> res = null;
+        try {
+            res = chargesApiService.invokeChsKafkaApi(contextId,
+                    companyNumber,
+                    chargeId);
+        } catch (ResponseStatusException ex) {
+            Optional.ofNullable(existingCharges)
+                    .ifPresentOrElse(chargesRepository::save,
+                            () -> chargesRepository.deleteById(chargeId));
+            throw ex;
+        }
+        HttpStatus httpStatus = res != null ? HttpStatus.resolve(res.getStatusCode()) : null;
         if (httpStatus == null || !httpStatus.is2xxSuccessful()) {
             throw new ResponseStatusException(httpStatus != null
                     ? httpStatus : HttpStatus.INTERNAL_SERVER_ERROR, "invokeChsKafkaApi");
@@ -188,11 +199,6 @@ public class ChargesService {
                 contextId,
                 companyNumber));
 
-        this.chargesRepository.save(charges);
-        logger.info(String.format("ChsKafka api CHANGED invoked "
-                + "successfully for contextId %s and company number %s",
-                contextId,
-                companyNumber));
     }
 
     /**

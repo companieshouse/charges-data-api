@@ -1,43 +1,5 @@
 package uk.gov.companieshouse.charges.data.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.bson.Document;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.Resource;
-import org.springframework.dao.DataAccessResourceFailureException;
-import org.springframework.http.HttpStatus;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.web.server.ResponseStatusException;
-import uk.gov.companieshouse.api.charges.ChargeApi;
-import uk.gov.companieshouse.api.charges.ChargesApi;
-import uk.gov.companieshouse.api.metrics.MetricsApi;
-import uk.gov.companieshouse.api.model.ApiResponse;
-import uk.gov.companieshouse.charges.data.api.ChargesApiService;
-import uk.gov.companieshouse.charges.data.api.CompanyMetricsApiService;
-import uk.gov.companieshouse.charges.data.model.ChargesAggregate;
-import uk.gov.companieshouse.charges.data.model.TotalCharges;
-import uk.gov.companieshouse.charges.data.model.ChargesDocument;
-import uk.gov.companieshouse.charges.data.model.RequestCriteria;
-import uk.gov.companieshouse.charges.data.repository.ChargesRepository;
-import uk.gov.companieshouse.charges.data.transform.ChargesTransformer;
-import uk.gov.companieshouse.logging.Logger;
-
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.time.OffsetDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Optional;
-
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -51,6 +13,58 @@ import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static uk.gov.companieshouse.api.charges.ChargeApi.AssetsCeasedReleasedEnum.PART_PROPERTY_RELEASED;
+import static uk.gov.companieshouse.api.charges.ChargeApi.StatusEnum.PART_SATISFIED;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import org.bson.Document;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.Resource;
+import org.springframework.dao.DataAccessResourceFailureException;
+import org.springframework.http.HttpStatus;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.server.ResponseStatusException;
+import uk.gov.companieshouse.api.charges.ChargeApi;
+import uk.gov.companieshouse.api.charges.ChargeLink;
+import uk.gov.companieshouse.api.charges.ChargesApi;
+import uk.gov.companieshouse.api.charges.ClassificationApi;
+import uk.gov.companieshouse.api.charges.InsolvencyCasesApi;
+import uk.gov.companieshouse.api.charges.InternalChargeApi;
+import uk.gov.companieshouse.api.charges.InternalData;
+import uk.gov.companieshouse.api.charges.ParticularsApi;
+import uk.gov.companieshouse.api.charges.PersonsEntitledApi;
+import uk.gov.companieshouse.api.charges.ScottishAlterationsApi;
+import uk.gov.companieshouse.api.charges.SecuredDetailsApi;
+import uk.gov.companieshouse.api.charges.TransactionsApi;
+import uk.gov.companieshouse.api.metrics.MetricsApi;
+import uk.gov.companieshouse.api.model.ApiResponse;
+import uk.gov.companieshouse.charges.data.api.ChargesApiService;
+import uk.gov.companieshouse.charges.data.api.CompanyMetricsApiService;
+import uk.gov.companieshouse.charges.data.model.ChargesAggregate;
+import uk.gov.companieshouse.charges.data.model.ChargesDocument;
+import uk.gov.companieshouse.charges.data.model.RequestCriteria;
+import uk.gov.companieshouse.charges.data.model.TotalCharges;
+import uk.gov.companieshouse.charges.data.repository.ChargesRepository;
+import uk.gov.companieshouse.charges.data.transform.ChargesTransformer;
+import uk.gov.companieshouse.logging.Logger;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -90,6 +104,8 @@ class ChargesServiceTest {
     @Mock
     private ChargesDocument document;
 
+    private final InternalChargeApi internalChargeApi = buildInternalCharges();
+
     /**
      * Reset the mocks so defaults are returned and invocation counters cleared.
      */
@@ -100,7 +116,7 @@ class ChargesServiceTest {
     }
 
    @Test
-    public void find_charges_should_return_charges() throws IOException {
+    void find_charges_should_return_charges() throws IOException {
         trainMocks();
         Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,
                 new RequestCriteria().setItemsPerPage(1).setStartIndex(0));
@@ -200,7 +216,7 @@ class ChargesServiceTest {
     }
 
     @Test
-    public void empty_charges_when_repository_returns_empty_result() {
+     void empty_charges_when_repository_returns_empty_result() {
         when(chargesRepository.findCharges(anyString(), any(), anyInt(), anyInt())).thenReturn(chargesAggregate);
         when(chargesAggregate.getChargesDocuments()).thenReturn(singletonList(document));
         when(chargesAggregate.getTotalCharges()).thenReturn(singletonList(new TotalCharges(0L)));
@@ -212,7 +228,7 @@ class ChargesServiceTest {
     }
 
     @Test
-    public void empty_charges_when_company_metrics_returns_no_result() {
+     void empty_charges_when_company_metrics_returns_no_result() {
         when(chargesRepository.findCharges(anyString(), any(), anyInt(), anyInt())).thenReturn(chargesAggregate);
         when(chargesAggregate.getChargesDocuments()).thenReturn(singletonList(document));
         when(chargesAggregate.getTotalCharges()).thenReturn(singletonList(new TotalCharges(1L)));
@@ -259,7 +275,8 @@ class ChargesServiceTest {
     @Test
     void delete_charge_id_and_check_it_does_not_exist_in_database() {
         String chargeId = "123456789";
-        Mockito.when(chargesApiService.invokeChsKafkaApiWithDeleteEvent(anyString(), anyString(), anyString(), any())).thenReturn(new ApiResponse<>(200, null));
+        Mockito.when(chargesApiService.invokeChsKafkaApiWithDeleteEvent(anyString(), anyString(), anyString(), any()))
+                .thenReturn(new ApiResponse<>(200, null));
         Mockito.when(chargesRepository.findById(chargeId)).thenReturn(
                 populateChargesDocument(chargeId,populateCharge()));
 
@@ -274,7 +291,8 @@ class ChargesServiceTest {
     @Test
     void when_charge_id_exist_ani_invoke_chs_kafka_api_successfully_invoked_then_delete_charge() {
         String chargeId = "123456789"; String contextId="1111111"; String companyNumber="1234";
-        Mockito.when(chargesApiService.invokeChsKafkaApiWithDeleteEvent(anyString(), anyString(), anyString(), any())).thenReturn(new ApiResponse<>(200, null));
+        Mockito.when(chargesApiService.invokeChsKafkaApiWithDeleteEvent(anyString(), anyString(), anyString(), any()))
+                        .thenReturn(new ApiResponse<>(200, null));
         Mockito.when(chargesRepository.findById(chargeId)).thenReturn(
                 populateChargesDocument(chargeId,populateCharge()));
 
@@ -341,6 +359,66 @@ class ChargesServiceTest {
 
     }
 
+
+    @Test
+    void testInsertChargeHandlesCompensatoryTransactionWhenServiceUnavailableThrown() {
+        // given
+        String chargeId = "123456789";
+        String contextId = "1111111";
+        String companyNumber = "1234";
+        ChargesDocument chargesDocument = new ChargesDocument()
+                .setId("123456789")
+                .setCompanyNumber("1234");
+
+        when(chargesTransformer.transform(any(), any(), any(InternalChargeApi.class))).thenReturn(
+                chargesDocument);
+        when(chargesRepository.findById(any())).thenReturn(Optional.empty());
+        when(chargesApiService.invokeChsKafkaApi(any(), any(), any())).thenThrow(
+                ResponseStatusException.class);
+
+        // When
+        Executable executable = () -> chargesService.upsertCharges(contextId, companyNumber,
+                chargeId, internalChargeApi);
+
+        // then
+        assertThrows(ResponseStatusException.class, executable);
+        verify(chargesRepository).save(chargesDocument);
+        verify(chargesRepository).deleteById(chargesDocument.getId());
+    }
+
+    @Test
+    void testUpdateChargeHandlesCompensatoryTransactionWhenServiceUnavailableThrown() {
+        // given
+        String chargeId = "123456789";
+        String contextId = "1111111";
+        String companyNumber = "1234";
+        internalChargeApi.getInternalData()
+                .setDeltaAt(OffsetDateTime.parse("2023-11-06T15:30:00.000000Z"));
+        ChargesDocument deltaChargesDocument = new ChargesDocument().setId("chargesIdDELTA")
+                .setCompanyNumber("012345678")
+                .setDeltaAt(OffsetDateTime.parse("2023-11-06T16:30:00.000000Z"));
+
+        ChargesDocument existingDocument = new ChargesDocument().setId("chargesIdEXISTING")
+                .setCompanyNumber("012345678")
+                .setDeltaAt(OffsetDateTime.parse("2023-11-06T12:00:00.000000Z"));
+
+        when(chargesTransformer.transform(any(), any(), any(InternalChargeApi.class))).thenReturn(
+                deltaChargesDocument);
+        when(chargesRepository.findById(any())).thenReturn(Optional.of(existingDocument));
+        when(chargesApiService.invokeChsKafkaApi(any(), any(), any())).thenThrow(
+                ResponseStatusException.class);
+
+        // When
+        Executable executable = () -> chargesService.upsertCharges(contextId, companyNumber,
+                chargeId, internalChargeApi);
+
+        // then
+        assertThrows(ResponseStatusException.class, executable);
+        verify(chargesRepository).save(deltaChargesDocument);
+        verify(chargesRepository).save(existingDocument);
+    }
+
+
     private Optional<ChargesDocument> populateChargesDocument(String chargeId, ChargeApi chargeApi) {
 
         return Optional.of(new ChargesDocument()
@@ -377,5 +455,48 @@ class ChargesServiceTest {
                 .thenReturn(new ChargesAggregate(singletonList(new TotalCharges(1L)), singletonList(createCharges())));
         when(companyMetricsApiService.getCompanyMetrics(companyNumber))
                 .thenReturn(Optional.ofNullable(createMetrics()));
+    }
+
+    private InternalChargeApi buildInternalCharges() {
+        InternalChargeApi output = new InternalChargeApi();
+
+        ChargeApi externalData = new ChargeApi();
+        ClassificationApi classificationApi = new ClassificationApi();
+        ParticularsApi particularsApi = new ParticularsApi();
+        SecuredDetailsApi securedDetailsApi = new SecuredDetailsApi();
+        ScottishAlterationsApi scottishAlterationsApi = new ScottishAlterationsApi();
+        List<PersonsEntitledApi> personsEntitled = new ArrayList<>();
+        List<TransactionsApi> transactions = new ArrayList<>();
+        List<InsolvencyCasesApi> insolvencyCases = new ArrayList<>();
+        ChargeLink chargeLink = new ChargeLink();
+        externalData.setEtag("etag");
+        externalData.setId("id");
+        externalData.setChargeCode("chargeCode");
+        externalData.setClassification(classificationApi);
+        externalData.setChargeNumber(22);
+        externalData.setStatus(PART_SATISFIED);
+        externalData.setAssetsCeasedReleased(PART_PROPERTY_RELEASED);
+        externalData.setAcquiredOn(null);
+        externalData.setDeliveredOn(null);
+        externalData.setResolvedOn(null);
+        externalData.setCoveringInstrumentDate(null);
+        externalData.createdOn(null);
+        externalData.setSatisfiedOn(null);
+        externalData.setParticulars(particularsApi);
+        externalData.setSecuredDetails(securedDetailsApi);
+        externalData.setScottishAlterations(scottishAlterationsApi);
+        externalData.setMoreThanFourPersonsEntitled(false);
+        externalData.setPersonsEntitled(personsEntitled);
+        externalData.setTransactions(transactions);
+        externalData.setInsolvencyCases(insolvencyCases);
+        externalData.setLinks(chargeLink);
+
+        InternalData internalData = new InternalData();
+        internalData.setDeltaAt(OffsetDateTime.parse("2022-01-13T00:00:00Z"));
+        internalData.setUpdatedBy("updatedBy");
+        output.setExternalData(externalData);
+        output.setInternalData(internalData);
+
+        return output;
     }
 }
