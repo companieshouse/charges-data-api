@@ -187,6 +187,7 @@ public class ChargesService {
             Optional.ofNullable(existingCharges)
                     .ifPresentOrElse(chargesRepository::save,
                             () -> chargesRepository.deleteById(chargeId));
+            throw ex;
         }
         HttpStatus httpStatus = res != null ? HttpStatus.resolve(res.getStatusCode()) : null;
         if (httpStatus == null || !httpStatus.is2xxSuccessful()) {
