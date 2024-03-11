@@ -9,6 +9,8 @@
 	</parent>
 
 	<artifactId>charges-data-api</artifactId>
+
+
 	<version>unversioned</version>
 	<name>charges-data-api</name>
 	<description>Charges Data Api</description>
