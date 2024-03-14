@@ -75,7 +75,7 @@ class CompanyMetricsApiServiceTest {
         when(privateCompanyMetricsResourceHandler.getCompanyMetrics(Mockito.any())).thenReturn(
                 privateCompanyMetricsGet);
         when(privateCompanyMetricsGet.execute()).thenThrow(ApiErrorResponseException.class);
-        assertThrows(ResponseStatusException.class, () -> companyMetricsApiService.getCompanyMetrics("00006400"));
+        assertThrows(IllegalArgumentException.class, () -> companyMetricsApiService.getCompanyMetrics("00006400"));
         verify(apiClientService, times(1)).getInternalApiClient();
         verify(privateCompanyMetricsResourceHandler, times(1)).getCompanyMetrics(Mockito.any());
         verify(privateCompanyMetricsGet, times(1)).execute();
