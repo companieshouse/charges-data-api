@@ -19,7 +19,6 @@ public class EricTokenAuthenticationFilter extends OncePerRequestFilter {
         this.logger = logger;
     }
 
-    @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 

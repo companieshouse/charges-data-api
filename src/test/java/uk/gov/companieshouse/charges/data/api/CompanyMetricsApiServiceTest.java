@@ -13,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.server.ResponseStatusException;
 import uk.gov.companieshouse.api.InternalApiClient;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
@@ -29,7 +28,7 @@ class CompanyMetricsApiServiceTest {
     @Mock
     private ApiClientService apiClientService;
 
-    private final Logger logger = Mockito.mock(Logger.class);;
+    private final Logger logger = Mockito.mock(Logger.class);
 
     @Mock
     private InternalApiClient internalApiClient;
