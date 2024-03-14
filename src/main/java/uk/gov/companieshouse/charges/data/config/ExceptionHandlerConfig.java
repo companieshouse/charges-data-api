@@ -96,7 +96,7 @@ public class ExceptionHandlerConfig {
                     HttpStatus.NOT_EXTENDED);
         }
 
-        if (HttpStatus.SERVICE_UNAVAILABLE.equals(ex.getStatus())) {
+        if (HttpStatus.SERVICE_UNAVAILABLE.equals(ex.getStatusCode())) {
             return new ResponseEntity<>(responseAndLogBuilderHandler(ex,request),
                     HttpStatus.SERVICE_UNAVAILABLE);
         }

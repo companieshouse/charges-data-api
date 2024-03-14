@@ -24,7 +24,7 @@ import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.logging.Logger;
 
 @ExtendWith(MockitoExtension.class)
-public class CompanyMetricsApiServiceTest {
+class CompanyMetricsApiServiceTest {
 
     @Mock
     private ApiClientService apiClientService;
