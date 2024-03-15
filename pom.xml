@@ -9,8 +9,6 @@
 	</parent>
 
 	<artifactId>charges-data-api</artifactId>
-
-
 	<version>unversioned</version>
 	<name>charges-data-api</name>
 	<description>Charges Data Api</description>
@@ -24,9 +22,9 @@
 
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
-		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+		<maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
 		<spring.boot.version>3.2.3</spring.boot.version>
-		<assertj-core.version>3.22.0</assertj-core.version>
+		<assertj-core.version>3.25.3</assertj-core.version>
 		<test-containers.version>1.19.7</test-containers.version>
 		<maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
 		<maven-build-helper-plugin.version>3.5.0</maven-build-helper-plugin.version>
@@ -36,16 +34,16 @@
 		<api-sdk-manager-java-library.version>3.0.5</api-sdk-manager-java-library.version>
 		<api-helper-java-library.version>3.0.1</api-helper-java-library.version>
 		<cucumber-java.version>7.15.0</cucumber-java.version>
-		<jib-maven-plugin.version>3.4.0</jib-maven-plugin.version>
+		<jib-maven-plugin.version>3.4.1</jib-maven-plugin.version>
 		<skip.integration.tests>false</skip.integration.tests>
 		<skip.unit.tests>false</skip.unit.tests>
 		<private-api-sdk-java.version>4.0.76</private-api-sdk-java.version>
-		<io-cucumber.version>7.2.3</io-cucumber.version>
+		<io-cucumber.version>7.15.0</io-cucumber.version>
 		<wiremock.standalone.version>3.0.1</wiremock.standalone.version>
 		<maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
 
 		<!--sonar configuration-->
-		<sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
+		<sonar-maven-plugin.version>3.10.0.2594</sonar-maven-plugin.version>
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 		<sonar.projectKey>uk.gov.companieshouse:charges-data-api</sonar.projectKey>
 		<sonar.sources>src/main</sonar.sources>
@@ -223,7 +221,7 @@
 		<dependency>
 			<groupId>io.cucumber</groupId>
 			<artifactId>cucumber-java</artifactId>
-			<version>7.8.1</version>
+			<version>${io-cucumber.version}</version>
 			<scope>compile</scope>
 		</dependency>
 
@@ -315,7 +313,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>3.5.0</version>
+				<version>${maven-build-helper-plugin.version}</version>
 				<executions>
 					<execution>
 						<id>add-integration-test-sources</id>
