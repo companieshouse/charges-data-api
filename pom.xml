@@ -43,7 +43,7 @@
 		<maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
 
 		<!--sonar configuration-->
-		<sonar-maven-plugin.version>3.10.0.2594</sonar-maven-plugin.version>
+		<sonar-maven-plugin.version>3.11.0.3922</sonar-maven-plugin.version>
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 		<sonar.projectKey>uk.gov.companieshouse:charges-data-api</sonar.projectKey>
 		<sonar.sources>src/main</sonar.sources>
