@@ -251,7 +251,7 @@ class ChargesServiceTest {
             chargesService.deleteCharge("x-request-id", chargeId);
         });
 
-        assertEquals(HttpStatus.NOT_FOUND, ((ResponseStatusException)exception).getStatus());
+        assertEquals(HttpStatus.NOT_FOUND, ((ResponseStatusException)exception).getStatusCode());
         verify(chargesRepository, Mockito.times(0)).deleteById(Mockito.any());
         verify(chargesRepository, Mockito.times(1)).findById(Mockito.eq(chargeId));
     }
@@ -265,7 +265,7 @@ class ChargesServiceTest {
             chargesService.deleteCharge( "x-request-id", chargeId);
         }
         catch (ResponseStatusException statusException)  {
-            assertEquals(HttpStatus.NOT_FOUND, statusException.getStatus());
+            assertEquals(HttpStatus.NOT_FOUND, statusException.getStatusCode());
         }
 
         verify(chargesRepository, Mockito.times(0)).deleteById(Mockito.any());
@@ -319,7 +319,7 @@ class ChargesServiceTest {
                 chargesService.deleteCharge("x-request-id", chargeId);
         }
         catch (ResponseStatusException statusException)  {
-            assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, statusException.getStatus());
+            assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, statusException.getStatusCode());
         }
     }
 
@@ -334,7 +334,7 @@ class ChargesServiceTest {
             chargesService.deleteCharge( "x-request-id", chargeId);
         }
         catch (ResponseStatusException statusException)  {
-            assertEquals(HttpStatus.SERVICE_UNAVAILABLE, statusException.getStatus());
+            assertEquals(HttpStatus.SERVICE_UNAVAILABLE, statusException.getStatusCode());
         }
 
     }

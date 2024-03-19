@@ -23,32 +23,32 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
 @SpringBootTest
-public class ExceptionHandlerConfigTest {
+class ExceptionHandlerConfigTest {
 
 
     @Mock
     private WebRequest request;
 
-    private ExceptionHandlerConfig exceptionHanler;
+    private ExceptionHandlerConfig exceptionHandler;
 
     @BeforeEach
     void setUp() {
-        exceptionHanler = new ExceptionHandlerConfig(mock(Logger.class));
+        exceptionHandler = new ExceptionHandlerConfig(mock(Logger.class));
     }
 
     @Test
     @DisplayName("Handle Generic Exception")
-    public void handleGenericExceptionTest() {
+    void handleGenericExceptionTest() {
         Exception exp = new Exception("some error");
         ResponseStatusException rse = new ResponseStatusException(404, exp.getMessage(), exp);
 
-        ResponseEntity<Object> response = exceptionHanler.handleException(rse, request);
-        assertEquals(500, response.getStatusCodeValue());
+        ResponseEntity<Object> response = exceptionHandler.handleException(rse, request);
+        assertEquals(500, response.getStatusCode().value());
     }
 
     @Test
-    @DisplayName("Handle HttpMessageNotReadableException thown when patload not deserialised")
-    public void handleHttpMessageNotReadableExceptionTest() {
+    @DisplayName("Handle HttpMessageNotReadableException thrown when payload not deserialised")
+    void handleHttpMessageNotReadableExceptionTest() {
         HttpInputMessage inputMessage = new HttpInputMessage() {
             @Override
             public HttpHeaders getHeaders() {
@@ -61,23 +61,23 @@ public class ExceptionHandlerConfigTest {
             }
         };
         HttpMessageNotReadableException exp = new HttpMessageNotReadableException("some error", inputMessage);
-        ResponseEntity<Object> response = exceptionHanler.handleException(exp, request);
+        ResponseEntity<Object> response = exceptionHandler.handleException(exp, request);
         assertEquals(400, response.getStatusCodeValue());
     }
 
     @Test
     @DisplayName("Handle Exception when KafkaApi returns Non 200 Response")
-    public void handleExceptionKafkaNon200ResponseTest() {
+    void handleExceptionKafkaNon200ResponseTest() {
         ResponseStatusException rse = new ResponseStatusException(Objects.requireNonNull(HttpStatus.resolve(404)), "invokeChsKafkaApi");
-        ResponseEntity<Object> response = exceptionHanler.handleException(rse, request);
+        ResponseEntity<Object> response = exceptionHandler.handleException(rse, request);
         assertEquals(510, response.getStatusCodeValue());
     }
 
     @Test
     @DisplayName("Handle DataAccessResourceFailureException")
-    public void handleCausedByIOExceptionTest() {
+    void handleCausedByIOExceptionTest() {
         DataAccessResourceFailureException exp = new DataAccessResourceFailureException("Test exception");
-        ResponseEntity<Object> response = exceptionHanler.handleException(exp, request);
+        ResponseEntity<Object> response = exceptionHandler.handleException(exp, request);
         assertEquals(503, response.getStatusCodeValue());
     }
 

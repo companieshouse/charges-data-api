@@ -21,6 +21,8 @@ import java.io.InputStreamReader;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.Optional;
+
+import com.google.gson.GsonBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,7 +54,7 @@ import uk.gov.companieshouse.logging.Logger;
 @WebMvcTest(controllers = ChargesController.class)
 @ContextConfiguration(classes = {ChargesController.class, ExceptionHandlerConfig.class})
 @Import({WebSecurityConfig.class})
-public class ChargesControllerTest {
+class ChargesControllerTest {
     private final String companyNumber = "02588581";
     private final String chargeId = "18588520";
     private final String CHARGES_PUT_URL = "/company/" + companyNumber + "/charge/" + chargeId + "/internal";
@@ -79,7 +81,9 @@ public class ChargesControllerTest {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
-    private final Gson gson = new Gson();
+    private final Gson gson = new GsonBuilder().setPrettyPrinting()
+            .excludeFieldsWithoutExposeAnnotation()
+            .create();
 
     @Value("file:src/test/resources/charges-api-request-data.json")
     Resource resourceFile;
@@ -92,7 +96,7 @@ public class ChargesControllerTest {
 
     @Test
     @DisplayName("Charges PUT request")
-    public void callChargesPutRequest() throws Exception {
+    void callChargesPutRequest() throws Exception {
         InternalChargeApi request = createChargesDocument();
         mockMvc.perform(put(CHARGES_PUT_URL)
                 .contentType(APPLICATION_JSON)
@@ -106,7 +110,7 @@ public class ChargesControllerTest {
 
     @Test
     @DisplayName("Charges PUT request fails when Oauth2 has privileges")
-    public void callChargesPutRequestOauth2WithPrivileges() throws Exception {
+    void callChargesPutRequestOauth2WithPrivileges() throws Exception {
         InternalChargeApi request = createChargesDocument();
         mockMvc.perform(put(CHARGES_PUT_URL)
                         .contentType(APPLICATION_JSON)
@@ -120,7 +124,7 @@ public class ChargesControllerTest {
 
     @Test
     @DisplayName("Charges PUT request fails when missing privileges for KEY identity type")
-    public void callChargesPutRequestMissingAuthorisationForKeyType() throws Exception {
+    void callChargesPutRequestMissingAuthorisationForKeyType() throws Exception {
         InternalChargeApi request = createChargesDocument();
         mockMvc.perform(put(CHARGES_PUT_URL)
                         .contentType(APPLICATION_JSON)
@@ -133,7 +137,7 @@ public class ChargesControllerTest {
 
     @Test
     @DisplayName("Charges PUT request fails when missing privileges for OAUTH2 identity type")
-    public void callChargesPutRequestMissingAuthorisationForOauth2Type() throws Exception {
+    void callChargesPutRequestMissingAuthorisationForOauth2Type() throws Exception {
         InternalChargeApi request = createChargesDocument();
         mockMvc.perform(put(CHARGES_PUT_URL)
                         .contentType(APPLICATION_JSON)
@@ -146,7 +150,7 @@ public class ChargesControllerTest {
 
     @Test
     @DisplayName("Charges PUT request fails when no ERIC-Identity")
-    public void chargesPutRequestFailsWhenUnauthenticatedWithNoIdentity() throws Exception {
+    void chargesPutRequestFailsWhenUnauthenticatedWithNoIdentity() throws Exception {
         InternalChargeApi request = createChargesDocument();
         mockMvc.perform(put(CHARGES_PUT_URL)
                         .contentType(APPLICATION_JSON)
@@ -157,7 +161,7 @@ public class ChargesControllerTest {
 
     @Test
     @DisplayName("Charges PUT request fails when no ERIC-Identity-Type")
-    public void chargesPutRequestFailsWhenUnauthenticatedWithNoIdentityType() throws Exception {
+    void chargesPutRequestFailsWhenUnauthenticatedWithNoIdentityType() throws Exception {
         InternalChargeApi request = createChargesDocument();
         mockMvc.perform(put(CHARGES_PUT_URL)
                         .contentType(APPLICATION_JSON)
@@ -169,7 +173,7 @@ public class ChargesControllerTest {
 
     @Test
     @DisplayName("Charges PUT request fails when no ERIC-Identity is present but has a valid ERIC-Identity-Type of Key")
-    public void chargesPutRequestFailsWhenUnauthenticatedWithNoIdentityButValidIdentityTypeOfKey() throws Exception {
+    void chargesPutRequestFailsWhenUnauthenticatedWithNoIdentityButValidIdentityTypeOfKey() throws Exception {
         InternalChargeApi request = createChargesDocument();
         mockMvc.perform(put(CHARGES_PUT_URL)
                         .contentType(APPLICATION_JSON)
@@ -181,7 +185,7 @@ public class ChargesControllerTest {
 
     @Test
     @DisplayName("Charges PUT request fails when no ERIC-Identity is present but has a valid ERIC-Identity-Type of Oauth2")
-    public void chargesPutRequestFailsWhenUnauthenticatedWithNoIdentityButValidIdentityTypeOfOauth2() throws Exception {
+    void chargesPutRequestFailsWhenUnauthenticatedWithNoIdentityButValidIdentityTypeOfOauth2() throws Exception {
         InternalChargeApi request = createChargesDocument();
         mockMvc.perform(put(CHARGES_PUT_URL)
                         .contentType(APPLICATION_JSON)
@@ -193,7 +197,7 @@ public class ChargesControllerTest {
 
     @Test
     @DisplayName("Charges GET request")
-    public void callChargesGetRequest() throws Exception {
+    void callChargesGetRequest() throws Exception {
         ChargesApi charge = new ChargesApi();
         doReturn(Optional.of(charge))
                 .when(chargesService).findCharges(anyString(), any());
@@ -209,7 +213,7 @@ public class ChargesControllerTest {
 
     @Test
     @DisplayName("Charges GET request success with no privileges for Key ERIC-Identity-Type")
-    public void callChargesGetRequestWithNoPrivilegesForKeyType() throws Exception {
+    void callChargesGetRequestWithNoPrivilegesForKeyType() throws Exception {
         ChargesApi charge = new ChargesApi();
         doReturn(Optional.of(charge))
                 .when(chargesService).findCharges(anyString(), any());
@@ -224,7 +228,7 @@ public class ChargesControllerTest {
 
     @Test
     @DisplayName("Charges GET request success with no privileges for Oauth2 ERIC-Identity-Type")
-    public void callChargesGetRequestWithNoPrivilegesForOauth2Type() throws Exception {
+    void callChargesGetRequestWithNoPrivilegesForOauth2Type() throws Exception {
         ChargesApi charge = new ChargesApi();
         doReturn(Optional.of(charge))
                 .when(chargesService).findCharges(anyString(), any());
@@ -240,7 +244,7 @@ public class ChargesControllerTest {
 
     @Test
     @DisplayName("Charges GET request fails when no ERIC-Identity")
-    public void chargesGetRequestFailsWhenUnauthenticatedWithNoIdentity() throws Exception {
+    void chargesGetRequestFailsWhenUnauthenticatedWithNoIdentity() throws Exception {
         mockMvc.perform(get(CHARGES_GET_URL)
                         .contentType(APPLICATION_JSON)
                         .header("x-request-id", X_REQUEST_ID)
@@ -250,7 +254,7 @@ public class ChargesControllerTest {
 
     @Test
     @DisplayName("Charges GET request fails when no ERIC-Identity-Type")
-    public void chargesGetRequestFailsWhenUnauthenticatedWithNoIdentityType() throws Exception {
+    void chargesGetRequestFailsWhenUnauthenticatedWithNoIdentityType() throws Exception {
         mockMvc.perform(get(CHARGES_GET_URL)
                         .contentType(APPLICATION_JSON)
                         .header("x-request-id", X_REQUEST_ID)
@@ -261,7 +265,7 @@ public class ChargesControllerTest {
 
     @Test
     @DisplayName("Charges GET request fails when no ERIC-Identity is present but has a valid ERIC-Identity-Type of Key")
-    public void chargesGetRequestFailsWhenUnauthenticatedWithNoIdentityButValidIdentityTypeOfKey() throws Exception {
+    void chargesGetRequestFailsWhenUnauthenticatedWithNoIdentityButValidIdentityTypeOfKey() throws Exception {
         mockMvc.perform(get(CHARGES_GET_URL)
                         .contentType(APPLICATION_JSON)
                         .header("x-request-id", X_REQUEST_ID)
@@ -272,7 +276,7 @@ public class ChargesControllerTest {
 
     @Test
     @DisplayName("Charges GET request fails when no ERIC-Identity is present but has a valid ERIC-Identity-Type of Oauth2")
-    public void chargesGetRequestFailsWhenUnauthenticatedWithNoIdentityButValidIdentityTypeOfOauth2() throws Exception {
+    void chargesGetRequestFailsWhenUnauthenticatedWithNoIdentityButValidIdentityTypeOfOauth2() throws Exception {
         mockMvc.perform(get(CHARGES_GET_URL)
                         .contentType(APPLICATION_JSON)
                         .header("x-request-id", X_REQUEST_ID)

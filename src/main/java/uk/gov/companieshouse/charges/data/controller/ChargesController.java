@@ -3,8 +3,6 @@ package uk.gov.companieshouse.charges.data.controller;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -154,8 +152,8 @@ public class ChargesController {
             logger.error(String.format("Unexpected error occurred "
                             + "while processing DELETE request with contextId %s. "
                             + "Response Status Exception: %s.",
-                    contextId, responseStatusException.getStatus().value()));
-            return ResponseEntity.status(responseStatusException.getStatus()).build();
+                    contextId, responseStatusException.getStatusCode().value()));
+            return ResponseEntity.status(responseStatusException.getStatusCode()).build();
         } catch (Exception exception) {
             logger.error(String.format("Unexpected error occurred "
                             + "while processing DELETE request with contextId %s:"

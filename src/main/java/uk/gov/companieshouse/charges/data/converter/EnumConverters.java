@@ -39,7 +39,7 @@ public class EnumConverters {
         @Override
         public Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
             try {
-                return sourceType.getType().getDeclaredMethod("getValue", null)
+                return sourceType.getType().getDeclaredMethod("getValue", (Class<?>) null)
                         .invoke(source, null);
             } catch (Exception ex) {
                 return ((Enum<?>) source).name();
