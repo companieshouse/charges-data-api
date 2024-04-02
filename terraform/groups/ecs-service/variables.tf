@@ -100,6 +100,12 @@ variable "service_scaleup_schedule" {
 variable "cloudwatch_alarms_enabled" {
   description = "Whether to create a standard set of cloudwatch alarms for the service.  Requires an SNS topic to have already been created for the stack."
   type        = bool
+  default     = false
+}
+
+variable "multilb_cloudwatch_alarms_enabled" {
+  description = "Whether to create a standard set of cloudwatch alarms for the service in multilb setup.  Requires an SNS topic to have already been created for the stack."
+  type        = bool
   default     = true
 }
 
@@ -121,6 +127,11 @@ variable "use_set_environment_files" {
 variable "identity_verification_api_version" {
   type        = string
   description = "The version of the identity-verification-api container to run."
+}
+
+variable "charges_data_api_version" {
+  type        = string
+  description = "The version of the charges_data_api_version container to run."
 }
 
 variable "log_level" {
