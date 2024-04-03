@@ -98,3 +98,4 @@ module "ecs-service" {
   eric_environment_filename = local.eric_environment_filename
   eric_secrets              = local.eric_secrets
 }
+

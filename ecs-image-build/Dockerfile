@@ -6,3 +6,4 @@ COPY /app .
 COPY docker_start.sh .
 
 CMD ["./docker_start.sh"]
+
