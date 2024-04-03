@@ -8,9 +8,9 @@ locals {
   eric_port                  = "10000"
   docker_repo                = "charges-data-api"
   kms_alias                  = "alias/${var.aws_profile}/environment-services-kms"
-  lb_listener_rule_priority  = 210
-  lb_listener_paths          = ["/verification/*"]
-  healthcheck_path           = "/charges-data-api/healthcheck" #healthcheck path for identity verification api
+  lb_listener_rule_priority  = 52
+  lb_listener_paths          = ["/verification/*","/company/*/charge","/company/*/charges","/company/*/charges/*/*"]
+  healthcheck_path           = "/charges-data-api/healthcheck" #healthcheck path for charges data api
   healthcheck_matcher        = "200"
   s3_config_bucket           = data.vault_generic_secret.shared_s3.data["config_bucket_name"]
   app_environment_filename   = "charges-data-api.env"

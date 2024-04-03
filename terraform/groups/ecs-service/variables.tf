@@ -124,11 +124,6 @@ variable "use_set_environment_files" {
   description = "Toggle default global and shared  environment files"
 }
 
-variable "identity_verification_api_version" {
-  type        = string
-  description = "The version of the identity-verification-api container to run."
-}
-
 variable "charges_data_api_version" {
   type        = string
   description = "The version of the charges_data_api_version container to run."
