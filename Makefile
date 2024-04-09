@@ -53,6 +53,10 @@ run-local:
 	@# Help: Run springboot app locally
 	mvn spring-boot:run
 
+.PHONY: security-check
+security-check:
+	npm audit
+
 .PHONY: package
 package:
 	@# Help: Create a single versioned deployable package (i.e. jar, zip, tar, etc.). May be dependent on the build target being run before package
