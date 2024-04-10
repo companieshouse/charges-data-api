@@ -13,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.server.ResponseStatusException;
 import uk.gov.companieshouse.api.InternalApiClient;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
@@ -24,12 +23,12 @@ import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.logging.Logger;
 
 @ExtendWith(MockitoExtension.class)
-public class CompanyMetricsApiServiceTest {
+class CompanyMetricsApiServiceTest {
 
     @Mock
     private ApiClientService apiClientService;
 
-    private final Logger logger = Mockito.mock(Logger.class);;
+    private final Logger logger = Mockito.mock(Logger.class);
 
     @Mock
     private InternalApiClient internalApiClient;
@@ -75,7 +74,7 @@ public class CompanyMetricsApiServiceTest {
         when(privateCompanyMetricsResourceHandler.getCompanyMetrics(Mockito.any())).thenReturn(
                 privateCompanyMetricsGet);
         when(privateCompanyMetricsGet.execute()).thenThrow(ApiErrorResponseException.class);
-        assertThrows(ResponseStatusException.class, () -> companyMetricsApiService.getCompanyMetrics("00006400"));
+        assertThrows(IllegalArgumentException.class, () -> companyMetricsApiService.getCompanyMetrics("00006400"));
         verify(apiClientService, times(1)).getInternalApiClient();
         verify(privateCompanyMetricsResourceHandler, times(1)).getCompanyMetrics(Mockito.any());
         verify(privateCompanyMetricsGet, times(1)).execute();

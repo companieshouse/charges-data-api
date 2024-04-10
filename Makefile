@@ -53,6 +53,11 @@ run-local:
 	@# Help: Run springboot app locally
 	mvn spring-boot:run
 
+.PHONY: security-check
+security-check:
+	mvn org.owasp:dependency-check-maven:update-only
+	mvn org.owasp:dependency-check-maven:check -DfailBuildOnCVSS=4 -DassemblyAnalyzerEnabled=false
+
 .PHONY: package
 package:
 	@# Help: Create a single versioned deployable package (i.e. jar, zip, tar, etc.). May be dependent on the build target being run before package
