@@ -55,7 +55,8 @@ run-local:
 
 .PHONY: security-check
 security-check:
-	npm audit
+	mvn org.owasp:dependency-check-maven:update-only
+	mvn org.owasp:dependency-check-maven:check -DfailBuildOnCVSS=4 -DassemblyAnalyzerEnabled=false
 
 .PHONY: package
 package:
