@@ -25,7 +25,7 @@ charges:
   api:
     resource:
       changed:
-        uri: ${CHARGES_API_RESOURCE_CHANGED_URI:/resource-changed}
+        uri: ${CHARGES_API_RESOURCE_CHANGED_URI:/private/resource-changed}
       kind: ${CHARGES_API_RESOURCE_KIND:company-charges}
 
 api:
