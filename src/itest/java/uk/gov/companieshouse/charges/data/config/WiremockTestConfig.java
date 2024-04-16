@@ -31,7 +31,7 @@ public class WiremockTestConfig {
 
     public static void stubKafkaApi(Integer responseCode) {
         stubFor(
-                post(urlPathMatching("/resource-changed"))
+                post(urlPathMatching("/private/resource-changed"))
                         .willReturn(aResponse()
                                 .withStatus(responseCode)
                                 .withHeader("Content-Type", "application/json"))

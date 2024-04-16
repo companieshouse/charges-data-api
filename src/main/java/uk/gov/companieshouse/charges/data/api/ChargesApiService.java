@@ -54,7 +54,7 @@ public class ChargesApiService {
                     null));
             return changedResourcePost.execute();
         } catch (ApiErrorResponseException exp) {
-            logger.error("Error occurred while calling /resource-changed endpoint.", exp);
+            logger.error("Error occurred while calling /private/resource-changed endpoint.", exp);
             throw new ResponseStatusException(HttpStatus.valueOf(exp.getStatusCode()),
                     exp.getStatusMessage(), exp);
         }
@@ -109,7 +109,7 @@ public class ChargesApiService {
 
         } catch (ApiErrorResponseException exp) {
             HttpStatus statusCode = HttpStatus.valueOf(exp.getStatusCode());
-            logger.error("Unsuccessful call to /resource-changed "
+            logger.error("Unsuccessful call to /private/resource-changed "
                         + "endpoint for a charge delete event", exp);
             throw new ResponseStatusException(statusCode, exp.getMessage());
         }

@@ -207,7 +207,7 @@ public class ChargesApiSteps {
         assertThat(actual.getId()).isEqualTo(chargeId);
         assertThat(actual.getCompanyNumber()).isEqualTo(companyNumber);
         assertThat(actual.getData()).isEqualTo(expected.getData());
-        verify(moreThanOrExactly(1), postRequestedFor(urlEqualTo("/resource-changed")));
+        verify(moreThanOrExactly(1), postRequestedFor(urlEqualTo("/private/resource-changed")));
     }
 
     @Then("I should receive {int} status code")
@@ -271,7 +271,7 @@ public class ChargesApiSteps {
 
     @Then("CHS Kafka API is never invoked")
     public void chs_kafka_api_is_never_invoked() {
-        verify(lessThanOrExactly(0), postRequestedFor(urlEqualTo("/resource-changed")));
+        verify(lessThanOrExactly(0), postRequestedFor(urlEqualTo("/private/resource-changed")));
     }
 
     @When("PUT Rest endpoint is invoked with a random invalid payload that fails to de-serialised into Request object")
