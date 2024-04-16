@@ -355,6 +355,14 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${maven-surefire-plugin.version}</version>
+				<configuration>
+					<argLine>-Dfile.encoding=UTF-8</argLine>
+					<argLine>${surefireArgLine}</argLine>
+					<excludes>
+						<exclude>**/*ITest.java</exclude>
+					</excludes>
+					<skipTests>${skip.unit.tests}</skipTests>
+				</configuration>
 			</plugin>
 
 			<plugin>
