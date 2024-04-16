@@ -57,6 +57,11 @@
 
 		<!-- OWASP dependency checker -->
 		<dependency-check-plugin.version>9.1.0</dependency-check-plugin.version>
+
+		<argLine>
+			--add-opens java.base/java.util=ALL-UNNAMED
+			--add-opens java.base/java.lang=ALL-UNNAMED
+		</argLine>
 	</properties>
 
 	<dependencyManagement>
@@ -339,7 +344,7 @@
 						</goals>
 						<configuration>
 							<sources>
-								<source>src/itest/java</source>
+								<source>src/it/java</source>
 							</sources>
 						</configuration>
 					</execution>
