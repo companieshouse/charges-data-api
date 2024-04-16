@@ -84,7 +84,7 @@ sonar-pr-analysis:
 .PHONY: sonar
 sonar:
 	@# Help: Run sonar scan
-	mvn verify sonar:sonar
+	mvn  sonar:sonar
 
 .PHONY: deps
 deps:

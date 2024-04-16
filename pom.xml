@@ -61,6 +61,7 @@
 		<argLine>
 			--add-opens java.base/java.util=ALL-UNNAMED
 			--add-opens java.base/java.lang=ALL-UNNAMED
+			-Dsun.jnu.encoding=UTF-8
 		</argLine>
 	</properties>
 
