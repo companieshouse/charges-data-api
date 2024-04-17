@@ -200,7 +200,6 @@
 			<groupId>uk.gov.companieshouse</groupId>
 			<artifactId>api-helper-java</artifactId>
 			<version>${api-helper-java-library.version}</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.github.tomakehurst</groupId>
