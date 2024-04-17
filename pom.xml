@@ -241,7 +241,7 @@
 			<groupId>io.cucumber</groupId>
 			<artifactId>cucumber-java</artifactId>
 			<version>${io-cucumber.version}</version>
-			<scope>compile</scope>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -325,20 +325,6 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
 				<version>${maven-build-helper-plugin.version}</version>
-				<executions>
-					<execution>
-						<id>add-integration-test-sources</id>
-						<phase>generate-test-sources</phase>
-						<goals>
-							<goal>add-test-source</goal>
-						</goals>
-						<configuration>
-							<sources>
-								<source>src/it/java</source>
-							</sources>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 
 			<plugin>
@@ -449,6 +435,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
+							<encoding>UTF-8</encoding>
 							<outputDirectory>${basedir}/target/test-classes</outputDirectory>
 							<resources>
 								<resource>
