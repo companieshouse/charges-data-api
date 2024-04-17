@@ -16,15 +16,11 @@ import static java.time.temporal.ChronoUnit.SECONDS;
 public class AbstractMongoConfig {
 
     public static final MongoDBContainer mongoDBContainer = new MongoDBContainer(
-            DockerImageName.parse("mongo:4.0.10"));
+            DockerImageName.parse("mongo:5"));
 
     @DynamicPropertySource
     public static void setProperties(DynamicPropertyRegistry registry) {
-        mongoDBContainer.setWaitStrategy(Wait.defaultWaitStrategy()
-                .withStartupTimeout(Duration.of(300, SECONDS)));
-        registry.add("spring.data.mongodb.uri", (() -> mongoDBContainer.getReplicaSetUrl() +
-                "?serverSelectionTimeoutMS=100&connectTimeoutMS=100"));
-
+        registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
         mongoDBContainer.start();
     }
 }

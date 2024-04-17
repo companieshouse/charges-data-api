@@ -14,8 +14,6 @@
 	<description>Charges Data Api</description>
 
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>21</java.version>
 
 		<main.class>uk.gov.companieshouse.charges.data.ChargesDataApiApplication</main.class>
@@ -54,9 +52,6 @@
 			${project.basedir}/target/site/jacoco/jacoco.xml
 		</sonar.coverage.jacoco.xmlReportPaths>
 		<sonar.jacoco.reports>${project.basedir}/target/site</sonar.jacoco.reports>
-
-		<!-- OWASP dependency checker -->
-		<dependency-check-plugin.version>9.1.0</dependency-check-plugin.version>
 	</properties>
 
 	<dependencyManagement>
@@ -246,7 +241,7 @@
 			<groupId>io.cucumber</groupId>
 			<artifactId>cucumber-java</artifactId>
 			<version>${io-cucumber.version}</version>
-			<scope>compile</scope>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -330,20 +325,6 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
 				<version>${maven-build-helper-plugin.version}</version>
-				<executions>
-					<execution>
-						<id>add-integration-test-sources</id>
-						<phase>generate-test-sources</phase>
-						<goals>
-							<goal>add-test-source</goal>
-						</goals>
-						<configuration>
-							<sources>
-								<source>src/itest/java</source>
-							</sources>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 
 			<plugin>
@@ -454,6 +435,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
+							<encoding>UTF-8</encoding>
 							<outputDirectory>${basedir}/target/test-classes</outputDirectory>
 							<resources>
 								<resource>
@@ -464,26 +446,6 @@
 								</resource>
 							</resources>
 						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.owasp</groupId>
-				<artifactId>dependency-check-maven</artifactId>
-				<version>${dependency-check-plugin.version}</version>
-				<configuration>
-					<formats>
-						<format>html</format>
-					</formats>
-					<suppressionFiles>
-						<suppressionFile>suppress.xml</suppressionFile>
-					</suppressionFiles>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>check</goal>
-						</goals>
 					</execution>
 				</executions>
 			</plugin>

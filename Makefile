@@ -55,7 +55,8 @@ run-local:
 
 .PHONY: security-check
 security-check:
-	mvn compile org.owasp:dependency-check-maven:check -DfailBuildOnCVSS=11 -DassemblyAnalyzerEnabled=false
+	mvn org.owasp:dependency-check-maven:update-only
+	mvn org.owasp:dependency-check-maven:check -DfailBuildOnCVSS=11 -DassemblyAnalyzerEnabled=false
 
 .PHONY: package
 package:
@@ -90,15 +91,6 @@ sonar:
 deps:
 	@# Help: Install dependencies
 	brew install kafka
-
-.PHONY: lint
-lint: lint/docker-compose sonar
-	@# Help: Run all lint/* targets and sonar
-
-.PHONY: lint/docker-compose
-lint/docker-compose:
-	@# Help: Lint docker file
-	docker-compose -f docker-compose.yml config
 
 
 
