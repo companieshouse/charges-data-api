@@ -54,14 +54,6 @@
 			${project.basedir}/target/site/jacoco/jacoco.xml
 		</sonar.coverage.jacoco.xmlReportPaths>
 		<sonar.jacoco.reports>${project.basedir}/target/site</sonar.jacoco.reports>
-
-		<!-- OWASP dependency checker -->
-		<dependency-check-plugin.version>9.1.0</dependency-check-plugin.version>
-
-		<argLine>
-			--add-opens java.base/java.util=ALL-UNNAMED
-			--add-opens java.base/java.lang=ALL-UNNAMED
-		</argLine>
 	</properties>
 
 	<dependencyManagement>
@@ -469,26 +461,6 @@
 								</resource>
 							</resources>
 						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.owasp</groupId>
-				<artifactId>dependency-check-maven</artifactId>
-				<version>${dependency-check-plugin.version}</version>
-				<configuration>
-					<formats>
-						<format>html</format>
-					</formats>
-					<suppressionFiles>
-						<suppressionFile>suppress.xml</suppressionFile>
-					</suppressionFiles>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>check</goal>
-						</goals>
 					</execution>
 				</executions>
 			</plugin>
