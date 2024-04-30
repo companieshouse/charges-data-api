@@ -9,7 +9,7 @@ locals {
   docker_repo                = "charges-data-api"
   kms_alias                  = "alias/${var.aws_profile}/environment-services-kms"
   lb_listener_rule_priority  = 52
-  lb_listener_paths          = ["/company/*/charge","/company/*/charges","/company/*/charges/*/*"]
+  lb_listener_paths          = ["/company/*/charge","/company/*/charges","/company/*/charges/*", "/company/*/charge/*/internal"]
   healthcheck_path           = "/charges-data-api/healthcheck" #healthcheck path for charges data api
   healthcheck_matcher        = "200"
   s3_config_bucket           = data.vault_generic_secret.shared_s3.data["config_bucket_name"]
@@ -62,7 +62,7 @@ locals {
   task_secrets = concat(local.global_secret_list,local.service_secret_list)
 
   task_environment = concat(local.ssm_global_version_map,local.ssm_service_version_map,[
-    { "name" : "LOGLEVEL", "value" : var.log_level }
+    { "name" : "PORT", "value" : local.container_port }
   ])
 
 # get eric secrets from global secrets map

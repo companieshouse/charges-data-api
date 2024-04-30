@@ -129,14 +129,7 @@ variable "charges_data_api_version" {
   description = "The version of the charges_data_api_version container to run."
 }
 
-variable "log_level" {
-  default     = "info"
-  type        = string
-  description = "The log level for services to use: trace, debug, info or error"
-}
-
 variable "eric_version" {
   type        = string
   description = "The version of the eric container to run."
 }
-
