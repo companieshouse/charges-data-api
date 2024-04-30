@@ -62,7 +62,7 @@ locals {
   task_secrets = concat(local.global_secret_list,local.service_secret_list)
 
   task_environment = concat(local.ssm_global_version_map,local.ssm_service_version_map,[
-    { "name" : "LOGLEVEL", "value" : var.log_level }
+    { "name" : "PORT", "value" : local.container_port }
   ])
 
 # get eric secrets from global secrets map
