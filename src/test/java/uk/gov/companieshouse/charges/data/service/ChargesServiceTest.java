@@ -140,7 +140,7 @@ class ChargesServiceTest {
         assertThat(charges.get().getPartSatisfiedCount()).isEqualTo(2);
         assertThat(charges.get().getUnfilteredCount()).isEqualTo(14);
         verify(chargesRepository).findCharges(companyNumber,
-                Arrays.asList(ChargeApi.StatusEnum.SATISFIED, ChargeApi.StatusEnum.FULLY_SATISFIED), 0, 1);
+                Arrays.asList(ChargeApi.StatusEnum.SATISFIED.toString(), ChargeApi.StatusEnum.FULLY_SATISFIED.toString()), 0, 1);
     }
 
     @Test
@@ -155,7 +155,7 @@ class ChargesServiceTest {
         assertThat(charges.get().getPartSatisfiedCount()).isEqualTo(2);
         assertThat(charges.get().getUnfilteredCount()).isEqualTo(14);
         verify(chargesRepository).findCharges(companyNumber,
-                Arrays.asList(ChargeApi.StatusEnum.SATISFIED, ChargeApi.StatusEnum.FULLY_SATISFIED), 0, 25);
+                Arrays.asList(ChargeApi.StatusEnum.SATISFIED.toString(), ChargeApi.StatusEnum.FULLY_SATISFIED.toString()), 0, 25);
     }
 
     @Test
@@ -201,7 +201,7 @@ class ChargesServiceTest {
         Optional<ChargesApi> chargeApi = chargesService.findCharges(companyNumber, new RequestCriteria().setFilter("outstanding"));
         assertEquals(0, chargeApi.get().getTotalCount());
         verify(chargesRepository).findCharges(companyNumber,
-                Arrays.asList(ChargeApi.StatusEnum.SATISFIED, ChargeApi.StatusEnum.FULLY_SATISFIED), 0, 25);
+                Arrays.asList(ChargeApi.StatusEnum.SATISFIED.toString(), ChargeApi.StatusEnum.FULLY_SATISFIED.toString()), 0, 25);
     }
 
     @Test

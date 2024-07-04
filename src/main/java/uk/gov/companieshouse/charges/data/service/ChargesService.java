@@ -115,10 +115,10 @@ public class ChargesService {
      */
     public Optional<ChargesApi> findCharges(final String companyNumber,
                                             final RequestCriteria requestCriteria) {
-        List<ChargeApi.StatusEnum> statusFilter = new ArrayList<>();
+        List<String> statusFilter = new ArrayList<>();
         if ("outstanding".equals(requestCriteria.getFilter())) {
-            statusFilter.add(ChargeApi.StatusEnum.SATISFIED);
-            statusFilter.add(ChargeApi.StatusEnum.FULLY_SATISFIED);
+            statusFilter.add(ChargeApi.StatusEnum.SATISFIED.toString());
+            statusFilter.add(ChargeApi.StatusEnum.FULLY_SATISFIED.toString());
         }
         ChargesAggregate chargesAggregate =
                 chargesRepository.findCharges(companyNumber, statusFilter,

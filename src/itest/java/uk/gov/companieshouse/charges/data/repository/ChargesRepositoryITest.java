@@ -130,7 +130,7 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
 
         // when
         ChargesAggregate chargesAggregate = chargesRepository.findCharges(
-                "00006400", Arrays.asList(ChargeApi.StatusEnum.SATISFIED, ChargeApi.StatusEnum.FULLY_SATISFIED), 0, 4);
+                "00006400", Arrays.asList(ChargeApi.StatusEnum.SATISFIED.toString(), ChargeApi.StatusEnum.FULLY_SATISFIED.toString()), 0, 4);
 
         // then
         assertEquals(2, chargesAggregate.getChargesDocuments().size());
@@ -264,7 +264,7 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
                 Arrays.asList(chargeOne, chargeTwo,
                         chargeThree, chargeFour));
 
-        List<ChargeApi.StatusEnum> filter = Arrays.asList(ChargeApi.StatusEnum.SATISFIED, ChargeApi.StatusEnum.FULLY_SATISFIED);
+        List<String> filter = Arrays.asList(ChargeApi.StatusEnum.SATISFIED.toString(), ChargeApi.StatusEnum.FULLY_SATISFIED.toString());
 
         // when
 
@@ -281,7 +281,7 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
     @Test
     void findChargesNoResultsWithFilter() {
         // given
-        List<ChargeApi.StatusEnum> filter = Arrays.asList(ChargeApi.StatusEnum.SATISFIED, ChargeApi.StatusEnum.FULLY_SATISFIED);
+        List<String> filter = Arrays.asList(ChargeApi.StatusEnum.SATISFIED.toString(), ChargeApi.StatusEnum.FULLY_SATISFIED.toString());
 
         // when
 
