@@ -21,7 +21,7 @@
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
-		<spring.boot.version>3.2.4</spring.boot.version>
+		<spring.boot.version>3.3.1</spring.boot.version>
 		<assertj-core.version>3.25.3</assertj-core.version>
 		<test-containers.version>1.19.7</test-containers.version>
 		<maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
