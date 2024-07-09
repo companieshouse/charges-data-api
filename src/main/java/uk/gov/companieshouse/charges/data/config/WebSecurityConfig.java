@@ -27,11 +27,13 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)  // Added CORS disable
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterAt(new EricTokenAuthenticationFilter(logger), BasicAuthenticationFilter.class)
+                .addFilterBefore(new CustomCorsFilter(List.of(HttpMethod.GET.name())), CsrfFilter.class) // Added Custom CORS filter
                 .authorizeHttpRequests(auth -> auth.anyRequest().permitAll()
                 );
-                return http.build();
+        return http.build();
     }
 
     /**
