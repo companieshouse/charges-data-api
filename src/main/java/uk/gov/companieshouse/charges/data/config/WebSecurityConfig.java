@@ -2,6 +2,7 @@ package uk.gov.companieshouse.charges.data.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -10,8 +11,12 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.csrf.CsrfFilter;
+import uk.gov.companieshouse.api.filter.CustomCorsFilter;
 import uk.gov.companieshouse.charges.data.auth.EricTokenAuthenticationFilter;
 import uk.gov.companieshouse.logging.Logger;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity

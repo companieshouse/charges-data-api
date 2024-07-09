@@ -38,6 +38,7 @@
 		<skip.integration.tests>false</skip.integration.tests>
 		<skip.unit.tests>false</skip.unit.tests>
 		<private-api-sdk-java.version>4.0.99</private-api-sdk-java.version>
+		<api-security-java.version>2.0.5</api-security-java.version>
 		<io-cucumber.version>7.15.0</io-cucumber.version>
 		<spring-cloud-contract-wiremock.version>4.1.3</spring-cloud-contract-wiremock.version>
 		<handlebars.version>4.4.0</handlebars.version>
@@ -108,6 +109,11 @@
 			<groupId>uk.gov.companieshouse</groupId>
 			<artifactId>structured-logging</artifactId>
 			<version>${structured-logging.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>uk.gov.companieshouse</groupId>
+			<artifactId>api-security-java</artifactId>
+			<version>${api-security-java.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>uk.gov.companieshouse</groupId>
