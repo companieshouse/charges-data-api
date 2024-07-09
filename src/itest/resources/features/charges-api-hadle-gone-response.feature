@@ -10,7 +10,7 @@ Feature: Process company charges gone scenarios
 
     Examples:
       | data                              | company_number | exceptionText                    |  charge_id                                               |
-      | Insolvency_cases_Happy_Path_input | 08124207       | problem: Unexpected value '401'; | OzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng  |
+      | Insolvency_cases_Happy_Path_input | 08124207       | Error while extracting response | OzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng  |
 
   Scenario Outline: Process company charges GET without charge ID without security headers
 
@@ -22,7 +22,7 @@ Feature: Process company charges gone scenarios
 
     Examples:
       | data                              | company_number | exceptionText                    |  charge_id                                               |
-      | Insolvency_cases_Happy_Path_input | 08124207       | problem: Unexpected value '401'; | OzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng  |
+      | Insolvency_cases_Happy_Path_input | 08124207       | Error while extracting response | OzRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng  |
 
 
   Scenario Outline: Process company charges PUT without security headers

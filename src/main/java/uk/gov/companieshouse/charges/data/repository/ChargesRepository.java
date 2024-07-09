@@ -38,7 +38,7 @@ public interface ChargesRepository extends MongoRepository<ChargesDocument, Stri
                     + "'charges_documents': [ { '$skip': ?2 }, { '$limit': ?3 } ] }}",
             })
     ChargesAggregate findCharges(final String companyNumber,
-                                   final List<ChargeApi.StatusEnum> filter,
+                                   final List<String> filter,
                                    final int startIndex,
                                    final int pageSize);
 }
