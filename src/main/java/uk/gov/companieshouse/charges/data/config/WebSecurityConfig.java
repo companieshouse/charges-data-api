@@ -32,10 +32,10 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)  // Added CORS disable
+                .cors(AbstractHttpConfigurer::disable)
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterAt(new EricTokenAuthenticationFilter(logger), BasicAuthenticationFilter.class)
-                .addFilterBefore(new CustomCorsFilter(List.of(HttpMethod.GET.name())), CsrfFilter.class) // Added Custom CORS filter
+                .addFilterBefore(new CustomCorsFilter(List.of(HttpMethod.GET.name())), CsrfFilter.class)
                 .authorizeHttpRequests(auth -> auth.anyRequest().permitAll()
                 );
         return http.build();
