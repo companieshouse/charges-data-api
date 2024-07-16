@@ -11,6 +11,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -34,7 +36,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -62,6 +66,15 @@ class ChargesControllerTest {
     private final String CHARGES_GET_URL = "/company/" + companyNumber + "/charges";
     private final String CHARGES_DELETE_URL = String.format("/company/%s/charges/%s", companyNumber, chargeId);
     private final String X_REQUEST_ID = "123";
+
+    private static final String ERIC_ALLOWED_ORIGIN="ERIC-Allowed-Origin";
+    private static final String ERIC_IDENTITY="ERIC-Identity";
+    private static final String ERIC_IDENTITY_TYPE="ERIC-Identity-Type";
+    private static final String ORIGIN="Origin";
+    private static final String ERIC_ALLOWED_ORIGIN_VALUE="some-origin";
+    private static final String ERIC_IDENTITY_VALUE="123";
+    private static final String ERIC_IDENTITY_TYPE_VALUE="key";
+    private static final String ORIGIN_VALUE="http://www.test.com";
 
 
     @Autowired
@@ -462,4 +475,64 @@ class ChargesControllerTest {
                         .header("ERIC-Authorised-Key-Privileges", "internal-app"))
                 .andExpect(status().isBadGateway());
     }
+
+    @Test
+    void optionsChargesRequestCORS() throws Exception {
+
+        mockMvc.perform(options(CHARGES_GET_URL)
+                        .contentType(APPLICATION_JSON)
+                        .header("Origin", "")
+                )
+                .andExpect(status().isNoContent())
+                .andExpect(header().exists(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN))
+                .andExpect(header().exists(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS))
+                .andExpect(header().exists(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS))
+                .andExpect(header().exists(HttpHeaders.ACCESS_CONTROL_MAX_AGE))
+                .andReturn();
+    }
+
+    @Test
+    void whenCorsRequestWithValidMethod_thenProceed() throws Exception {
+        ChargesApi charge = new ChargesApi();
+        doReturn(Optional.of(charge))
+                .when(chargesService).findCharges(anyString(), any());
+
+        mockMvc.perform(get(CHARGES_GET_URL)
+                        .header(ERIC_ALLOWED_ORIGIN, ERIC_ALLOWED_ORIGIN_VALUE)
+                        .header(ERIC_IDENTITY, ERIC_IDENTITY_VALUE)
+                        .header(ERIC_IDENTITY_TYPE, ERIC_IDENTITY_TYPE_VALUE)
+                        .header(ORIGIN,ORIGIN_VALUE)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void whenCorsRequestWithInvalidMethod_thenForbidden() throws Exception {
+        InternalChargeApi request = createChargesDocument();
+        mockMvc.perform(put(CHARGES_PUT_URL)
+                        .contentType(APPLICATION_JSON)
+                        .header(ERIC_ALLOWED_ORIGIN, ERIC_ALLOWED_ORIGIN_VALUE)
+                        .header(ERIC_IDENTITY, ERIC_IDENTITY_VALUE)
+                        .header(ERIC_IDENTITY_TYPE, ERIC_IDENTITY_TYPE_VALUE)
+                        .header(ORIGIN,ORIGIN_VALUE)
+                        .content(gson.toJson(request)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void whenCorsRequestWithMissingAllowedOrigin_thenForbidden() throws Exception {
+
+        ChargesApi charge = new ChargesApi();
+        doReturn(Optional.of(charge))
+                .when(chargesService).findCharges(anyString(), any());
+
+        mockMvc.perform(get(CHARGES_GET_URL)
+                        .header(ERIC_IDENTITY, ERIC_IDENTITY_VALUE)
+                        .header(ERIC_IDENTITY_TYPE, ERIC_IDENTITY_TYPE_VALUE)
+                        .header(ORIGIN,ORIGIN_VALUE)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
 }
