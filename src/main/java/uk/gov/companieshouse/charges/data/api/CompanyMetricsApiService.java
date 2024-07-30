@@ -51,6 +51,8 @@ public class CompanyMetricsApiService {
                                 String.format(GET_COMPANY_METRICS_ENDPOINT, companyNumber));
         try {
             ApiResponse<MetricsApi> execute = companyMetrics.execute();
+            logger.debug(String.format("Finished : getCompanyMetrics for Company Number %s ",
+                    companyNumber));
             return Optional.ofNullable(execute.getData());
         } catch (URIValidationException exp) {
             logger.error("Error occurred while calling getCompanyMetrics endpoint.");
@@ -68,9 +70,6 @@ public class CompanyMetricsApiService {
                     exp.getStatusMessage(), null);
             }
         }
-        logger.debug(String.format("Finished : getCompanyMetrics for Company Number %s ",
-                companyNumber
-        ));
         return Optional.empty();
     }
 }
