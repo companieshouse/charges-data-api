@@ -1,29 +1,44 @@
 package uk.gov.companieshouse.charges.data.util;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
-public class DateTimeFormatterTest {
+class DateTimeFormatterTest {
 
     @Test
-    public void shouldParseAndFormatGivenDateString() {
+    void shouldParseAndFormatGivenDateString() {
         LocalDate parsedValue = DateTimeFormatter.parse("2015-06-26T08:31:35.058Z");
         assertThat(parsedValue).isNotNull();
-        assertThat(parsedValue.toString()).isEqualTo("2015-06-26");
+        assertThat(parsedValue).hasToString("2015-06-26");
     }
 
     @Test
-    public void throwExceptionWhenGivenWrongDate() {
+    void throwExceptionWhenGivenWrongDate() {
         assertThrows(IllegalStateException.class, () -> DateTimeFormatter.parse("2015 08:31:35.058Z"));
     }
 
     @Test
-    public void shouldFormatGivenDateString() {
+    void shouldFormatGivenDateString() {
         String formattedDate = DateTimeFormatter.format(LocalDate.of(2015, 06, 26));
         assertThat(formattedDate).isNotNull();
         assertThat(formattedDate).isEqualTo("2015-06-26T00:00:00Z");
+    }
+
+    @Test
+    void shouldFormatPublishedAtToCorrectPattern() {
+        // given
+        Instant now = Instant.parse("2024-09-04T10:52:22.235486Z");
+        final String expected = "2024-09-04T10:52:22";
+
+        // when
+        final String actual = DateTimeFormatter.formatPublishedAt(now);
+
+        // then
+        assertEquals(expected, actual);
     }
 }
