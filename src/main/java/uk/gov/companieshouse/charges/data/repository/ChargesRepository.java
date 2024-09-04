@@ -2,12 +2,10 @@ package uk.gov.companieshouse.charges.data.repository;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
-import uk.gov.companieshouse.api.charges.ChargeApi;
 import uk.gov.companieshouse.charges.data.model.ChargesAggregate;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 
