@@ -1,7 +1,6 @@
 package uk.gov.companieshouse.charges.data.api;
 
-import java.time.OffsetDateTime;
-
+import java.time.Instant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -14,6 +13,7 @@ import uk.gov.companieshouse.api.chskafka.ChangedResourceEvent;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.chskafka.request.PrivateChangedResourcePost;
 import uk.gov.companieshouse.api.model.ApiResponse;
+import uk.gov.companieshouse.charges.data.util.DateTimeFormatter;
 import uk.gov.companieshouse.logging.Logger;
 
 @Service
@@ -64,7 +64,7 @@ public class ChargesApiService {
                                                String chargeId, ChargeApi chargeApi) {
         ChangedResourceEvent event = new ChangedResourceEvent();
         event.setType(CHANGED_EVENT_TYPE);
-        event.setPublishedAt(String.valueOf(OffsetDateTime.now()));
+        event.setPublishedAt(DateTimeFormatter.formatPublishedAt(Instant.now()));
         ChangedResource changedResource = new ChangedResource();
         if (chargeApi != null) {
             changedResource.setDeletedData(chargeApi);
