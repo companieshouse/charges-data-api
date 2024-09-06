@@ -35,7 +35,12 @@ variable "desired_task_count" {
 variable "max_task_count" {
   type        = number
   description = "The maximum number of tasks for this service."
-  default     = 3
+  default     = 5
+}
+variable "min_task_count" {
+  default     = 1
+  type        = number
+  description = "The minimum number of tasks for this service."
 }
 variable "required_cpus" {
   type        = number
