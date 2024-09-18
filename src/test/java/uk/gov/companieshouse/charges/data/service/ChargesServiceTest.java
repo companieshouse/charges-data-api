@@ -12,6 +12,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static uk.gov.companieshouse.api.charges.ChargeApi.AssetsCeasedReleasedEnum.PART_PROPERTY_RELEASED;
 import static uk.gov.companieshouse.api.charges.ChargeApi.StatusEnum.PART_SATISFIED;
@@ -103,8 +104,6 @@ class ChargesServiceTest {
 
     @Mock
     private ChargesDocument document;
-
-    private final InternalChargeApi internalChargeApi = buildInternalCharges();
 
     /**
      * Reset the mocks so defaults are returned and invocation counters cleared.
@@ -378,7 +377,7 @@ class ChargesServiceTest {
 
         // When
         Executable executable = () -> chargesService.upsertCharges(contextId, companyNumber,
-                chargeId, internalChargeApi);
+                chargeId, buildInternalCharges(OffsetDateTime.parse("2023-11-06T15:30:00.000000Z")));
 
         // then
         assertThrows(ResponseStatusException.class, executable);
@@ -389,11 +388,6 @@ class ChargesServiceTest {
     @Test
     void testUpdateChargeHandlesCompensatoryTransactionWhenServiceUnavailableThrown() {
         // given
-        String chargeId = "123456789";
-        String contextId = "1111111";
-        String companyNumber = "1234";
-        internalChargeApi.getInternalData()
-                .setDeltaAt(OffsetDateTime.parse("2023-11-06T15:30:00.000000Z"));
         ChargesDocument deltaChargesDocument = new ChargesDocument().setId("chargesIdDELTA")
                 .setCompanyNumber("012345678")
                 .setDeltaAt(OffsetDateTime.parse("2023-11-06T16:30:00.000000Z"));
@@ -409,13 +403,39 @@ class ChargesServiceTest {
                 ResponseStatusException.class);
 
         // When
-        Executable executable = () -> chargesService.upsertCharges(contextId, companyNumber,
-                chargeId, internalChargeApi);
+        Executable executable = () -> chargesService.upsertCharges("contextId", "012345678",
+                "chargesIdDELTA", buildInternalCharges(OffsetDateTime.parse("2023-11-06T15:30:00.000000Z")));
 
         // then
         assertThrows(ResponseStatusException.class, executable);
         verify(chargesRepository).save(deltaChargesDocument);
         verify(chargesRepository).save(existingDocument);
+    }
+
+    @Test
+    void testUpdateChargesWhenDeltaAtIsTheSameAsTheTimestampWithinMongoDB () {
+        //given
+        ChargesDocument deltaChargesDocument = new ChargesDocument().setId("chargesId")
+                .setCompanyNumber("012345678")
+                .setDeltaAt(OffsetDateTime.parse("2023-11-06T15:30:00.000000Z"));
+
+        ChargesDocument existingDocument = new ChargesDocument().setId("chargesId")
+                .setCompanyNumber("012345678")
+                .setDeltaAt(OffsetDateTime.parse("2023-11-06T15:30:00.000000Z"));
+
+        when(chargesTransformer.transform(any(), any(), any(InternalChargeApi.class))).thenReturn(
+                deltaChargesDocument);
+        when(chargesRepository.findById(any())).thenReturn(Optional.of(existingDocument));
+        when(chargesApiService.invokeChsKafkaApi(any(), any(), any()))
+                .thenReturn(new ApiResponse<>(200, null));
+
+        //when
+        chargesService.upsertCharges("contextId", "012345678",
+                "chargesId", buildInternalCharges(OffsetDateTime.parse("2023-11-06T15:30:00.000000Z")));
+
+        //then
+        verify(chargesRepository).save(deltaChargesDocument);
+        verifyNoMoreInteractions(chargesRepository);
     }
 
 
@@ -457,7 +477,7 @@ class ChargesServiceTest {
                 .thenReturn(Optional.ofNullable(createMetrics()));
     }
 
-    private InternalChargeApi buildInternalCharges() {
+    private InternalChargeApi buildInternalCharges(OffsetDateTime deltaAt) {
         InternalChargeApi output = new InternalChargeApi();
 
         ChargeApi externalData = new ChargeApi();
@@ -492,7 +512,7 @@ class ChargesServiceTest {
         externalData.setLinks(chargeLink);
 
         InternalData internalData = new InternalData();
-        internalData.setDeltaAt(OffsetDateTime.parse("2022-01-13T00:00:00Z"));
+        internalData.setDeltaAt(deltaAt);
         internalData.setUpdatedBy("updatedBy");
         output.setExternalData(externalData);
         output.setInternalData(internalData);

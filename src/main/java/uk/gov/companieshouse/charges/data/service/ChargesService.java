@@ -63,17 +63,17 @@ public class ChargesService {
                               InternalChargeApi requestBody) {
         Optional<ChargesDocument> chargesDocumentOptional = chargesRepository.findById(chargeId);
 
-        chargesDocumentOptional.ifPresentOrElse(chargesDocument -> {
-            OffsetDateTime dateFromBodyRequest = requestBody.getInternalData().getDeltaAt();
-            OffsetDateTime deltaAtFromDb = chargesDocument.getDeltaAt();
+        chargesDocumentOptional.ifPresentOrElse(existingDocument -> {
+            OffsetDateTime deltaAtFromBodyRequest = requestBody.getInternalData().getDeltaAt();
+            OffsetDateTime deltaAtFromDb = existingDocument.getDeltaAt();
 
-            if (dateFromBodyRequest == null
-                    || deltaAtFromDb == null || dateFromBodyRequest.isAfter(deltaAtFromDb)) {
+            if (deltaAtFromBodyRequest == null
+                    || deltaAtFromDb == null || !deltaAtFromBodyRequest.isBefore(deltaAtFromDb)) {
                 ChargesDocument charges =
                         this.chargesTransformer.transform(companyNumber, chargeId, requestBody);
 
                 saveAndInvokeChsKafkaApi(contextId, companyNumber, chargeId, charges,
-                        chargesDocument);
+                        existingDocument);
             } else {
                 logger.error("Charge not saved "
                         + "as record provided is older than the one already stored"

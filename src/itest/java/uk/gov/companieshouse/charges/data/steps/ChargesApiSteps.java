@@ -307,6 +307,13 @@ public class ChargesApiSteps {
         Assertions.assertThat(chargesDocuments).hasSize(0);
     }
 
+    @Then("Data is updated in Mongo DB")
+    public void data_is_updated_in_mongo_db() {
+        List<ChargesDocument> chargesDocuments = chargesRepository.findAll();
+        Assertions.assertThat(chargesDocuments).hasSize(1);
+    }
+
+
     private Document readData(Resource resource) throws IOException {
         return Document.parse(IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8));
     }
