@@ -46,7 +46,7 @@ Feature: Delete company charges information
     And  the company charge exists for charge id "<charge_id>"
     When I send DELETE request with company number "<company_number>" and charge id "<charge_id>"
     Then I should receive 503 status code
-    And charge id "<charge_id>" exist in mongo db
+    And charge id "<charge_id>" does not exist in mongo db
 
     Examples:
       | company_number |   charge_id      |
@@ -82,7 +82,7 @@ Feature: Delete company charges information
     And  the company charge exists for charge id "<charge_id>"
     When I send DELETE request with company number "<company_number>" and charge id "<charge_id>"
     Then I should receive 301 status code
-    And charge id "<charge_id>" exist in mongo db
+    And charge id "<charge_id>" does not exist in mongo db
 
     Examples:
       | company_number |   charge_id      |

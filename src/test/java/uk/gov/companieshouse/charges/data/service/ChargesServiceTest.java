@@ -352,7 +352,7 @@ class ChargesServiceTest {
                 "ChsKafka api DELETED invoked successfully for contextId "  + contextId + " and company number " + companyNumber
         );
         verify(chargesRepository, Mockito.times(1)).findById(Mockito.eq(chargeId));
-        verify(chargesRepository, Mockito.times(0)).deleteById(Mockito.any());
+        verify(chargesRepository, Mockito.times(1)).deleteById(Mockito.any());
         verify(chargesApiService, times(1)).
                 invokeChsKafkaApiWithDeleteEvent(eq(contextId), eq(chargeId), eq(companyNumber),eq(populateCharge()));
 
@@ -382,7 +382,7 @@ class ChargesServiceTest {
         // then
         assertThrows(ResponseStatusException.class, executable);
         verify(chargesRepository).save(chargesDocument);
-        verify(chargesRepository).deleteById(chargesDocument.getId());
+        verifyNoMoreInteractions(chargesRepository);
     }
 
     @Test
@@ -409,7 +409,7 @@ class ChargesServiceTest {
         // then
         assertThrows(ResponseStatusException.class, executable);
         verify(chargesRepository).save(deltaChargesDocument);
-        verify(chargesRepository).save(existingDocument);
+        verifyNoMoreInteractions(chargesRepository);
     }
 
     @Test

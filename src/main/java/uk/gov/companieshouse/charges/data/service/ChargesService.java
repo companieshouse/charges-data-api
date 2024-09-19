@@ -72,8 +72,7 @@ public class ChargesService {
                 ChargesDocument charges =
                         this.chargesTransformer.transform(companyNumber, chargeId, requestBody);
 
-                saveAndInvokeChsKafkaApi(contextId, companyNumber, chargeId, charges,
-                        existingDocument);
+                saveAndInvokeChsKafkaApi(contextId, companyNumber, chargeId, charges);
             } else {
                 logger.error("Charge not saved "
                         + "as record provided is older than the one already stored"
@@ -83,7 +82,7 @@ public class ChargesService {
                 () -> {
                     ChargesDocument charges =
                             this.chargesTransformer.transform(companyNumber, chargeId, requestBody);
-                    saveAndInvokeChsKafkaApi(contextId, companyNumber, chargeId, charges, null);
+                    saveAndInvokeChsKafkaApi(contextId, companyNumber, chargeId, charges);
                 });
     }
 
@@ -170,25 +169,16 @@ public class ChargesService {
     }
 
     private void saveAndInvokeChsKafkaApi(String contextId, String companyNumber,
-                                          String chargeId, ChargesDocument charges,
-                                          ChargesDocument existingCharges) {
+                                          String chargeId, ChargesDocument charges) {
 
         chargesRepository.save(charges);
         logger.debug(
                 String.format("Invoking chs-kafka-api for chargeId %s company number %s ",
                         chargeId,
                         companyNumber));
-        ApiResponse<Void> res = null;
-        try {
-            res = chargesApiService.invokeChsKafkaApi(contextId,
+        ApiResponse<Void> res = chargesApiService.invokeChsKafkaApi(contextId,
                     companyNumber,
                     chargeId);
-        } catch (ResponseStatusException ex) {
-            Optional.ofNullable(existingCharges)
-                    .ifPresentOrElse(chargesRepository::save,
-                            () -> chargesRepository.deleteById(chargeId));
-            throw ex;
-        }
         HttpStatus httpStatus = res != null ? HttpStatus.resolve(res.getStatusCode()) : null;
         if (httpStatus == null || !httpStatus.is2xxSuccessful()) {
             throw new ResponseStatusException(httpStatus != null
@@ -235,6 +225,13 @@ public class ChargesService {
                                     HttpStatus.NOT_FOUND,
                                     "ChargeApi object doesn't exist for" + chargeId));
 
+            chargesRepository.deleteById(chargeId);
+            logger.info(String.format(
+                    "Company charge is deleted in "
+                            + "MongoDB with contextId %s and company number %s",
+                    contextId,
+                    companyNumber));
+
             ApiResponse<Void> apiResponse = chargesApiService.invokeChsKafkaApiWithDeleteEvent(
                     contextId,
                     chargeId,
@@ -257,13 +254,6 @@ public class ChargesService {
                         .valueOf(apiResponse.getStatusCode()),
                         " error response received from ChsKafkaApi");
             }
-
-            chargesRepository.deleteById(chargeId);
-            logger.info(String.format(
-                    "Company charge is deleted in "
-                            + "MongoDB with contextId %s and company number %s",
-                    contextId,
-                    companyNumber));
 
         } catch (DataAccessException dbException) {
             logger.error(String.format(
