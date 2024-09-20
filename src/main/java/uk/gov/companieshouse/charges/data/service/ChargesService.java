@@ -225,13 +225,6 @@ public class ChargesService {
                                     HttpStatus.NOT_FOUND,
                                     "ChargeApi object doesn't exist for" + chargeId));
 
-            chargesRepository.deleteById(chargeId);
-            logger.info(String.format(
-                    "Company charge is deleted in "
-                            + "MongoDB with contextId %s and company number %s",
-                    contextId,
-                    companyNumber));
-
             ApiResponse<Void> apiResponse = chargesApiService.invokeChsKafkaApiWithDeleteEvent(
                     contextId,
                     chargeId,
@@ -254,6 +247,13 @@ public class ChargesService {
                         .valueOf(apiResponse.getStatusCode()),
                         " error response received from ChsKafkaApi");
             }
+
+            chargesRepository.deleteById(chargeId);
+            logger.info(String.format(
+                    "Company charge is deleted in "
+                            + "MongoDB with contextId %s and company number %s",
+                    contextId,
+                    companyNumber));
 
         } catch (DataAccessException dbException) {
             logger.error(String.format(
