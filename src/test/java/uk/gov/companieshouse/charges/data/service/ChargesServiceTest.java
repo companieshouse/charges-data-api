@@ -12,6 +12,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static uk.gov.companieshouse.api.charges.ChargeApi.AssetsCeasedReleasedEnum.PART_PROPERTY_RELEASED;
 import static uk.gov.companieshouse.api.charges.ChargeApi.StatusEnum.PART_SATISFIED;
@@ -70,7 +71,9 @@ import uk.gov.companieshouse.logging.Logger;
 @ExtendWith(MockitoExtension.class)
 class ChargesServiceTest {
 
-    private static final String companyNumber = "NI622400";
+    private static final String CONTEXT_ID = "1111111";
+    private static final String CHARGE_ID = "123456789";
+    private static final String COMPANY_NUMBER = "NI622400";
 
     @Autowired
     private ObjectMapper mongoCustomConversions;
@@ -104,8 +107,6 @@ class ChargesServiceTest {
     @Mock
     private ChargesDocument document;
 
-    private final InternalChargeApi internalChargeApi = buildInternalCharges();
-
     /**
      * Reset the mocks so defaults are returned and invocation counters cleared.
      */
@@ -118,7 +119,7 @@ class ChargesServiceTest {
    @Test
     void find_charges_should_return_charges() throws IOException {
         trainMocks();
-        Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,
+        Optional<ChargesApi> charges = chargesService.findCharges(COMPANY_NUMBER,
                 new RequestCriteria().setItemsPerPage(1).setStartIndex(0));
         assertThat(charges.isPresent()).isTrue();
         assertThat(charges.get().getItems().isEmpty()).isFalse();
@@ -128,10 +129,11 @@ class ChargesServiceTest {
         assertThat(charges.get().getUnfilteredCount()).isEqualTo(14);
     }
 
+
     @Test
     void findChargesWithFilter() throws IOException {
         trainMocks();
-        Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,
+        Optional<ChargesApi> charges = chargesService.findCharges(COMPANY_NUMBER,
                 new RequestCriteria().setFilter("outstanding").setStartIndex(0).setItemsPerPage(1));
         assertThat(charges.isPresent()).isTrue();
         assertThat(charges.get().getItems().isEmpty()).isFalse();
@@ -139,14 +141,14 @@ class ChargesServiceTest {
         assertThat(charges.get().getSatisfiedCount()).isEqualTo(1);
         assertThat(charges.get().getPartSatisfiedCount()).isEqualTo(2);
         assertThat(charges.get().getUnfilteredCount()).isEqualTo(14);
-        verify(chargesRepository).findCharges(companyNumber,
+        verify(chargesRepository).findCharges(COMPANY_NUMBER,
                 Arrays.asList(ChargeApi.StatusEnum.SATISFIED.toString(), ChargeApi.StatusEnum.FULLY_SATISFIED.toString()), 0, 1);
     }
 
     @Test
     void findChargesWithFilterUnpaged() throws IOException {
         trainMocks();
-        Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,
+        Optional<ChargesApi> charges = chargesService.findCharges(COMPANY_NUMBER,
                 new RequestCriteria().setFilter("outstanding"));
         assertThat(charges.isPresent()).isTrue();
         assertThat(charges.get().getItems().isEmpty()).isFalse();
@@ -154,14 +156,14 @@ class ChargesServiceTest {
         assertThat(charges.get().getSatisfiedCount()).isEqualTo(1);
         assertThat(charges.get().getPartSatisfiedCount()).isEqualTo(2);
         assertThat(charges.get().getUnfilteredCount()).isEqualTo(14);
-        verify(chargesRepository).findCharges(companyNumber,
+        verify(chargesRepository).findCharges(COMPANY_NUMBER,
                 Arrays.asList(ChargeApi.StatusEnum.SATISFIED.toString(), ChargeApi.StatusEnum.FULLY_SATISFIED.toString()), 0, 25);
     }
 
     @Test
     void findChargesWithPaging() throws IOException {
         trainMocks();
-        Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,
+        Optional<ChargesApi> charges = chargesService.findCharges(COMPANY_NUMBER,
                 new RequestCriteria().setItemsPerPage(1).setStartIndex(0));
         assertThat(charges.isPresent()).isTrue();
         assertThat(charges.get().getItems().isEmpty()).isFalse();
@@ -169,50 +171,50 @@ class ChargesServiceTest {
         assertThat(charges.get().getSatisfiedCount()).isEqualTo(1);
         assertThat(charges.get().getPartSatisfiedCount()).isEqualTo(2);
         assertThat(charges.get().getUnfilteredCount()).isEqualTo(14);
-        verify(chargesRepository).findCharges(companyNumber, Collections.emptyList(), 0, 1);
+        verify(chargesRepository).findCharges(COMPANY_NUMBER, Collections.emptyList(), 0, 1);
     }
 
     @Test
     void findChargesWithoutPaging() throws IOException {
         trainMocks();
-        Optional<ChargesApi> charges = chargesService.findCharges(companyNumber, new RequestCriteria());
+        Optional<ChargesApi> charges = chargesService.findCharges(COMPANY_NUMBER, new RequestCriteria());
         assertThat(charges.isPresent()).isTrue();
         assertThat(charges.get().getItems().isEmpty()).isFalse();
         assertThat(charges.get().getTotalCount()).isEqualTo(1);
         assertThat(charges.get().getSatisfiedCount()).isEqualTo(1);
         assertThat(charges.get().getPartSatisfiedCount()).isEqualTo(2);
         assertThat(charges.get().getUnfilteredCount()).isEqualTo(14);
-        verify(chargesRepository).findCharges(companyNumber, Collections.emptyList(), 0, 25);
+        verify(chargesRepository).findCharges(COMPANY_NUMBER, Collections.emptyList(), 0, 25);
     }
 
     @Test
     void findChargesWithPageSizeAboveLimit() throws IOException {
         trainMocks();
-        chargesService.findCharges(companyNumber, new RequestCriteria().setItemsPerPage(101).setStartIndex(0));
-        verify(chargesRepository).findCharges(companyNumber, Collections.emptyList(), 0, 100);
+        chargesService.findCharges(COMPANY_NUMBER, new RequestCriteria().setItemsPerPage(101).setStartIndex(0));
+        verify(chargesRepository).findCharges(COMPANY_NUMBER, Collections.emptyList(), 0, 100);
     }
 
     @Test
     void findChargesWithFilterNoResults() throws IOException {
-        when(chargesRepository.findCharges(eq(companyNumber), any(), anyInt(), anyInt()))
+        when(chargesRepository.findCharges(eq(COMPANY_NUMBER), any(), anyInt(), anyInt()))
                 .thenReturn(new ChargesAggregate());
-        when(companyMetricsApiService.getCompanyMetrics(companyNumber))
+        when(companyMetricsApiService.getCompanyMetrics(COMPANY_NUMBER))
                 .thenReturn(Optional.ofNullable(createMetrics()));
-        Optional<ChargesApi> chargeApi = chargesService.findCharges(companyNumber, new RequestCriteria().setFilter("outstanding"));
+        Optional<ChargesApi> chargeApi = chargesService.findCharges(COMPANY_NUMBER, new RequestCriteria().setFilter("outstanding"));
         assertEquals(0, chargeApi.get().getTotalCount());
-        verify(chargesRepository).findCharges(companyNumber,
+        verify(chargesRepository).findCharges(COMPANY_NUMBER,
                 Arrays.asList(ChargeApi.StatusEnum.SATISFIED.toString(), ChargeApi.StatusEnum.FULLY_SATISFIED.toString()), 0, 25);
     }
 
     @Test
     void findChargesWithNoResults() throws IOException {
-        when(chargesRepository.findCharges(eq(companyNumber), any(), anyInt(), anyInt()))
+        when(chargesRepository.findCharges(eq(COMPANY_NUMBER), any(), anyInt(), anyInt()))
                 .thenReturn(new ChargesAggregate());
-        when(companyMetricsApiService.getCompanyMetrics(companyNumber))
+        when(companyMetricsApiService.getCompanyMetrics(COMPANY_NUMBER))
                 .thenReturn(Optional.ofNullable(createMetrics()));
-        Optional<ChargesApi> chargeApi = chargesService.findCharges(companyNumber, new RequestCriteria());
+        Optional<ChargesApi> chargeApi = chargesService.findCharges(COMPANY_NUMBER, new RequestCriteria());
         assertEquals(0, chargeApi.get().getTotalCount());
-        verify(chargesRepository).findCharges(companyNumber, emptyList(), 0, 25);
+        verify(chargesRepository).findCharges(COMPANY_NUMBER, emptyList(), 0, 25);
     }
 
     @Test
@@ -220,11 +222,11 @@ class ChargesServiceTest {
         when(chargesRepository.findCharges(anyString(), any(), anyInt(), anyInt())).thenReturn(chargesAggregate);
         when(chargesAggregate.getChargesDocuments()).thenReturn(singletonList(document));
         when(chargesAggregate.getTotalCharges()).thenReturn(singletonList(new TotalCharges(0L)));
-        Optional<ChargesApi> charges = chargesService.findCharges(companyNumber, new RequestCriteria());
+        Optional<ChargesApi> charges = chargesService.findCharges(COMPANY_NUMBER, new RequestCriteria());
         assertThat(charges.isPresent()).isTrue();
         assertThat(charges.get().getTotalCount()).isEqualTo(0);
         verify(companyMetricsApiService, times(1))
-                .getCompanyMetrics(companyNumber);
+                .getCompanyMetrics(COMPANY_NUMBER);
     }
 
     @Test
@@ -232,7 +234,7 @@ class ChargesServiceTest {
         when(chargesRepository.findCharges(anyString(), any(), anyInt(), anyInt())).thenReturn(chargesAggregate);
         when(chargesAggregate.getChargesDocuments()).thenReturn(singletonList(document));
         when(chargesAggregate.getTotalCharges()).thenReturn(singletonList(new TotalCharges(1L)));
-        Optional<ChargesApi> charges = chargesService.findCharges(companyNumber,
+        Optional<ChargesApi> charges = chargesService.findCharges(COMPANY_NUMBER,
                 new RequestCriteria().setItemsPerPage(1).setStartIndex(0));
         assertThat(charges.isPresent()).isTrue();
         //assert no metrics
@@ -274,7 +276,7 @@ class ChargesServiceTest {
 
     @Test
     void delete_charge_id_and_check_it_does_not_exist_in_database() {
-        String chargeId = "123456789";
+        String chargeId = CHARGE_ID;
         Mockito.when(chargesApiService.invokeChsKafkaApiWithDeleteEvent(anyString(), anyString(), anyString(), any()))
                 .thenReturn(new ApiResponse<>(200, null));
         Mockito.when(chargesRepository.findById(chargeId)).thenReturn(
@@ -290,7 +292,7 @@ class ChargesServiceTest {
 
     @Test
     void when_charge_id_exist_ani_invoke_chs_kafka_api_successfully_invoked_then_delete_charge() {
-        String chargeId = "123456789"; String contextId="1111111"; String companyNumber="1234";
+        String chargeId = CHARGE_ID; String contextId="1111111"; String companyNumber="1234";
         Mockito.when(chargesApiService.invokeChsKafkaApiWithDeleteEvent(anyString(), anyString(), anyString(), any()))
                         .thenReturn(new ApiResponse<>(200, null));
         Mockito.when(chargesRepository.findById(chargeId)).thenReturn(
@@ -310,7 +312,7 @@ class ChargesServiceTest {
 
     @Test
     void when_connection_issue_in_db_on_delete_then_throw_service_internal_exception() {
-        String chargeId = "123456789";
+        String chargeId = CHARGE_ID;
 
         Mockito.when(chargesRepository.findById(chargeId)).thenReturn(
                 populateChargesDocument(chargeId, populateCharge()));
@@ -325,7 +327,7 @@ class ChargesServiceTest {
 
     @Test
     void when_connection_issue_in_db_on_find_in_delete_then_throw_service_unavailable_exception() {
-        String chargeId = "123456789";
+        String chargeId = CHARGE_ID;
 
         doThrow(new DataAccessResourceFailureException("Connection broken"))
                 .when(chargesRepository)
@@ -341,7 +343,7 @@ class ChargesServiceTest {
 
     @Test
     void when_charge_id_exist_ani_invoke_chs_kafka_api_un_successfully_invoked_then_delete_charge() {
-        String chargeId = "123456789"; String contextId="1111111"; String companyNumber="1234";
+        String chargeId = CHARGE_ID; String contextId="1111111"; String companyNumber="1234";
         Mockito.when(chargesApiService.invokeChsKafkaApiWithDeleteEvent(anyString(), anyString(), anyString(), any()))
                 .thenReturn(new ApiResponse<>(301, null));
         Mockito.when(chargesRepository.findById(chargeId)).thenReturn(
@@ -361,61 +363,136 @@ class ChargesServiceTest {
 
 
     @Test
-    void testInsertChargeHandlesCompensatoryTransactionWhenServiceUnavailableThrown() {
+    void testInsertChargeSavesAndInvokesChsKafkaAPISuccessfully() {
         // given
-        String chargeId = "123456789";
-        String contextId = "1111111";
-        String companyNumber = "1234";
         ChargesDocument chargesDocument = new ChargesDocument()
-                .setId("123456789")
+                .setId(CHARGE_ID)
                 .setCompanyNumber("1234");
 
         when(chargesTransformer.transform(any(), any(), any(InternalChargeApi.class))).thenReturn(
                 chargesDocument);
         when(chargesRepository.findById(any())).thenReturn(Optional.empty());
-        when(chargesApiService.invokeChsKafkaApi(any(), any(), any())).thenThrow(
-                ResponseStatusException.class);
+        when(chargesApiService.invokeChsKafkaApi(any(), any(), any())).thenReturn(
+                (new ApiResponse<>(200, null)));
 
         // When
-        Executable executable = () -> chargesService.upsertCharges(contextId, companyNumber,
-                chargeId, internalChargeApi);
+        chargesService.upsertCharges(CONTEXT_ID, COMPANY_NUMBER,
+                CHARGE_ID, buildInternalCharges(OffsetDateTime.parse("2023-11-06T15:30:00.000000Z")));
 
         // then
-        assertThrows(ResponseStatusException.class, executable);
         verify(chargesRepository).save(chargesDocument);
-        verify(chargesRepository).deleteById(chargesDocument.getId());
+        verifyNoMoreInteractions(chargesRepository);
+        verify(chargesApiService, times(0)).
+                invokeChsKafkaApi(CONTEXT_ID, CHARGE_ID, COMPANY_NUMBER);
     }
 
     @Test
-    void testUpdateChargeHandlesCompensatoryTransactionWhenServiceUnavailableThrown() {
+    void testUpdateChargeSavesAndInvokesChsKafkaAPISuccessfully() {
         // given
-        String chargeId = "123456789";
-        String contextId = "1111111";
-        String companyNumber = "1234";
-        internalChargeApi.getInternalData()
-                .setDeltaAt(OffsetDateTime.parse("2023-11-06T15:30:00.000000Z"));
-        ChargesDocument deltaChargesDocument = new ChargesDocument().setId("chargesIdDELTA")
+        ChargesDocument deltaChargesDocument = new ChargesDocument().setId("chargeIdDELTA")
                 .setCompanyNumber("012345678")
                 .setDeltaAt(OffsetDateTime.parse("2023-11-06T16:30:00.000000Z"));
 
-        ChargesDocument existingDocument = new ChargesDocument().setId("chargesIdEXISTING")
-                .setCompanyNumber("012345678")
+        ChargesDocument existingDocument = new ChargesDocument().setId(CHARGE_ID)
+                .setCompanyNumber(COMPANY_NUMBER)
                 .setDeltaAt(OffsetDateTime.parse("2023-11-06T12:00:00.000000Z"));
 
         when(chargesTransformer.transform(any(), any(), any(InternalChargeApi.class))).thenReturn(
                 deltaChargesDocument);
         when(chargesRepository.findById(any())).thenReturn(Optional.of(existingDocument));
-        when(chargesApiService.invokeChsKafkaApi(any(), any(), any())).thenThrow(
-                ResponseStatusException.class);
+        when(chargesApiService.invokeChsKafkaApi(any(), any(), any())).thenReturn(
+                (new ApiResponse<>(200, null)));
 
         // When
-        Executable executable = () -> chargesService.upsertCharges(contextId, companyNumber,
-                chargeId, internalChargeApi);
+        chargesService.upsertCharges("contextId", "012345678",
+                "chargesIdDELTA", buildInternalCharges(OffsetDateTime.parse("2023-11-06T15:30:00.000000Z")));
+
+        // then
+        verify(chargesRepository).save(deltaChargesDocument);
+        verifyNoMoreInteractions(chargesRepository);
+        verify(chargesApiService, times(1)).
+                invokeChsKafkaApi("contextId", "012345678", "chargesIdDELTA");
+    }
+
+    @Test
+    void testInsertChargeStillSavesWhenServiceUnavailableThrownForChsKafkaAPI() {
+        // given
+        ChargesDocument chargesDocument = new ChargesDocument()
+                .setId(CHARGE_ID)
+                .setCompanyNumber("1234");
+
+        when(chargesTransformer.transform(any(), any(), any(InternalChargeApi.class))).thenReturn(
+                chargesDocument);
+        when(chargesRepository.findById(any())).thenReturn(Optional.empty());
+        when(chargesApiService.invokeChsKafkaApi(any(), any(), any())).thenReturn(
+                (new ApiResponse<>(503, null)));
+
+        // When
+        Executable executable = () -> chargesService.upsertCharges(CONTEXT_ID, COMPANY_NUMBER,
+                CHARGE_ID, buildInternalCharges(OffsetDateTime.parse("2023-11-06T15:30:00.000000Z")));
+
+        // then
+        assertThrows(ResponseStatusException.class, executable);
+        verify(chargesRepository).save(chargesDocument);
+        verifyNoMoreInteractions(chargesRepository);
+        verify(chargesApiService, times(0)).
+                invokeChsKafkaApi(CONTEXT_ID, CHARGE_ID, COMPANY_NUMBER);
+    }
+
+    @Test
+    void testUpdateChargeStillSavesWhenServiceUnavailableThrownForChsKafkaAPI() {
+        // given
+        ChargesDocument deltaChargesDocument = new ChargesDocument().setId("chargeIdDELTA")
+                .setCompanyNumber("012345678")
+                .setDeltaAt(OffsetDateTime.parse("2023-11-06T16:30:00.000000Z"));
+
+        ChargesDocument existingDocument = new ChargesDocument().setId(CHARGE_ID)
+                .setCompanyNumber(COMPANY_NUMBER)
+                .setDeltaAt(OffsetDateTime.parse("2023-11-06T12:00:00.000000Z"));
+
+        when(chargesTransformer.transform(any(), any(), any(InternalChargeApi.class))).thenReturn(
+                deltaChargesDocument);
+        when(chargesRepository.findById(any())).thenReturn(Optional.of(existingDocument));
+        when(chargesApiService.invokeChsKafkaApi(any(), any(), any())).thenReturn(
+                (new ApiResponse<>(503, null)));
+
+
+        // When
+        Executable executable = () -> chargesService.upsertCharges("contextId", "012345678",
+                "chargesIdDELTA", buildInternalCharges(OffsetDateTime.parse("2023-11-06T15:30:00.000000Z")));
 
         // then
         assertThrows(ResponseStatusException.class, executable);
         verify(chargesRepository).save(deltaChargesDocument);
-        verify(chargesRepository).save(existingDocument);
+        verifyNoMoreInteractions(chargesRepository);
+        verify(chargesApiService, times(0)).
+                invokeChsKafkaApi(CONTEXT_ID, CHARGE_ID, COMPANY_NUMBER);
+    }
+
+    @Test
+    void testUpdateChargesWhenDeltaAtIsTheSameAsTheTimestampWithinMongoDB () {
+        //given
+        ChargesDocument deltaChargesDocument = new ChargesDocument().setId("chargeIdDELTA")
+                .setCompanyNumber("012345678")
+                .setDeltaAt(OffsetDateTime.parse("2023-11-06T15:30:00.000000Z"));
+
+        ChargesDocument existingDocument = new ChargesDocument().setId(CHARGE_ID)
+                .setCompanyNumber(COMPANY_NUMBER)
+                .setDeltaAt(OffsetDateTime.parse("2023-11-06T15:30:00.000000Z"));
+
+        when(chargesTransformer.transform(any(), any(), any(InternalChargeApi.class))).thenReturn(
+                deltaChargesDocument);
+        when(chargesRepository.findById(any())).thenReturn(Optional.of(existingDocument));
+        when(chargesApiService.invokeChsKafkaApi(any(), any(), any()))
+                .thenReturn(new ApiResponse<>(200, null));
+
+        //when
+        chargesService.upsertCharges("contextId", "012345678",
+                "chargeIdDELTA", buildInternalCharges(OffsetDateTime.parse("2023-11-06T15:30:00.000000Z")));
+
+        //then
+        verify(chargesRepository).save(deltaChargesDocument);
+        verifyNoMoreInteractions(chargesRepository);
     }
 
 
@@ -451,13 +528,13 @@ class ChargesServiceTest {
     }
 
     private void trainMocks() throws IOException {
-        when(chargesRepository.findCharges(eq(companyNumber), any(), anyInt(), anyInt()))
+        when(chargesRepository.findCharges(eq(COMPANY_NUMBER), any(), anyInt(), anyInt()))
                 .thenReturn(new ChargesAggregate(singletonList(new TotalCharges(1L)), singletonList(createCharges())));
-        when(companyMetricsApiService.getCompanyMetrics(companyNumber))
+        when(companyMetricsApiService.getCompanyMetrics(COMPANY_NUMBER))
                 .thenReturn(Optional.ofNullable(createMetrics()));
     }
 
-    private InternalChargeApi buildInternalCharges() {
+    private InternalChargeApi buildInternalCharges(OffsetDateTime deltaAt) {
         InternalChargeApi output = new InternalChargeApi();
 
         ChargeApi externalData = new ChargeApi();
@@ -492,7 +569,7 @@ class ChargesServiceTest {
         externalData.setLinks(chargeLink);
 
         InternalData internalData = new InternalData();
-        internalData.setDeltaAt(OffsetDateTime.parse("2022-01-13T00:00:00Z"));
+        internalData.setDeltaAt(deltaAt);
         internalData.setUpdatedBy("updatedBy");
         output.setExternalData(externalData);
         output.setInternalData(internalData);

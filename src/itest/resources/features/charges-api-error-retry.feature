@@ -5,7 +5,7 @@ Feature: Process company charges error scenarios
     Given Charges Data API component is successfully running
     And   Stubbed CHS Kafka API endpoint will return 200 http response code
     But   MongoDB is not reachable
-    When  PUT Rest endpoint is invoked with a valid json payload but Repository throws an error
+    When  PUT Rest endpoint is invoked with a valid json payload
     Then  Rest endpoint returns http response code 503 to the client
     And   CHS Kafka API is never invoked
 
@@ -33,4 +33,4 @@ Feature: Process company charges error scenarios
     And   Stubbed CHS Kafka API endpoint will return 503 http response code
     When  PUT Rest endpoint is invoked with a valid json payload
     Then  Rest endpoint returns http response code 503 to the client
-    And   Data is not updated into Mongo DB
+    And   Data is updated in Mongo DB
