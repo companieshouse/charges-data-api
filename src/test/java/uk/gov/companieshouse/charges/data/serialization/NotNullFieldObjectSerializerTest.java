@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class NotNullFieldObjectSerializerTest {
+class NotNullFieldObjectSerializerTest {
 
     @Mock
     private SerializerProvider serializerProvider;

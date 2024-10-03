@@ -5,23 +5,18 @@ import static org.junit.Assert.assertNotNull;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import uk.gov.companieshouse.api.charges.ChargeApi;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
 import uk.gov.companieshouse.api.charges.InternalData;
-import uk.gov.companieshouse.logging.Logger;
 
 public class ChargesTransformerTest {
 
-    private Logger logger;
     private ChargesTransformer chargesTransformer;
 
     @Before
     public void init() {
-        this.logger = Mockito.mock(Logger.class);
         this.chargesTransformer = new ChargesTransformer();
     }
 

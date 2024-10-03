@@ -20,15 +20,12 @@ import uk.gov.companieshouse.api.handler.metrics.PrivateCompanyMetricsResourceHa
 import uk.gov.companieshouse.api.handler.metrics.request.PrivateCompanyMetricsGet;
 import uk.gov.companieshouse.api.metrics.MetricsApi;
 import uk.gov.companieshouse.api.model.ApiResponse;
-import uk.gov.companieshouse.logging.Logger;
 
 @ExtendWith(MockitoExtension.class)
 class CompanyMetricsApiServiceTest {
 
     @Mock
     private ApiClientService apiClientService;
-
-    private final Logger logger = Mockito.mock(Logger.class);
 
     @Mock
     private InternalApiClient internalApiClient;

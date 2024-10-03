@@ -55,11 +55,11 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
 
         List<ChargesDocument> documents = chargesRepository.findAll();
         assertThat(documents).hasSize(1);
-        assertThat(documents.get(0).getData().getId()).isEqualTo(chargesDocument.getData().getId());
-        assertThat(documents.get(0).getCompanyNumber()).isEqualTo(chargesDocument.getCompanyNumber());
-        assertThat(documents.get(0).getDeltaAt()).isEqualTo(chargesDocument.getDeltaAt());
-        assertThat(documents.get(0).getUpdated().getAt()).isEqualTo(chargesDocument.getUpdated().getAt());
-        assertThat(documents.get(0).getData().getAcquiredOn()).isEqualTo(chargesDocument.getData().getAcquiredOn());
+        assertThat(documents.getFirst().getData().getId()).isEqualTo(chargesDocument.getData().getId());
+        assertThat(documents.getFirst().getCompanyNumber()).isEqualTo(chargesDocument.getCompanyNumber());
+        assertThat(documents.getFirst().getDeltaAt()).isEqualTo(chargesDocument.getDeltaAt());
+        assertThat(documents.getFirst().getUpdated().getAt()).isEqualTo(chargesDocument.getUpdated().getAt());
+        assertThat(documents.getFirst().getData().getAcquiredOn()).isEqualTo(chargesDocument.getData().getAcquiredOn());
     }
 
     @Test
@@ -72,11 +72,11 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
 
         List<ChargesDocument> documents = chargesRepository.findAll();
         assertThat(documents).hasSize(1);
-        assertThat(documents.get(0).getData().getId()).isEqualTo(chargesDocument.getData().getId());
-        assertThat(documents.get(0).getCompanyNumber()).isEqualTo(chargesDocument.getCompanyNumber());
-        assertThat(documents.get(0).getDeltaAt()).isEqualTo(chargesDocument.getDeltaAt());
-        assertThat(documents.get(0).getUpdated().getAt()).isEqualTo(chargesDocument.getUpdated().getAt());
-        assertThat(documents.get(0).getData().getAcquiredOn()).isEqualTo(chargesDocument.getData().getAcquiredOn());
+        assertThat(documents.getFirst().getData().getId()).isEqualTo(chargesDocument.getData().getId());
+        assertThat(documents.getFirst().getCompanyNumber()).isEqualTo(chargesDocument.getCompanyNumber());
+        assertThat(documents.getFirst().getDeltaAt()).isEqualTo(chargesDocument.getDeltaAt());
+        assertThat(documents.getFirst().getUpdated().getAt()).isEqualTo(chargesDocument.getUpdated().getAt());
+        assertThat(documents.getFirst().getData().getAcquiredOn()).isEqualTo(chargesDocument.getData().getAcquiredOn());
     }
 
     @DisplayName("Repository returns unfiltered charges when no filter specified")
@@ -134,8 +134,8 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
 
         // then
         assertEquals(2, chargesAggregate.getChargesDocuments().size());
-        assertEquals(chargesPartSatisfied.getId(), chargesAggregate.getChargesDocuments().get(0).getId());
-        assertEquals(chargesPartSatisfied.getData().getStatus(), chargesAggregate.getChargesDocuments().get(0).getData().getStatus());
+        assertEquals(chargesPartSatisfied.getId(), chargesAggregate.getChargesDocuments().getFirst().getId());
+        assertEquals(chargesPartSatisfied.getData().getStatus(), chargesAggregate.getChargesDocuments().getFirst().getData().getStatus());
         assertEquals(chargesOutstanding.getId(), chargesAggregate.getChargesDocuments().get(1).getId());
         assertEquals(chargesOutstanding.getData().getStatus(), chargesAggregate.getChargesDocuments().get(1).getData().getStatus());
     }
@@ -165,9 +165,9 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
                 emptyList(), 0, 3);
 
         // then
-        assertEquals(4L, chargesAggregate.getTotalCharges().get(0).getCount());
+        assertEquals(4L, chargesAggregate.getTotalCharges().getFirst().getCount());
         assertEquals(3, chargesAggregate.getChargesDocuments().size());
-        assertEquals(chargeThree.getId(), chargesAggregate.getChargesDocuments().get(0).getId());
+        assertEquals(chargeThree.getId(), chargesAggregate.getChargesDocuments().getFirst().getId());
         assertEquals(chargeFour.getId(), chargesAggregate.getChargesDocuments().get(1).getId());
         assertEquals(chargeTwo.getId(), chargesAggregate.getChargesDocuments().get(2).getId());
     }
@@ -197,9 +197,9 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
                 emptyList(), 2, 3);
 
         // then
-        assertEquals(4L, chargesAggregate.getTotalCharges().get(0).getCount());
+        assertEquals(4L, chargesAggregate.getTotalCharges().getFirst().getCount());
         assertEquals(2, chargesAggregate.getChargesDocuments().size());
-        assertEquals(chargeTwo.getId(), chargesAggregate.getChargesDocuments().get(0).getId());
+        assertEquals(chargeTwo.getId(), chargesAggregate.getChargesDocuments().getFirst().getId());
         assertEquals(chargeOne.getId(), chargesAggregate.getChargesDocuments().get(1).getId());
     }
 
@@ -229,7 +229,7 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
 
         // then
         assertEquals(4, chargesAggregate.getChargesDocuments().size());
-        assertEquals(chargeThree.getId(), chargesAggregate.getChargesDocuments().get(0).getId());
+        assertEquals(chargeThree.getId(), chargesAggregate.getChargesDocuments().getFirst().getId());
         assertEquals(chargeFour.getId(), chargesAggregate.getChargesDocuments().get(1).getId());
         assertEquals(chargeTwo.getId(), chargesAggregate.getChargesDocuments().get(2).getId());
         assertEquals(chargeOne.getId(), chargesAggregate.getChargesDocuments().get(3).getId());
@@ -272,7 +272,7 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
 
         // then
         assertEquals(3, chargesAggregate.getChargesDocuments().size());
-        assertEquals(chargeThree.getId(), chargesAggregate.getChargesDocuments().get(0).getId());
+        assertEquals(chargeThree.getId(), chargesAggregate.getChargesDocuments().getFirst().getId());
         assertEquals(chargeFour.getId(), chargesAggregate.getChargesDocuments().get(1).getId());
         assertEquals(chargeTwo.getId(), chargesAggregate.getChargesDocuments().get(2).getId());
     }
@@ -312,10 +312,7 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
         InternalChargeApi chargesDocument = mapper.readValue(incomingData, InternalChargeApi.class);
-        ChargesDocument transformedChargesDocument =
-                transform(companyNumber, chargeId, chargesDocument);
-
-        return transformedChargesDocument;
+        return transform(companyNumber, chargeId, chargesDocument);
     }
 
     public ChargesDocument transform(String companyNumber, String chargeId,
@@ -329,12 +326,10 @@ class ChargesRepositoryITest extends AbstractIntegrationTest {
         String by = requestBody.getInternalData().getUpdatedBy();
         final Updated updated =
                 new Updated().setAt(at.toLocalDateTime()).setType(type).setBy(by);
-        var chargesDocument = new ChargesDocument().setId(chargeId)
+        return new ChargesDocument().setId(chargeId)
                 .setCompanyNumber(companyNumber).setData(requestBody.getExternalData())
                 .setDeltaAt(deltaAt)
                 .setUpdated(updated);
-
-        return chargesDocument;
     }
 
     private String loadFile(String dir, String fileName) {

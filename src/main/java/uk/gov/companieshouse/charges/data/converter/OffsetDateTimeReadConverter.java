@@ -10,9 +10,8 @@ public class OffsetDateTimeReadConverter implements Converter<Date, OffsetDateTi
 
     @Override
     public OffsetDateTime convert(final Date date) {
-        OffsetDateTime offsetDateTime = date.toInstant()
+        return date.toInstant()
                 .atOffset(ZoneOffset.UTC);
-        return offsetDateTime;
     }
 
 }

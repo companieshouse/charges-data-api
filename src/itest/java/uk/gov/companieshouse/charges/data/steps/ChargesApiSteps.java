@@ -64,17 +64,16 @@ public class ChargesApiSteps {
 
     String companyNumber = "08124207";
     String chargeId = "AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==";
-    String insolvency_cases_happy_path_input = "Insolvency_cases_Happy_Path_input";
-    String invalid_payload = "Invalid_payload";
-    String x_request_value = "5234234234";
-    String x_request_id = "x-request-id";
+    String insolvencyCasesHappyPathInput = "Insolvency_cases_Happy_Path_input";
+    String invalidPayload = "Invalid_payload";
+    String xRequestValue = "5234234234";
+    String xRequestId = "x-request-id";
 
     static InternalChargeApi companyCharge;
 
     @Before
     public static void before_each() {
         WiremockTestConfig.setupWiremock();
-        //CucumberFeaturesRunnerITest.start();
         companyCharge = null;
     }
 
@@ -115,7 +114,7 @@ public class ChargesApiSteps {
             fail("Failed to read Company Charge File '" + fileName +"'");
         }
         String uri = "/company/{company_number}/charge/{charge_id}/internal";
-        ResponseEntity<Void> response = restTemplate.exchange(uri, HttpMethod.PUT, getSecurityForRequest(companyCharge),
+        restTemplate.exchange(uri, HttpMethod.PUT, getSecurityForRequest(companyCharge),
             Void.class, companyNumber, chargeId);
     }
 
@@ -124,14 +123,14 @@ public class ChargesApiSteps {
         HttpEntity request = getSecurityForRequest(companyCharge);
         String uri = "/company/{company_number}/charge/{charge_id}/internal";
         ResponseEntity<Void> response = restTemplate.exchange(uri, HttpMethod.PUT, request, Void.class, inCompanyNumber, inChargeId);
-        CucumberContext.CONTEXT.set("statusCode", response.getStatusCodeValue());
+        CucumberContext.CONTEXT.set("statusCode", response.getStatusCode().value());
     }
 
     private HttpEntity getSecurityForRequest(Object body){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        headers.set(x_request_id, x_request_value);
+        headers.set(xRequestId, xRequestValue);
 
         headers.set("ERIC-Identity" , "SOME_IDENTITY");
         headers.set("ERIC-Identity-Type", "key");
@@ -143,7 +142,7 @@ public class ChargesApiSteps {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        headers.set(x_request_id, x_request_value);
+        headers.set(xRequestId, xRequestValue);
 
         return new HttpEntity(null, headers);
     }
@@ -152,7 +151,7 @@ public class ChargesApiSteps {
     public void i_send_get_request_with_parameters(String companyNumber, String chargeId) {
         String uri = "/company/{company_number}/charges/{charge_id}";
         ResponseEntity<ChargeApi> response = restTemplate.exchange(uri, HttpMethod.GET, getSecurityForRequest(null), ChargeApi.class, companyNumber, chargeId);
-        CucumberContext.CONTEXT.set("statusCode", response.getStatusCodeValue());
+        CucumberContext.CONTEXT.set("statusCode", response.getStatusCode().value());
         CucumberContext.CONTEXT.set("getChargeDetailsResponseBody", response.getBody());
     }
 
@@ -182,7 +181,7 @@ public class ChargesApiSteps {
     public void i_send_get_request_with_parameters(String companyNumber) {
         String uri = "/company/{company_number}/charges";
         ResponseEntity<ChargesApi> response = restTemplate.exchange(uri, HttpMethod.GET, getSecurityForRequest(null), ChargesApi.class, companyNumber);
-        CucumberContext.CONTEXT.set("statusCode", response.getStatusCodeValue());
+        CucumberContext.CONTEXT.set("statusCode", response.getStatusCode().value());
         CucumberContext.CONTEXT.set("getChargesResponseBody", response.getBody());
     }
 
@@ -258,7 +257,7 @@ public class ChargesApiSteps {
 
     @When("PUT Rest endpoint is invoked with a valid json payload but Repository throws an error")
     public void put_rest_endpoint_is_invoked_with_a_valid_json_payload_but_repository_throws_an_error() {
-        readCompanyChargeFile(insolvency_cases_happy_path_input);
+        readCompanyChargeFile(insolvencyCasesHappyPathInput);
         i_send_put_request_for_company_number_and_charge_id_with_payload(companyNumber,
                 chargeId);
     }
@@ -279,19 +278,19 @@ public class ChargesApiSteps {
         HttpEntity request = getSecurityForRequest(chargeId);
         String uri = "/company/{company_number}/charge/{charge_id}/internal";
         ResponseEntity<Void> response = restTemplate.exchange(uri, HttpMethod.PUT, request, Void.class, companyNumber, chargeId);
-        CucumberContext.CONTEXT.set("statusCode", response.getStatusCodeValue());
+        CucumberContext.CONTEXT.set("statusCode", response.getStatusCode().value());
     }
 
     @When("PUT Rest endpoint is invoked with a valid json payload that causes a NPE")
     public void put_rest_endpoint_is_invoked_with_a_valid_json_payload_that_causes_a_npe() {
-        readCompanyChargeFile(invalid_payload);
+        readCompanyChargeFile(invalidPayload);
         i_send_put_request_for_company_number_and_charge_id_with_payload(companyNumber,
                 chargeId);
     }
 
     @When("PUT Rest endpoint is invoked with a valid json payload")
     public void put_rest_endpoint_is_invoked_with_a_valid_json_payload() {
-        readCompanyChargeFile(insolvency_cases_happy_path_input);
+        readCompanyChargeFile(insolvencyCasesHappyPathInput);
         i_send_put_request_for_company_number_and_charge_id_with_payload(companyNumber,
                 chargeId);
     }
@@ -304,7 +303,7 @@ public class ChargesApiSteps {
     @Then("Data is not updated into Mongo DB")
     public void data_is_not_updated_into_mongo_db() {
         List<ChargesDocument> chargesDocuments = chargesRepository.findAll();
-        Assertions.assertThat(chargesDocuments).hasSize(0);
+        Assertions.assertThat(chargesDocuments).isEmpty();
     }
 
     @Then("Data is updated in Mongo DB")
@@ -331,7 +330,7 @@ public class ChargesApiSteps {
 
         ResponseEntity<Void> response = restTemplate.exchange(uri, HttpMethod.PUT, getNullRequest(),
             Void.class, companyNumber, chargeId);
-        CucumberContext.CONTEXT.set("statusCode", response.getStatusCodeValue());
+        CucumberContext.CONTEXT.set("statusCode", response.getStatusCode().value());
     }
 
 
@@ -342,7 +341,7 @@ public class ChargesApiSteps {
 
         ResponseEntity<Void> response = restTemplate.exchange(uri, HttpMethod.DELETE, getNullRequest(),
             Void.class, companyNumber, chargeId);
-        CucumberContext.CONTEXT.set("statusCode", response.getStatusCodeValue());
+        CucumberContext.CONTEXT.set("statusCode", response.getStatusCode().value());
     }
 
     @Given("the company charge exists for charge id {string}")
@@ -363,7 +362,7 @@ public class ChargesApiSteps {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        headers.set(x_request_id, x_request_value);
+        headers.set(xRequestId, xRequestValue);
         headers.set("ERIC-Identity" , "SOME_IDENTITY");
         headers.set("ERIC-Identity-Type", "key");
         headers.set("ERIC-Authorised-Key-Privileges", "internal-app");
@@ -371,7 +370,7 @@ public class ChargesApiSteps {
 
         ResponseEntity<Void> response = restTemplate.exchange(uri, HttpMethod.DELETE, request, Void.class, companyNumber, chargeId);
 
-        CucumberContext.CONTEXT.set("statusCode", response.getStatusCodeValue());
+        CucumberContext.CONTEXT.set("statusCode", response.getStatusCode().value());
     }
 
     @Then("the CHS Kafka API is invoked successfully with delete event payload {string}")
@@ -379,9 +378,9 @@ public class ChargesApiSteps {
 
         File file = new FileSystemResource("src/itest/resources/payload/input/" + payload + ".json").getFile();
         List<ServeEvent> serverEvents = WiremockTestConfig.getServeEvents();
-        assertThat(serverEvents.size()).isEqualTo(1);
-        assertThat(serverEvents.isEmpty()).isFalse();
-        String requestReceived = serverEvents.get(0).getRequest().getBodyAsString();
+        assertThat(serverEvents).hasSize(1);
+        assertThat(serverEvents).isNotEmpty();
+        String requestReceived = serverEvents.getFirst().getRequest().getBodyAsString();
 
         ChangedResource expectedChangedResource = mongoCustomConversions.readValue(file, ChangedResource.class);
         ChangedResource actualChangedResource = mongoCustomConversions.convertValue(Document.parse(requestReceived), ChangedResource.class);
@@ -396,12 +395,12 @@ public class ChargesApiSteps {
     public void i_send_get_request_with_company_number_and_charge_id(String companyNumber, String chargeId) {
         String uri = "/company/{company_number}/charges/{charge_id}";
         ResponseEntity<ChargesApi> response = restTemplate.exchange(uri, HttpMethod.GET, getSecurityForRequest(null), ChargesApi.class, companyNumber, chargeId);
-        CucumberContext.CONTEXT.set("statusCode", response.getStatusCodeValue());
+        CucumberContext.CONTEXT.set("statusCode", response.getStatusCode().value());
         CucumberContext.CONTEXT.set("getChargesResponseBody", response.getBody());
     }
 
     @Then("charge id {string} does not exist in mongo db")
-    public void charge_id_does_not_exist_in_mongo_db(String chargeId) throws IOException {
+    public void charge_id_does_not_exist_in_mongo_db(String chargeId) {
         assertFalse(chargesRepository.findById(chargeId).isPresent());
     }
 
@@ -411,7 +410,7 @@ public class ChargesApiSteps {
     }
 
     @Then("charge id {string} exist in mongo db")
-    public void charge_id_exist_in_mongo_db(String chargeId) throws IOException {
+    public void charge_id_exist_in_mongo_db(String chargeId) {
         Assert.assertTrue(chargesRepository.findById(chargeId).isPresent());
     }
 

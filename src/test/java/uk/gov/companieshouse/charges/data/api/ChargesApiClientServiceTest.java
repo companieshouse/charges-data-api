@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-public class ChargesApiClientServiceTest {
+class ChargesApiClientServiceTest {
 
     @Mock
     private ChsKafkaApiClientServiceImpl apiClientService;

@@ -9,22 +9,21 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.Optional;
-
-import com.google.gson.GsonBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,20 +51,20 @@ import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument.Updated;
 import uk.gov.companieshouse.charges.data.service.ChargesService;
 import uk.gov.companieshouse.charges.data.transform.ChargesTransformer;
-import uk.gov.companieshouse.logging.Logger;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = ChargesController.class)
 @ContextConfiguration(classes = {ChargesController.class, ExceptionHandlerConfig.class})
 @Import({WebSecurityConfig.class})
 class ChargesControllerTest {
-    private final String companyNumber = "02588581";
-    private final String chargeId = "18588520";
-    private final String CHARGES_PUT_URL = "/company/" + companyNumber + "/charge/" + chargeId + "/internal";
-    private final String CHARGE_DETAILS_GET_URL = "/company/" + companyNumber + "/charges/" + chargeId;
-    private final String CHARGES_GET_URL = "/company/" + companyNumber + "/charges";
-    private final String CHARGES_DELETE_URL = String.format("/company/%s/charges/%s", companyNumber, chargeId);
-    private final String X_REQUEST_ID = "123";
+
+    private static final String COMPANY_NUMBER = "02588581";
+    private static final String CHARGE_ID = "18588520";
+    private static final String CHARGES_PUT_URL = String.format("/company/%s/charges/%s/internal", COMPANY_NUMBER, CHARGE_ID);
+    private static final String CHARGE_DETAILS_GET_URL = String.format("/company/%s/charges/%s", COMPANY_NUMBER, CHARGE_ID);
+    private static final String CHARGES_GET_URL = String.format("/company/%s/charges", COMPANY_NUMBER);
+    private static final String CHARGES_DELETE_URL = String.format("/company/%s/charges/%s", COMPANY_NUMBER, CHARGE_ID);
+    private static final String X_REQUEST_ID = "123";
 
     private static final String ERIC_ALLOWED_ORIGIN="ERIC-Allowed-Origin";
     private static final String ERIC_IDENTITY="ERIC-Identity";
@@ -79,9 +78,6 @@ class ChargesControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @MockBean
-    private Logger logger;
 
     @MockBean
     private ChargesService chargesService;
@@ -318,8 +314,8 @@ class ChargesControllerTest {
     @DisplayName("Retrieve company charge details for a given company number and chargeId")
     void getCharge() throws Exception {
         InternalChargeApi request = createChargesDocument();
-        ChargesDocument document = transform(companyNumber, chargeId, request);
-        when(chargesService.getChargeDetails(companyNumber, chargeId)).thenReturn(Optional.of(document.getData()));
+        ChargesDocument document = transform(COMPANY_NUMBER, CHARGE_ID, request);
+        when(chargesService.getChargeDetails(COMPANY_NUMBER, CHARGE_ID)).thenReturn(Optional.of(document.getData()));
         mockMvc.perform(get(CHARGE_DETAILS_GET_URL)
                     .header("x-request-id", X_REQUEST_ID)
                     .header("ERIC-Identity" , "SOME_IDENTITY")
@@ -345,10 +341,10 @@ class ChargesControllerTest {
         String incomingData =
                 FileCopyUtils.copyToString(new InputStreamReader(Objects.requireNonNull(
                         resourceFile.getInputStream())));
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        return mapper.readValue(incomingData, InternalChargeApi.class);
+        ObjectMapper chargesDocMapper = new ObjectMapper()
+                .registerModule(new JavaTimeModule())
+                .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        return chargesDocMapper.readValue(incomingData, InternalChargeApi.class);
     }
 
     public ChargesDocument transform(String companyNumber, String chargeId,
@@ -362,11 +358,10 @@ class ChargesControllerTest {
         OffsetDateTime deltaAt = requestBody.getInternalData().getDeltaAt();
         final Updated updated =
                 new Updated().setAt(at.toLocalDateTime()).setType(type).setBy(by);
-        var chargesDocument = new ChargesDocument().setId(chargeId)
+        return new ChargesDocument().setId(chargeId)
                 .setCompanyNumber(companyNumber).setData(requestBody.getExternalData())
                 .setDeltaAt(deltaAt)
                 .setUpdated(updated);
-        return chargesDocument;
     }
 
     @Test

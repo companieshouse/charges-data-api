@@ -1,5 +1,9 @@
 package uk.gov.companieshouse.charges.data.config;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.io.InputStream;
+import java.util.Objects;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,14 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
-import uk.gov.companieshouse.logging.Logger;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Objects;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
 
 @SpringBootTest
 class ExceptionHandlerConfigTest {
@@ -56,13 +52,13 @@ class ExceptionHandlerConfigTest {
             }
 
             @Override
-            public InputStream getBody() throws IOException {
+            public InputStream getBody() {
                 return null;
             }
         };
         HttpMessageNotReadableException exp = new HttpMessageNotReadableException("some error", inputMessage);
         ResponseEntity<Object> response = exceptionHandler.handleException(exp, request);
-        assertEquals(400, response.getStatusCodeValue());
+        assertEquals(400, response.getStatusCode().value());
     }
 
     @Test
@@ -70,7 +66,7 @@ class ExceptionHandlerConfigTest {
     void handleExceptionKafkaNon200ResponseTest() {
         ResponseStatusException rse = new ResponseStatusException(Objects.requireNonNull(HttpStatus.resolve(404)), "invokeChsKafkaApi");
         ResponseEntity<Object> response = exceptionHandler.handleException(rse, request);
-        assertEquals(510, response.getStatusCodeValue());
+        assertEquals(510, response.getStatusCode().value());
     }
 
     @Test
@@ -78,7 +74,7 @@ class ExceptionHandlerConfigTest {
     void handleCausedByIOExceptionTest() {
         DataAccessResourceFailureException exp = new DataAccessResourceFailureException("Test exception");
         ResponseEntity<Object> response = exceptionHandler.handleException(exp, request);
-        assertEquals(503, response.getStatusCodeValue());
+        assertEquals(503, response.getStatusCode().value());
     }
 
 }
