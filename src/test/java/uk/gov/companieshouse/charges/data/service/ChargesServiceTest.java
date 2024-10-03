@@ -112,7 +112,7 @@ class ChargesServiceTest {
      */
     @BeforeEach
     public void resetMocks() {
-        chargesService = new ChargesService(logger, chargesRepository,
+        chargesService = new ChargesService(chargesRepository,
                 chargesTransformer, chargesApiService, companyMetricsApiService);
     }
 

@@ -11,7 +11,7 @@ import uk.gov.companieshouse.logging.LoggerFactory;
  */
 @Configuration
 public class LoggingConfig {
-
+//TODO pretty sure we don't need this with the advent of structured logging.
     private static Logger staticLogger;
 
     @Value("${logger.namespace}")

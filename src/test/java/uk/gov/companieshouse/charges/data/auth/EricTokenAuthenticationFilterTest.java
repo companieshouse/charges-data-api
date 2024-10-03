@@ -22,9 +22,6 @@ import static org.mockito.Mockito.when;
 public class EricTokenAuthenticationFilterTest {
 
     @Mock
-    Logger logger;
-
-    @Mock
     HttpServletRequest request;
 
     @Mock
@@ -37,7 +34,7 @@ public class EricTokenAuthenticationFilterTest {
 
     @BeforeEach
     void setup() {
-        ericTokenAuthenticationFilter = new EricTokenAuthenticationFilter(logger);
+        ericTokenAuthenticationFilter = new EricTokenAuthenticationFilter();
     }
 
     @Test

@@ -1,11 +1,12 @@
 package uk.gov.companieshouse.charges.data.service;
 
+import static uk.gov.companieshouse.charges.data.ChargesDataApiApplication.NAMESPACE;
+
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
-
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,17 +19,20 @@ import uk.gov.companieshouse.api.metrics.MortgageApi;
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.charges.data.api.ChargesApiService;
 import uk.gov.companieshouse.charges.data.api.CompanyMetricsApiService;
+import uk.gov.companieshouse.charges.data.logging.DataMapHolder;
 import uk.gov.companieshouse.charges.data.model.ChargesAggregate;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.model.RequestCriteria;
 import uk.gov.companieshouse.charges.data.repository.ChargesRepository;
 import uk.gov.companieshouse.charges.data.transform.ChargesTransformer;
 import uk.gov.companieshouse.logging.Logger;
+import uk.gov.companieshouse.logging.LoggerFactory;
 
 @Service
 public class ChargesService {
 
-    private final Logger logger;
+    private static final Logger LOGGER = LoggerFactory.getLogger(NAMESPACE);
+
     private final ChargesApiService chargesApiService;
     private final ChargesTransformer chargesTransformer;
     private final ChargesRepository chargesRepository;
@@ -38,14 +42,12 @@ public class ChargesService {
     /**
      * ChargesService constructor.
      *
-     * @param logger            Logger.
      * @param chargesRepository chargesRepository.
      */
-    public ChargesService(final Logger logger, final ChargesRepository chargesRepository,
-                          final ChargesTransformer chargesTransformer,
-                          ChargesApiService chargesApiService,
-                          CompanyMetricsApiService companyMetricsApiService) {
-        this.logger = logger;
+    public ChargesService(final ChargesRepository chargesRepository,
+            final ChargesTransformer chargesTransformer,
+            ChargesApiService chargesApiService,
+            CompanyMetricsApiService companyMetricsApiService) {
         this.chargesRepository = chargesRepository;
         this.chargesTransformer = chargesTransformer;
         this.chargesApiService = chargesApiService;
@@ -60,25 +62,24 @@ public class ChargesService {
      * @param requestBody   request body.
      */
     public void upsertCharges(String contextId, String companyNumber, String chargeId,
-                              InternalChargeApi requestBody) {
+            InternalChargeApi requestBody) {
         Optional<ChargesDocument> chargesDocumentOptional = chargesRepository.findById(chargeId);
 
         chargesDocumentOptional.ifPresentOrElse(existingDocument -> {
-            OffsetDateTime deltaAtFromBodyRequest = requestBody.getInternalData().getDeltaAt();
-            OffsetDateTime deltaAtFromDb = existingDocument.getDeltaAt();
+                    OffsetDateTime deltaAtFromBodyRequest = requestBody.getInternalData().getDeltaAt();
+                    OffsetDateTime deltaAtFromDb = existingDocument.getDeltaAt();
 
-            if (deltaAtFromBodyRequest == null
-                    || deltaAtFromDb == null || !deltaAtFromBodyRequest.isBefore(deltaAtFromDb)) {
-                ChargesDocument charges =
-                        this.chargesTransformer.transform(companyNumber, chargeId, requestBody);
+                    if (deltaAtFromBodyRequest == null
+                            || deltaAtFromDb == null || !deltaAtFromBodyRequest.isBefore(deltaAtFromDb)) {
+                        ChargesDocument charges =
+                                this.chargesTransformer.transform(companyNumber, chargeId, requestBody);
 
-                saveAndInvokeChsKafkaApi(contextId, companyNumber, chargeId, charges);
-            } else {
-                logger.error("Charge not saved "
-                        + "as record provided is older than the one already stored"
-                );
-            }
-        },
+                        saveAndInvokeChsKafkaApi(contextId, companyNumber, chargeId, charges);
+                    } else {
+                        LOGGER.error("Charge not saved as record provided is older than the one already stored",
+                                DataMapHolder.getLogMap());
+                    }
+                },
                 () -> {
                     ChargesDocument charges =
                             this.chargesTransformer.transform(companyNumber, chargeId, requestBody);
@@ -97,10 +98,7 @@ public class ChargesService {
         Optional<ChargesDocument> chargesDocuments =
                 this.chargesRepository.findChargeDetails(companyNumber, chargeId);
         if (chargesDocuments.isEmpty()) {
-            logger.trace(
-                    String.format(
-                            "Company charges not found for company %s with charge id %s",
-                            companyNumber, chargeId));
+            LOGGER.trace("Company charges not found for company", DataMapHolder.getLogMap());
             return Optional.empty();
         }
         return chargesDocuments.map(ChargesDocument::getData);
@@ -113,7 +111,7 @@ public class ChargesService {
      * @return charges.
      */
     public Optional<ChargesApi> findCharges(final String companyNumber,
-                                            final RequestCriteria requestCriteria) {
+            final RequestCriteria requestCriteria) {
         List<String> statusFilter = new ArrayList<>();
         if ("outstanding".equals(requestCriteria.getFilter())) {
             statusFilter.add(ChargeApi.StatusEnum.SATISFIED.toString());
@@ -121,21 +119,20 @@ public class ChargesService {
         }
         ChargesAggregate chargesAggregate =
                 chargesRepository.findCharges(companyNumber, statusFilter,
-                Optional.ofNullable(requestCriteria.getStartIndex()).orElse(0),
-                Math.min(Optional.ofNullable(requestCriteria.getItemsPerPage()).orElse(25), 100));
+                        Optional.ofNullable(requestCriteria.getStartIndex()).orElse(0),
+                        Math.min(Optional.ofNullable(requestCriteria.getItemsPerPage()).orElse(25), 100));
 
         Optional<MetricsApi> companyMetrics =
                 companyMetricsApiService.getCompanyMetrics(companyNumber);
 
         if (companyMetrics.isEmpty()) {
-            logger.error(String.format("No company metrics data found for company %s ",
-                    companyNumber));
+            LOGGER.error("No company metrics data found for company", DataMapHolder.getLogMap());
         }
         return Optional.of(createChargesApi(chargesAggregate, companyMetrics));
     }
 
     private ChargesApi createChargesApi(ChargesAggregate chargesAggregate,
-                                        Optional<MetricsApi> metrics) {
+            Optional<MetricsApi> metrics) {
         var chargesApi = new ChargesApi();
         chargesAggregate.getChargesDocuments().forEach(
                 charge -> chargesApi.addItemsItem(charge.getData()));
@@ -169,25 +166,18 @@ public class ChargesService {
     }
 
     private void saveAndInvokeChsKafkaApi(String contextId, String companyNumber,
-                                          String chargeId, ChargesDocument charges) {
+            String chargeId, ChargesDocument charges) {
 
         chargesRepository.save(charges);
-        logger.debug(
-                String.format("Invoking chs-kafka-api for chargeId %s company number %s ",
-                        chargeId,
-                        companyNumber));
         ApiResponse<Void> res = chargesApiService.invokeChsKafkaApi(contextId,
-                    companyNumber,
-                    chargeId);
+                companyNumber,
+                chargeId);
         HttpStatus httpStatus = res != null ? HttpStatus.resolve(res.getStatusCode()) : null;
         if (httpStatus == null || !httpStatus.is2xxSuccessful()) {
             throw new ResponseStatusException(httpStatus != null
                     ? httpStatus : HttpStatus.INTERNAL_SERVER_ERROR, "invokeChsKafkaApi");
         }
-        logger.info(String.format("ChsKafka api CHANGED invoked "
-                        + "successfully for contextId %s and company number %s",
-                contextId,
-                companyNumber));
+        LOGGER.info("ChsKafka api CHANGED invoked successfully", DataMapHolder.getLogMap());
 
     }
 
@@ -198,15 +188,14 @@ public class ChargesService {
      * @param chargeId  the charge identifier.
      */
     public void deleteCharge(String contextId,
-                             String chargeId) {
+            String chargeId) {
         try {
             Optional<ChargesDocument> chargesDocumentOptional =
                     chargesRepository.findById(chargeId);
 
             if (chargesDocumentOptional.isEmpty()) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(
-                        "Company charge doesn't exist in company mortgages"
-                                + " with %s header x-request-id %s",
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        String.format("Company charge doesn't exist in company mortgages with %s header x-request-id %s",
                         chargeId, contextId));
             }
             Optional<String> companyNumberOptional = Optional.ofNullable(
@@ -214,27 +203,21 @@ public class ChargesService {
                     .filter(Predicate.not(String::isEmpty));
 
             String companyNumber = companyNumberOptional.orElseThrow(
-                    () -> new ResponseStatusException(
-                            HttpStatus.NOT_FOUND,
-                            "Company number doesn't exist in document for the given "
-                                    + "charge id" + chargeId));
+                    () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                            String.format("Company number doesn't exist in document for the given charge id %s",
+                                    chargeId)));
 
             ChargeApi chargeApi =
                     chargesDocumentOptional.map(ChargesDocument::getData)
-                            .orElseThrow(() -> new ResponseStatusException(
-                                    HttpStatus.NOT_FOUND,
-                                    "ChargeApi object doesn't exist for" + chargeId));
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                    String.format("ChargeApi object doesn't exist for %s", chargeId)));
 
             ApiResponse<Void> apiResponse = chargesApiService.invokeChsKafkaApiWithDeleteEvent(
                     contextId,
                     chargeId,
                     companyNumber,
                     chargeApi);
-            logger.info(String.format("ChsKafka api DELETED "
-                            + "invoked successfully for contextId %s and company number %s",
-                    contextId,
-                    companyNumber));
-
+            LOGGER.info("ChsKafka api DELETED invoked successfully", DataMapHolder.getLogMap());
 
             if (apiResponse == null) {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
@@ -243,22 +226,15 @@ public class ChargesService {
 
             HttpStatus statusCode = HttpStatus.valueOf(apiResponse.getStatusCode());
             if (!statusCode.is2xxSuccessful()) {
-                throw new ResponseStatusException(HttpStatus
-                        .valueOf(apiResponse.getStatusCode()),
+                throw new ResponseStatusException(HttpStatus.valueOf(apiResponse.getStatusCode()),
                         " error response received from ChsKafkaApi");
             }
 
             chargesRepository.deleteById(chargeId);
-            logger.info(String.format(
-                    "Company charge is deleted in "
-                            + "MongoDB with contextId %s and company number %s",
-                    contextId,
-                    companyNumber));
+            LOGGER.info("Company charge deleted successfully in MongoDB", DataMapHolder.getLogMap());
 
         } catch (DataAccessException dbException) {
-            logger.error(String.format(
-                    "Error occurred during a DB call for deleting "
-                            + "charge id %s and x-request-id %s", chargeId, contextId));
+            LOGGER.error("Error occurred during a DB call for delete", DataMapHolder.getLogMap());
             throw new ResponseStatusException(
                     HttpStatus.SERVICE_UNAVAILABLE, dbException.getMessage());
         }

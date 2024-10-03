@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.charges.data.api;
 
+import static uk.gov.companieshouse.charges.data.ChargesDataApiApplication.NAMESPACE;
+
 import java.time.Instant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,55 +15,59 @@ import uk.gov.companieshouse.api.chskafka.ChangedResourceEvent;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.chskafka.request.PrivateChangedResourcePost;
 import uk.gov.companieshouse.api.model.ApiResponse;
+import uk.gov.companieshouse.charges.data.logging.DataMapHolder;
 import uk.gov.companieshouse.charges.data.util.DateTimeFormatter;
 import uk.gov.companieshouse.logging.Logger;
+import uk.gov.companieshouse.logging.LoggerFactory;
 
 @Service
 public class ChargesApiService {
 
     private static final String CHANGED_EVENT_TYPE = "changed";
     private static final String COMPANY_CHARGES_URI = "/company/%s/charges/%s";
-    private final Logger logger;
+    private static final String DELETE_EVENT_TYPE = "deleted";
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(NAMESPACE);
     private final ChsKafkaApiClientServiceImpl apiClientServiceImpl;
     @Value("${charges.api.resource.changed.uri}")
     private String resourceChangedUri;
     @Value("${charges.api.resource.kind}")
     private String resourceKind;
-    private static final String DELETE_EVENT_TYPE = "deleted";
 
     /**
      * Invoke Charges API.
      */
     @Autowired
-    public ChargesApiService(ChsKafkaApiClientServiceImpl apiClientService, Logger logger) {
+    public ChargesApiService(ChsKafkaApiClientServiceImpl apiClientService) {
         this.apiClientServiceImpl = apiClientService;
-        this.logger = logger;
     }
 
     /**
      * Call chs-kafka api.
-     ** @param contextId contextId
+     * * @param contextId contextId
+     *
      * @param companyNumber company charges number
      * @return response returned from chs-kafka api
      */
     public ApiResponse<Void> invokeChsKafkaApi(String contextId, String companyNumber,
-                                               String chargeId) {
+            String chargeId) {
         try {
             PrivateChangedResourcePost changedResourcePost = getChangedResourcePost(
                     resourceChangedUri,
                     mapChangedResource(contextId,
-                    companyNumber, chargeId,
-                    null));
+                            companyNumber, chargeId,
+                            null));
             return changedResourcePost.execute();
         } catch (ApiErrorResponseException exp) {
-            logger.error("Error occurred while calling /private/resource-changed endpoint.", exp);
+            LOGGER.error("Error occurred while calling /private/resource-changed endpoint.", exp,
+                    DataMapHolder.getLogMap());
             throw new ResponseStatusException(HttpStatus.valueOf(exp.getStatusCode()),
                     exp.getStatusMessage(), exp);
         }
     }
 
     private ChangedResource mapChangedResource(String contextId, String companyNumber,
-                                               String chargeId, ChargeApi chargeApi) {
+            String chargeId, ChargeApi chargeApi) {
         ChangedResourceEvent event = new ChangedResourceEvent();
         event.setType(CHANGED_EVENT_TYPE);
         event.setPublishedAt(DateTimeFormatter.formatPublishedAt(Instant.now()));
@@ -81,7 +87,7 @@ public class ChargesApiService {
     }
 
     private PrivateChangedResourcePost getChangedResourcePost(String uri,
-                                                              ChangedResource changedResource) {
+            ChangedResource changedResource) {
 
         InternalApiClient internalApiClient = apiClientServiceImpl.getInternalApiClient();
         return internalApiClient.privateChangedResourceHandler()
@@ -90,28 +96,25 @@ public class ChargesApiService {
 
     /**
      * Call chs-kafka api.
-     * @param contextId x-request-id
+     *
+     * @param contextId     x-request-id
      * @param companyNumber companyNumber
-     * @param chargeApi serialized json object
+     * @param chargeApi     serialized json object
      * @return response returned from chs-kafka api
      */
     public ApiResponse<Void> invokeChsKafkaApiWithDeleteEvent(String contextId,
-                                                        String chargeId,
-                                                        String companyNumber,
-                                                        ChargeApi chargeApi) {
+            String chargeId,
+            String companyNumber,
+            ChargeApi chargeApi) {
         try {
-
-            PrivateChangedResourcePost changedResourcePost = getChangedResourcePost(
-                    resourceChangedUri,
-                    mapChangedResource(contextId, companyNumber,
-                            chargeId, chargeApi));
-            return changedResourcePost.execute();
+            return getChangedResourcePost(resourceChangedUri,
+                    mapChangedResource(contextId, companyNumber, chargeId, chargeApi))
+                    .execute();
 
         } catch (ApiErrorResponseException exp) {
-            HttpStatus statusCode = HttpStatus.valueOf(exp.getStatusCode());
-            logger.error("Unsuccessful call to /private/resource-changed "
-                        + "endpoint for a charge delete event", exp);
-            throw new ResponseStatusException(statusCode, exp.getMessage());
+            LOGGER.error("Unsuccessful call to /private/resource-changed "
+                    + "endpoint for a charge delete event", exp, DataMapHolder.getLogMap());
+            throw new ResponseStatusException(HttpStatus.valueOf(exp.getStatusCode()), exp.getMessage());
         }
     }
 
