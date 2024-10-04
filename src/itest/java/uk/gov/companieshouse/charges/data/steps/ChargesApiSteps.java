@@ -379,7 +379,6 @@ public class ChargesApiSteps {
         File file = new FileSystemResource("src/itest/resources/payload/input/" + payload + ".json").getFile();
         List<ServeEvent> serverEvents = WiremockTestConfig.getServeEvents();
         assertThat(serverEvents).hasSize(1);
-        assertThat(serverEvents).isNotEmpty();
         String requestReceived = serverEvents.getFirst().getRequest().getBodyAsString();
 
         ChangedResource expectedChangedResource = mongoCustomConversions.readValue(file, ChangedResource.class);
