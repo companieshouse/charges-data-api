@@ -45,6 +45,7 @@ public class CompanyMetricsApiService {
         LOGGER.info(String.format("Started : getCompanyMetrics for Company Number %s ", companyNumber),
                 DataMapHolder.getLogMap());
         final InternalApiClient internalApiClient = this.apiClientService.getInternalApiClient();
+        internalApiClient.getHttpClient().setRequestId(DataMapHolder.getRequestId());
         PrivateCompanyMetricsGet companyMetrics =
                 internalApiClient.privateCompanyMetricsResourceHandler()
                         .getCompanyMetrics(
