@@ -22,7 +22,7 @@ public class ChargesTransformerTest {
     @Before
     public void init() {
         this.logger = Mockito.mock(Logger.class);
-        this.chargesTransformer = new ChargesTransformer(this.logger);
+        this.chargesTransformer = new ChargesTransformer();
     }
 
     @Test

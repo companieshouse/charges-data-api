@@ -14,7 +14,6 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.csrf.CsrfFilter;
 import uk.gov.companieshouse.api.filter.CustomCorsFilter;
 import uk.gov.companieshouse.charges.data.auth.EricTokenAuthenticationFilter;
-import uk.gov.companieshouse.logging.Logger;
 
 import java.util.List;
 
@@ -27,14 +26,14 @@ public class WebSecurityConfig {
      * Configure Http Security.
      */
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, Logger logger) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterAt(new EricTokenAuthenticationFilter(logger), BasicAuthenticationFilter.class)
+                .addFilterAt(new EricTokenAuthenticationFilter(), BasicAuthenticationFilter.class)
                 .addFilterBefore(new CustomCorsFilter(List.of(HttpMethod.GET.name())), CsrfFilter.class)
                 .authorizeHttpRequests(auth -> auth.anyRequest().permitAll()
                 );

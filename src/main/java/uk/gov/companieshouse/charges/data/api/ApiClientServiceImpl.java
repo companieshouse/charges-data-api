@@ -3,6 +3,7 @@ package uk.gov.companieshouse.charges.data.api;
 import uk.gov.companieshouse.api.InternalApiClient;
 import uk.gov.companieshouse.api.http.ApiKeyHttpClient;
 import uk.gov.companieshouse.api.http.HttpClient;
+import uk.gov.companieshouse.charges.data.logging.DataMapHolder;
 
 public class ApiClientServiceImpl implements ApiClientService {
 
@@ -20,6 +21,7 @@ public class ApiClientServiceImpl implements ApiClientService {
         InternalApiClient internalApiClient = new InternalApiClient(getHttpClient());
         internalApiClient.setInternalBasePath(internalApiUrl);
         internalApiClient.setBasePath(internalApiUrl);
+        internalApiClient.getHttpClient().setRequestId(DataMapHolder.getRequestId());
 
         return internalApiClient;
     }

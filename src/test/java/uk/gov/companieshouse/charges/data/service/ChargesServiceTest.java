@@ -65,7 +65,6 @@ import uk.gov.companieshouse.charges.data.model.RequestCriteria;
 import uk.gov.companieshouse.charges.data.model.TotalCharges;
 import uk.gov.companieshouse.charges.data.repository.ChargesRepository;
 import uk.gov.companieshouse.charges.data.transform.ChargesTransformer;
-import uk.gov.companieshouse.logging.Logger;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -96,9 +95,6 @@ class ChargesServiceTest {
     private ChargesApiService chargesApiService;
 
     @Mock
-    private Logger logger;
-
-    @Mock
     private ChargesTransformer chargesTransformer;
 
     @Mock
@@ -112,7 +108,7 @@ class ChargesServiceTest {
      */
     @BeforeEach
     public void resetMocks() {
-        chargesService = new ChargesService(logger, chargesRepository,
+        chargesService = new ChargesService(chargesRepository,
                 chargesTransformer, chargesApiService, companyMetricsApiService);
     }
 
@@ -300,9 +296,6 @@ class ChargesServiceTest {
 
         chargesService.deleteCharge(contextId, chargeId);
 
-        verify(logger, Mockito.times(1)).info(
-                    "ChsKafka api DELETED invoked successfully for contextId "  + contextId + " and company number " + companyNumber
-        );
         verify(chargesRepository, Mockito.times(1)).deleteById(Mockito.any());
         verify(chargesRepository, Mockito.times(1)).findById(Mockito.eq(chargeId));
         verify(chargesApiService, times(1)).
@@ -351,9 +344,6 @@ class ChargesServiceTest {
 
         assertThrows(ResponseStatusException.class, () -> chargesService.deleteCharge(contextId, chargeId));
 
-        verify(logger, Mockito.times(1)).info(
-                "ChsKafka api DELETED invoked successfully for contextId "  + contextId + " and company number " + companyNumber
-        );
         verify(chargesRepository, Mockito.times(1)).findById(Mockito.eq(chargeId));
         verify(chargesRepository, Mockito.times(0)).deleteById(Mockito.any());
         verify(chargesApiService, times(1)).

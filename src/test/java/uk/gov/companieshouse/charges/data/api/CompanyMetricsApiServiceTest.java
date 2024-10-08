@@ -18,9 +18,9 @@ import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.handler.metrics.PrivateCompanyMetricsResourceHandler;
 import uk.gov.companieshouse.api.handler.metrics.request.PrivateCompanyMetricsGet;
+import uk.gov.companieshouse.api.http.HttpClient;
 import uk.gov.companieshouse.api.metrics.MetricsApi;
 import uk.gov.companieshouse.api.model.ApiResponse;
-import uk.gov.companieshouse.logging.Logger;
 
 @ExtendWith(MockitoExtension.class)
 class CompanyMetricsApiServiceTest {
@@ -28,10 +28,11 @@ class CompanyMetricsApiServiceTest {
     @Mock
     private ApiClientService apiClientService;
 
-    private final Logger logger = Mockito.mock(Logger.class);
-
     @Mock
     private InternalApiClient internalApiClient;
+
+    @Mock
+    private HttpClient httpClient;
 
     @Mock
     private PrivateCompanyMetricsResourceHandler privateCompanyMetricsResourceHandler;
@@ -50,6 +51,7 @@ class CompanyMetricsApiServiceTest {
             throws ApiErrorResponseException, URIValidationException {
 
         when(apiClientService.getInternalApiClient()).thenReturn(internalApiClient);
+        when(internalApiClient.getHttpClient()).thenReturn(httpClient);
         when(internalApiClient.privateCompanyMetricsResourceHandler()).thenReturn(
                 privateCompanyMetricsResourceHandler);
         when(privateCompanyMetricsResourceHandler.getCompanyMetrics(Mockito.any())).thenReturn(
@@ -69,6 +71,7 @@ class CompanyMetricsApiServiceTest {
             throws ApiErrorResponseException, URIValidationException {
 
         when(apiClientService.getInternalApiClient()).thenReturn(internalApiClient);
+        when(internalApiClient.getHttpClient()).thenReturn(httpClient);
         when(internalApiClient.privateCompanyMetricsResourceHandler()).thenReturn(
                 privateCompanyMetricsResourceHandler);
         when(privateCompanyMetricsResourceHandler.getCompanyMetrics(Mockito.any())).thenReturn(

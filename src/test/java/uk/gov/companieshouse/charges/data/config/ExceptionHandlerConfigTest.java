@@ -33,7 +33,7 @@ class ExceptionHandlerConfigTest {
 
     @BeforeEach
     void setUp() {
-        exceptionHandler = new ExceptionHandlerConfig(mock(Logger.class));
+        exceptionHandler = new ExceptionHandlerConfig();
     }
 
     @Test

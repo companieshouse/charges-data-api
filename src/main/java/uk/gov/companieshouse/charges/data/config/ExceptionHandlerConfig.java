@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.charges.data.config;
 
+import static uk.gov.companieshouse.charges.data.ChargesDataApiApplication.NAMESPACE;
+
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -17,18 +19,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.MethodNotAllowedException;
 import org.springframework.web.server.ResponseStatusException;
+import uk.gov.companieshouse.charges.data.logging.DataMapHolder;
 import uk.gov.companieshouse.logging.Logger;
+import uk.gov.companieshouse.logging.LoggerFactory;
 
 @ControllerAdvice
 public class ExceptionHandlerConfig {
 
-    private final Logger logger;
+    private static final Logger LOGGER = LoggerFactory.getLogger(NAMESPACE);
 
     private static final String X_REQUEST_ID_HEADER = "x-request-id";
-
-    public ExceptionHandlerConfig(final Logger logger) {
-        this.logger = logger;
-    }
 
     private void populateResponseBody(Map<String, Object> responseBody , String correlationId) {
         responseBody.put("timestamp", LocalDateTime.now());
@@ -36,9 +36,8 @@ public class ExceptionHandlerConfig {
                 + " request with Correlation ID: %s", correlationId));
     }
 
-    private void errorLogException(Exception ex, String correlationId) {
-        logger.errorContext(null, String.format("Exception occurred while processing the "
-                + "API request with Correlation ID: %s", correlationId), ex, null);
+    private void errorLogException(Exception ex) {
+        LOGGER.errorContext("Exception occurred while processing the API request", ex, DataMapHolder.getLogMap());
     }
 
     private Map<String, Object> responseAndLogBuilderHandler(Exception ex, WebRequest request) {
@@ -49,7 +48,7 @@ public class ExceptionHandlerConfig {
         }
         Map<String, Object> responseBody = new LinkedHashMap<>();
         populateResponseBody(responseBody, correlationId);
-        errorLogException(ex, correlationId);
+        errorLogException(ex);
 
         return responseBody;
     }

@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.charges.data.serialization;
 
+import static uk.gov.companieshouse.charges.data.serialization.LocalDateTimeDeSerializer.APPLICATION_NAME_SPACE;
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
@@ -12,10 +14,14 @@ import java.time.LocalDate;
 import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
-import uk.gov.companieshouse.charges.data.config.LoggingConfig;
+import uk.gov.companieshouse.charges.data.logging.DataMapHolder;
 import uk.gov.companieshouse.charges.data.util.DateTimeFormatter;
+import uk.gov.companieshouse.logging.Logger;
+import uk.gov.companieshouse.logging.LoggerFactory;
 
 public class LocalDateDeSerializer extends JsonDeserializer<LocalDate> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(APPLICATION_NAME_SPACE);
 
     @Override
     public LocalDate deserialize(JsonParser jsonParser,
@@ -27,7 +33,7 @@ public class LocalDateDeSerializer extends JsonDeserializer<LocalDate> {
                 if (!StringUtils.isBlank(dateStr)) {
                     return DateTimeFormatter.parse(dateStr);
                 } else {
-                    LoggingConfig.getLogger().debug("Ignoring empty date string.");
+                    LOGGER.debug("Ignoring empty date string.", DataMapHolder.getLogMap());
                     return null;
                 }
 
