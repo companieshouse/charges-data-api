@@ -62,12 +62,12 @@ public class ChargesApiSteps {
     @Autowired
     private ChargesRepository chargesRepository;
 
-    String companyNumber = "08124207";
-    String chargeId = "AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==";
-    String insolvencyCasesHappyPathInput = "Insolvency_cases_Happy_Path_input";
-    String invalidPayload = "Invalid_payload";
-    String xRequestValue = "5234234234";
-    String xRequestId = "x-request-id";
+    private static final String COMPANY_NUMBER = "08124207";
+    private static final String CHARGE_ID = "AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==";
+    private static final String INSOLVENCY_CASES_HAPPY_PATH_INPUT = "Insolvency_cases_Happy_Path_input";
+    private static final String INVALID_PAYLOAD = "Invalid_payload";
+    private static final String X_REQUEST_VALUE = "5234234234";
+    private static final String X_REQUEST_ID = "x-request-id";
 
     static InternalChargeApi companyCharge;
 
@@ -105,7 +105,6 @@ public class ChargesApiSteps {
 
     @Given("i create a company charges record in DB from file {string} for company number {string} and charge id {string}")
     public void addChargesToDBFromFile(String fileName, String companyNumber, String chargeId) {
-        InternalChargeApi companyCharge = null;
         File file = new FileSystemResource(
             "src/itest/resources/payload/input/" + fileName + ".json").getFile();
         try {
@@ -130,7 +129,7 @@ public class ChargesApiSteps {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        headers.set(xRequestId, xRequestValue);
+        headers.set(X_REQUEST_ID, X_REQUEST_VALUE);
 
         headers.set("ERIC-Identity" , "SOME_IDENTITY");
         headers.set("ERIC-Identity-Type", "key");
@@ -142,7 +141,7 @@ public class ChargesApiSteps {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        headers.set(xRequestId, xRequestValue);
+        headers.set(X_REQUEST_ID, X_REQUEST_VALUE);
 
         return new HttpEntity(null, headers);
     }
@@ -172,7 +171,7 @@ public class ChargesApiSteps {
 
         RestClientException exception = assertThrows(RestClientException.class,
             () -> restTemplate.exchange(uri, HttpMethod.GET, getNullRequest(), ChargeApi.class,
-                companyNumber, chargeId));
+                companyNumber, CHARGE_ID));
         String exceptionMessage = exception.getMessage();
         CucumberContext.CONTEXT.set("exceptionMessageText", exceptionMessage);
     }
@@ -193,7 +192,7 @@ public class ChargesApiSteps {
 
         Assertions.assertThat(chargesDocuments).hasSize(1);
 
-        ChargesDocument actual = chargesDocuments.get(0);
+        ChargesDocument actual = chargesDocuments.getFirst();
 
         assertThat(actual).isNotNull();
 
@@ -203,8 +202,8 @@ public class ChargesApiSteps {
 
         expected.getData().setEtag(actual.getData().getEtag());
 
-        assertThat(actual.getId()).isEqualTo(chargeId);
-        assertThat(actual.getCompanyNumber()).isEqualTo(companyNumber);
+        assertThat(actual.getId()).isEqualTo(CHARGE_ID);
+        assertThat(actual.getCompanyNumber()).isEqualTo(COMPANY_NUMBER);
         assertThat(actual.getData()).isEqualTo(expected.getData());
         verify(moreThanOrExactly(1), postRequestedFor(urlEqualTo("/private/resource-changed")));
     }
@@ -257,9 +256,9 @@ public class ChargesApiSteps {
 
     @When("PUT Rest endpoint is invoked with a valid json payload but Repository throws an error")
     public void put_rest_endpoint_is_invoked_with_a_valid_json_payload_but_repository_throws_an_error() {
-        readCompanyChargeFile(insolvencyCasesHappyPathInput);
-        i_send_put_request_for_company_number_and_charge_id_with_payload(companyNumber,
-                chargeId);
+        readCompanyChargeFile(INSOLVENCY_CASES_HAPPY_PATH_INPUT);
+        i_send_put_request_for_company_number_and_charge_id_with_payload(COMPANY_NUMBER,
+                CHARGE_ID);
     }
 
     @Then("Rest endpoint returns http response code {int} to the client")
@@ -275,24 +274,25 @@ public class ChargesApiSteps {
 
     @When("PUT Rest endpoint is invoked with a random invalid payload that fails to de-serialised into Request object")
     public void put_rest_endpoint_is_invoked_with_a_random_invalid_payload_that_fails_to_de_serialised_into_request_object() {
-        HttpEntity request = getSecurityForRequest(chargeId);
+        HttpEntity request = getSecurityForRequest(CHARGE_ID);
         String uri = "/company/{company_number}/charge/{charge_id}/internal";
-        ResponseEntity<Void> response = restTemplate.exchange(uri, HttpMethod.PUT, request, Void.class, companyNumber, chargeId);
+        ResponseEntity<Void> response = restTemplate.exchange(uri, HttpMethod.PUT, request, Void.class, COMPANY_NUMBER,
+                CHARGE_ID);
         CucumberContext.CONTEXT.set("statusCode", response.getStatusCode().value());
     }
 
     @When("PUT Rest endpoint is invoked with a valid json payload that causes a NPE")
     public void put_rest_endpoint_is_invoked_with_a_valid_json_payload_that_causes_a_npe() {
-        readCompanyChargeFile(invalidPayload);
-        i_send_put_request_for_company_number_and_charge_id_with_payload(companyNumber,
-                chargeId);
+        readCompanyChargeFile(INVALID_PAYLOAD);
+        i_send_put_request_for_company_number_and_charge_id_with_payload(COMPANY_NUMBER,
+                CHARGE_ID);
     }
 
     @When("PUT Rest endpoint is invoked with a valid json payload")
     public void put_rest_endpoint_is_invoked_with_a_valid_json_payload() {
-        readCompanyChargeFile(insolvencyCasesHappyPathInput);
-        i_send_put_request_for_company_number_and_charge_id_with_payload(companyNumber,
-                chargeId);
+        readCompanyChargeFile(INSOLVENCY_CASES_HAPPY_PATH_INPUT);
+        i_send_put_request_for_company_number_and_charge_id_with_payload(COMPANY_NUMBER,
+                CHARGE_ID);
     }
 
     @Then("MongoDB is successfully updated")
@@ -350,7 +350,7 @@ public class ChargesApiSteps {
         FileSystemResource file = new FileSystemResource("src/itest/resources/payload/input/" + id + ".json");
         Document document = readData(file);
         ChargesDocument chargesDocument = mongoCustomConversions.convertValue(document, ChargesDocument.class);
-        chargesDocument.setId(id); chargesDocument.setCompanyNumber(companyNumber);
+        chargesDocument.setId(id); chargesDocument.setCompanyNumber(COMPANY_NUMBER);
         chargesRepository.save(chargesDocument);
         assertNotNull(chargesRepository.findById(id));
     }
@@ -362,7 +362,7 @@ public class ChargesApiSteps {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        headers.set(xRequestId, xRequestValue);
+        headers.set(X_REQUEST_ID, X_REQUEST_VALUE);
         headers.set("ERIC-Identity" , "SOME_IDENTITY");
         headers.set("ERIC-Identity-Type", "key");
         headers.set("ERIC-Authorised-Key-Privileges", "internal-app");

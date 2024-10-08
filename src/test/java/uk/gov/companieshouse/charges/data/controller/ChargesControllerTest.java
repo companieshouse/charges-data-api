@@ -60,7 +60,7 @@ class ChargesControllerTest {
 
     private static final String COMPANY_NUMBER = "02588581";
     private static final String CHARGE_ID = "18588520";
-    private static final String CHARGES_PUT_URL = String.format("/company/%s/charges/%s/internal", COMPANY_NUMBER, CHARGE_ID);
+    private static final String CHARGES_PUT_URL = String.format("/company/%s/charge/%s/internal", COMPANY_NUMBER, CHARGE_ID);
     private static final String CHARGE_DETAILS_GET_URL = String.format("/company/%s/charges/%s", COMPANY_NUMBER, CHARGE_ID);
     private static final String CHARGES_GET_URL = String.format("/company/%s/charges", COMPANY_NUMBER);
     private static final String CHARGES_DELETE_URL = String.format("/company/%s/charges/%s", COMPANY_NUMBER, CHARGE_ID);
