@@ -7,9 +7,9 @@ import uk.gov.companieshouse.charges.data.logging.DataMapHolder;
 
 public class ApiClientServiceImpl implements ApiClientService {
 
-    private String apiKey;
+    private final String apiKey;
 
-    private String internalApiUrl;
+    private final String internalApiUrl;
 
     public ApiClientServiceImpl(String apiKey, String internalApiUrl) {
         this.apiKey = apiKey;
@@ -27,8 +27,7 @@ public class ApiClientServiceImpl implements ApiClientService {
     }
 
     private HttpClient getHttpClient() {
-        ApiKeyHttpClient httpClient = new ApiKeyHttpClient(apiKey);
-        return httpClient;
+        return new ApiKeyHttpClient(apiKey);
     }
 
 }

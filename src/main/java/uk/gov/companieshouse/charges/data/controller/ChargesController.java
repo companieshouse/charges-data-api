@@ -117,7 +117,7 @@ public class ChargesController {
     public ResponseEntity<Void> deleteCharge(
             @RequestHeader("x-request-id") String contextId,
             @PathVariable("company_number") String companyNumber,
-            @PathVariable("charge_id") String chargeId) throws Exception {
+            @PathVariable("charge_id") String chargeId) {
         DataMapHolder.get().companyNumber(companyNumber);
         DataMapHolder.get().mortgageId(chargeId);
         LOGGER.info("Deleting company charge", DataMapHolder.getLogMap());

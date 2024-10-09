@@ -16,7 +16,7 @@ import static org.mockito.Mockito.when;
 import static uk.gov.companieshouse.api.charges.ClassificationApi.TypeEnum.CHARGE_DESCRIPTION;
 
 @ExtendWith(MockitoExtension.class)
-public class EnumConvertersTest {
+class EnumConvertersTest {
 
     @Mock
     private TypeDescriptor typeDescriptor;

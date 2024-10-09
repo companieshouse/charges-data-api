@@ -20,7 +20,6 @@ import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 @SpringBootTest
 class ChargesConverterTest {
     String chargesData;
-    String chargesData1;
 
     @Autowired
     private ObjectMapper mongoCustomConversions;
@@ -35,7 +34,7 @@ class ChargesConverterTest {
     }
 
     @Test
-    void shouldReadEnumValue() throws IOException {
+    void shouldReadEnumValue() {
         Document chargesBson = Document.parse(chargesData);
         ChargesDocument chargesDocument =
                 mongoCustomConversions.convertValue(chargesBson, ChargesDocument.class);
