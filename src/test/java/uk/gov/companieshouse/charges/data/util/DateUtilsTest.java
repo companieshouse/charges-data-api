@@ -8,23 +8,23 @@ import java.time.Instant;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
-class DateTimeFormatterTest {
+class DateUtilsTest {
 
     @Test
     void shouldParseAndFormatGivenDateString() {
-        LocalDate parsedValue = DateTimeFormatter.parse("2015-06-26T08:31:35.058Z");
+        LocalDate parsedValue = DateUtils.parse("2015-06-26T08:31:35.058Z");
         assertThat(parsedValue).isNotNull();
         assertThat(parsedValue).hasToString("2015-06-26");
     }
 
     @Test
     void throwExceptionWhenGivenWrongDate() {
-        assertThrows(IllegalStateException.class, () -> DateTimeFormatter.parse("2015 08:31:35.058Z"));
+        assertThrows(IllegalStateException.class, () -> DateUtils.parse("2015 08:31:35.058Z"));
     }
 
     @Test
     void shouldFormatGivenDateString() {
-        String formattedDate = DateTimeFormatter.format(LocalDate.of(2015, 06, 26));
+        String formattedDate = DateUtils.format(LocalDate.of(2015, 06, 26));
         assertThat(formattedDate).isNotNull();
         assertThat(formattedDate).isEqualTo("2015-06-26T00:00:00Z");
     }
@@ -36,7 +36,7 @@ class DateTimeFormatterTest {
         final String expected = "2024-09-04T10:52:22";
 
         // when
-        final String actual = DateTimeFormatter.formatPublishedAt(now);
+        final String actual = DateUtils.formatPublishedAt(now);
 
         // then
         assertEquals(expected, actual);

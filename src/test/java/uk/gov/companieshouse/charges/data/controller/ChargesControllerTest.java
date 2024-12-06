@@ -41,12 +41,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.server.ResponseStatusException;
 import uk.gov.companieshouse.api.charges.ChargesApi;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
-import uk.gov.companieshouse.charges.data.config.ExceptionHandlerConfig;
 import uk.gov.companieshouse.charges.data.config.WebSecurityConfig;
+import uk.gov.companieshouse.charges.data.exception.BadRequestException;
+import uk.gov.companieshouse.charges.data.exception.ConflictException;
+import uk.gov.companieshouse.charges.data.exception.ServiceUnavailableException;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument.Updated;
 import uk.gov.companieshouse.charges.data.service.ChargesService;
@@ -54,17 +57,21 @@ import uk.gov.companieshouse.charges.data.transform.ChargesTransformer;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = ChargesController.class)
-@ContextConfiguration(classes = {ChargesController.class, ExceptionHandlerConfig.class})
+@ContextConfiguration(classes = {ChargesController.class, ControllerExceptionHandler.class})
 @Import({WebSecurityConfig.class})
 class ChargesControllerTest {
 
     private static final String COMPANY_NUMBER = "02588581";
     private static final String CHARGE_ID = "18588520";
-    private static final String CHARGES_PUT_URL = String.format("/company/%s/charge/%s/internal", COMPANY_NUMBER, CHARGE_ID);
-    private static final String CHARGE_DETAILS_GET_URL = String.format("/company/%s/charges/%s", COMPANY_NUMBER, CHARGE_ID);
+    private static final String CHARGES_PUT_URL = String.format("/company/%s/charge/%s/internal",
+            COMPANY_NUMBER, CHARGE_ID);
+    private static final String CHARGE_DETAILS_GET_URL = String.format("/company/%s/charges/%s",
+            COMPANY_NUMBER, CHARGE_ID);
     private static final String CHARGES_GET_URL = String.format("/company/%s/charges", COMPANY_NUMBER);
-    private static final String CHARGES_DELETE_URL = String.format("/company/%s/charges/%s", COMPANY_NUMBER, CHARGE_ID);
+    private static final String CHARGES_DELETE_URL = String.format("/company/%s/charge/%s/internal",
+            COMPANY_NUMBER, CHARGE_ID);
     private static final String X_REQUEST_ID = "123";
+    private static final String DELTA_AT = "20241205123045999999";
 
     private static final String ERIC_ALLOWED_ORIGIN="ERIC-Allowed-Origin";
     private static final String ERIC_IDENTITY="ERIC-Identity";
@@ -367,108 +374,99 @@ class ChargesControllerTest {
     @Test
     @DisplayName("Company Charges DELETE request")
     void callChargeDeleteRequest() throws Exception {
-        doNothing().when(chargesService).deleteCharge(anyString(), anyString());
+        // given
 
-        mockMvc.perform(delete(CHARGES_DELETE_URL)
+        // when
+        ResultActions result = mockMvc.perform(delete(CHARGES_DELETE_URL)
                         .contentType(APPLICATION_JSON)
                         .header("x-request-id", X_REQUEST_ID)
                         .header("ERIC-Identity" , "SOME_IDENTITY")
                         .header("ERIC-Identity-Type", "KEY")
-                        .header("ERIC-Authorised-Key-Privileges", "internal-app"))
-                .andExpect(status().isOk());
+                        .header("ERIC-Authorised-Key-Privileges", "internal-app")
+                        .header("X-DELTA-AT", DELTA_AT));
+
+        // then
+         result.andExpect(status().isOk());
     }
 
     @Test
-    @DisplayName("Company Charges DELETE request - NotFound status code 404 ")
-    void callChargeDeleteRequestIllegalArgument() throws Exception {
-        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND))
-                .when(chargesService).deleteCharge(anyString(), anyString());
+    @DisplayName("Company Charges DELETE request when service returns Service Unavailable exception")
+    void deleteCompanyExemptionsServerError() throws Exception {
+        // given
+        doThrow(ServiceUnavailableException.class).when(chargesService).deleteCharge(
+                anyString(), anyString(), anyString(), anyString());
 
-        mockMvc.perform(delete(CHARGES_DELETE_URL)
-                        .contentType(APPLICATION_JSON)
-                        .header("x-request-id", X_REQUEST_ID)
-                        .header("ERIC-Identity" , "SOME_IDENTITY")
-                        .header("ERIC-Identity-Type", "KEY")
-                        .header("ERIC-Authorised-Key-Privileges", "internal-app"))
-                .andExpect(status().isNotFound());
+        // when
+        ResultActions result = mockMvc.perform(delete(CHARGES_DELETE_URL)
+                .contentType(APPLICATION_JSON)
+                .header("x-request-id", "5342342")
+                .header("ERIC-Identity", "Test-Identity")
+                .header("ERIC-Identity-Type", "Key")
+                .header("ERIC-Authorised-Key-Privileges", "internal-app")
+                .header("X-DELTA-AT", DELTA_AT));
+
+        // then
+        result.andExpect(status().isServiceUnavailable());
     }
 
     @Test
-    @DisplayName("Company Charges DELETE request - BadRequest status code 400")
-    void callChargeDeleteRequestBadRequest() throws Exception {
-        doThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST))
-                .when(chargesService).deleteCharge(anyString(), anyString());
+    @DisplayName("Company Charges DELETE request when service returns Bad Request exception")
+    void deleteCompanyExemptionsBadRequest() throws Exception {
+        // given
+        doThrow(BadRequestException.class).when(chargesService).deleteCharge(
+                anyString(), anyString(), anyString(), anyString());
 
-        mockMvc.perform(delete(CHARGES_DELETE_URL)
-                        .contentType(APPLICATION_JSON)
-                    .header("x-request-id", X_REQUEST_ID)
-                    .header("ERIC-Identity" , "SOME_IDENTITY")
-                    .header("ERIC-Identity-Type", "KEY")
-                    .header("ERIC-Authorised-Key-Privileges", "internal-app"))
-                .andExpect(status().isBadRequest());
+        // when
+        ResultActions result = mockMvc.perform(delete(CHARGES_DELETE_URL)
+                .contentType(APPLICATION_JSON)
+                .header("x-request-id", "5342342")
+                .header("ERIC-Identity", "Test-Identity")
+                .header("ERIC-Identity-Type", "Key")
+                .header("ERIC-Authorised-Key-Privileges", "internal-app")
+                .header("X-DELTA-AT", DELTA_AT));
+
+        // then
+        result.andExpect(status().isBadRequest());
     }
 
     @Test
-    @DisplayName("Company Charges DELETE request - MethodNotAllowed status code 405")
-    void callChargeDeleteRequestMethodNotAllowed() throws Exception {
-        doThrow(new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED))
-                .when(chargesService).deleteCharge(anyString(), anyString());
+    @DisplayName("Company Charges DELETE request when service returns generic exception")
+    void deleteCompanyExemptionsGenericRuntimeException() throws Exception {
+        // given
+        doThrow(RuntimeException.class).when(chargesService).deleteCharge(
+                anyString(), anyString(), anyString(), anyString());
 
-        mockMvc.perform(put(CHARGES_DELETE_URL)
-                        .contentType(APPLICATION_JSON)
-                        .header("x-request-id", X_REQUEST_ID)
-                        .header("ERIC-Identity" , "SOME_IDENTITY")
-                        .header("ERIC-Identity-Type", "KEY")
-                        .header("ERIC-Authorised-Key-Privileges", "internal-app"))
-                .andExpect(status().isMethodNotAllowed());
+        // when
+        ResultActions result = mockMvc.perform(delete(CHARGES_DELETE_URL)
+                .contentType(APPLICATION_JSON)
+                .header("x-request-id", "5342342")
+                .header("ERIC-Identity", "Test-Identity")
+                .header("ERIC-Identity-Type", "Key")
+                .header("ERIC-Authorised-Key-Privileges", "internal-app")
+                .header("X-DELTA-AT", DELTA_AT));
+
+        // then
+        result.andExpect(status().isInternalServerError());
     }
 
     @Test
-    @DisplayName("Company Charges DELETE request - InternalServerError status code 500")
-    void callChargeDeleteRequestInternalServerError() throws Exception {
+    @DisplayName("Company Charges DELETE request when service returns conflict exception")
+    void deleteCompanyExemptionsConflict() throws Exception {
+        // given
+        doThrow(ConflictException.class).when(chargesService).deleteCharge(
+                anyString(), anyString(), anyString(), anyString());
 
-        doThrow(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR))
-                .when(chargesService).deleteCharge(anyString(), anyString());
+        // when
+        ResultActions result = mockMvc.perform(delete(CHARGES_DELETE_URL)
+                .contentType(APPLICATION_JSON)
+                .header("x-request-id", "5342342")
+                .header("ERIC-Identity", "Test-Identity")
+                .header("ERIC-Identity-Type", "Key")
+                .header("ERIC-Authorised-Key-Privileges", "internal-app")
+                .header("X-DELTA-AT", DELTA_AT));
 
-        mockMvc.perform(delete(CHARGES_DELETE_URL)
-                        .contentType(APPLICATION_JSON)
-                        .header("x-request-id", X_REQUEST_ID)
-                        .header("ERIC-Identity" , "SOME_IDENTITY")
-                        .header("ERIC-Identity-Type", "KEY")
-                        .header("ERIC-Authorised-Key-Privileges", "internal-app"))
-                .andExpect(status().isInternalServerError());
-    }
-
-    @Test
-    @DisplayName("Company Charges DELETE request - ServiceUnavailable status code 503")
-    void callChargeDeleteRequestServiceUnavailable() throws Exception {
-
-        doThrow(new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE))
-                .when(chargesService).deleteCharge(anyString(), anyString());
-
-        mockMvc.perform(delete(CHARGES_DELETE_URL)
-                        .contentType(APPLICATION_JSON)
-                        .header("x-request-id", X_REQUEST_ID)
-                        .header("ERIC-Identity" , "SOME_IDENTITY")
-                        .header("ERIC-Identity-Type", "KEY")
-                        .header("ERIC-Authorised-Key-Privileges", "internal-app"))
-                .andExpect(status().isServiceUnavailable());
-    }
-
-    @Test
-    @DisplayName("Company Charges DELETE request - BadGateway status code 502")
-    void callChargeDeleteRequestBadGatewayError() throws Exception {
-
-        doThrow(new ResponseStatusException(HttpStatus.BAD_GATEWAY))
-                .when(chargesService).deleteCharge(anyString(), anyString());
-
-        mockMvc.perform(delete(CHARGES_DELETE_URL)
-                        .contentType(APPLICATION_JSON)
-                        .header("x-request-id", X_REQUEST_ID)
-                        .header("ERIC-Identity" , "SOME_IDENTITY")
-                        .header("ERIC-Identity-Type", "KEY")
-                        .header("ERIC-Authorised-Key-Privileges", "internal-app"))
-                .andExpect(status().isBadGateway());
+        // then
+        result.andExpect(status().isConflict());
     }
 
     @Test

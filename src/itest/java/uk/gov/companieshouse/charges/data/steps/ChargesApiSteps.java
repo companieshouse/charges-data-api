@@ -357,7 +357,16 @@ public class ChargesApiSteps {
 
     @When("I send DELETE request with company number {string} and charge id {string}")
     public void i_send_delete_request_with_company_number(String companyNumber, String chargeId) {
-        String uri = "/company/{company_number}/charges/{charge_id}";
+        invokeDeleteCall(companyNumber, chargeId,"20241205123045999999");
+    }
+
+    @When("I send DELETE request with company number {string}, charge id {string} and delta_at {string}")
+    public void i_send_delete_request_with_stale_delta_at(String companyNumber, String chargeId, String deltaAt) {
+        invokeDeleteCall(companyNumber, chargeId, deltaAt);
+    }
+
+    private void invokeDeleteCall(String companyNumber, String chargeId, String deltaAt) {
+        String uri = "/company/{company_number}/charge/{charge_id}/internal";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -366,6 +375,7 @@ public class ChargesApiSteps {
         headers.set("ERIC-Identity" , "SOME_IDENTITY");
         headers.set("ERIC-Identity-Type", "key");
         headers.set("ERIC-Authorised-Key-Privileges", "internal-app");
+        headers.set("X-DELTA-AT", deltaAt);
         var request = new HttpEntity<>(null, headers);
 
         ResponseEntity<Void> response = restTemplate.exchange(uri, HttpMethod.DELETE, request, Void.class, companyNumber, chargeId);
@@ -398,7 +408,7 @@ public class ChargesApiSteps {
         CucumberContext.CONTEXT.set("getChargesResponseBody", response.getBody());
     }
 
-    @Then("charge id {string} does not exist in mongo db")
+    @When("charge id {string} does not exist in mongo db")
     public void charge_id_does_not_exist_in_mongo_db(String chargeId) {
         assertFalse(chargesRepository.findById(chargeId).isPresent());
     }

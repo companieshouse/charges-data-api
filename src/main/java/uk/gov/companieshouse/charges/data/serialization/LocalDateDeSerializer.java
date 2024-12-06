@@ -15,7 +15,7 @@ import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
 import uk.gov.companieshouse.charges.data.logging.DataMapHolder;
-import uk.gov.companieshouse.charges.data.util.DateTimeFormatter;
+import uk.gov.companieshouse.charges.data.util.DateUtils;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
@@ -31,7 +31,7 @@ public class LocalDateDeSerializer extends JsonDeserializer<LocalDate> {
             if (JsonNodeType.STRING.equals(jsonNode.getNodeType())) {
                 var dateStr = jsonNode.textValue();
                 if (!StringUtils.isBlank(dateStr)) {
-                    return DateTimeFormatter.parse(dateStr);
+                    return DateUtils.parse(dateStr);
                 } else {
                     LOGGER.debug("Ignoring empty date string.", DataMapHolder.getLogMap());
                     return null;
@@ -40,14 +40,14 @@ public class LocalDateDeSerializer extends JsonDeserializer<LocalDate> {
             } else {
                 var dateJsonNode = jsonNode.get("$date");
                 if (dateJsonNode == null) {
-                    return DateTimeFormatter.parse(jsonNode.textValue());
+                    return DateUtils.parse(jsonNode.textValue());
                 } else if (dateJsonNode.isTextual()) {
                     var dateStr = dateJsonNode.textValue();
-                    return DateTimeFormatter.parse(dateStr);
+                    return DateUtils.parse(dateStr);
                 } else {
                     var longDate = dateJsonNode.get("$numberLong").asLong();
                     var dateStr = Instant.ofEpochMilli(new Date(longDate).getTime()).toString();
-                    return DateTimeFormatter.parse(dateStr);
+                    return DateUtils.parse(dateStr);
                 }
             }
         } catch (Exception ex) {

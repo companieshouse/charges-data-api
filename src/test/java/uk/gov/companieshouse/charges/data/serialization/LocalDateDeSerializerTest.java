@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.companieshouse.charges.data.util.DateTimeFormatter;
+import uk.gov.companieshouse.charges.data.util.DateUtils;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -44,7 +44,7 @@ class LocalDateDeSerializerTest {
         when(jsonNode.textValue()).thenReturn(DATE_STRING);
         LocalDate localDate = deserializer.deserialize(jsonParser, deserializationContext);
 
-        Assertions.assertEquals(DateTimeFormatter.parse(DATE_STRING), localDate);
+        Assertions.assertEquals(DateUtils.parse(DATE_STRING), localDate);
     }
 
     @Test
@@ -53,7 +53,7 @@ class LocalDateDeSerializerTest {
         when(jsonNode.textValue()).thenReturn(DATE_STRING);
         LocalDate localDate = deserializer.deserialize(jsonParser, deserializationContext);
 
-        Assertions.assertEquals(DateTimeFormatter.parse(DATE_STRING), localDate);
+        Assertions.assertEquals(DateUtils.parse(DATE_STRING), localDate);
     }
 
     @Test
@@ -63,6 +63,6 @@ class LocalDateDeSerializerTest {
         when(jsonNode.asLong()).thenReturn(1435308155000L);
         LocalDate localDate = deserializer.deserialize(jsonParser, deserializationContext);
 
-        Assertions.assertEquals(DateTimeFormatter.parse(DATE_STRING), localDate);
+        Assertions.assertEquals(DateUtils.parse(DATE_STRING), localDate);
     }
 }

@@ -9,7 +9,6 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 public class ChargesDataApiApplication {
 
     public static final String NAMESPACE = "charges-data-api";
-
     public static void main(String[] args) {
         SpringApplication.run(ChargesDataApiApplication.class, args);
     }
