@@ -113,9 +113,6 @@ public class ChargesService {
         try {
             Optional<ChargesDocument> chargesDocuments =
                     this.chargesRepository.findChargeDetails(companyNumber, chargeId);
-//            if (chargesDocuments.isEmpty()) {
-//                LOGGER.trace("Company charges not found for company", DataMapHolder.getLogMap());
-//            }
             return chargesDocuments.map(ChargesDocument::getData).orElseThrow(() -> new NotFoundException(
                     String.format(GET_CHARGE_MESSAGE, chargeId, companyNumber)));
         } catch (DataAccessException ex) {
