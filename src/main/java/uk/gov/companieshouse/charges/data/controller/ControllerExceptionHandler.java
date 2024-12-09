@@ -26,7 +26,7 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Void> handleNotFound(NotFoundException ex) {
-        LOGGER.error("Unable to locate company exemptions", ex);
+        LOGGER.error("Unable to locate company charges", ex);
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .build();
