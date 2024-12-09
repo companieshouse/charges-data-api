@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.charges.data.config;
 
+import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -14,8 +15,6 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.csrf.CsrfFilter;
 import uk.gov.companieshouse.api.filter.CustomCorsFilter;
 import uk.gov.companieshouse.charges.data.auth.EricTokenAuthenticationFilter;
-
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
