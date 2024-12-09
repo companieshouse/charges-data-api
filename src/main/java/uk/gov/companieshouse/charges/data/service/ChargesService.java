@@ -146,17 +146,14 @@ public class ChargesService {
             if (companyMetrics.isEmpty()) {
                 LOGGER.error("No company metrics data found for company", DataMapHolder.getLogMap());
             }
-            return createChargesApi(chargesAggregate, companyMetrics).orElseThrow(() -> {
-                LOGGER.info(String.format(String.format(FIND_CHARGES_MESSAGE, companyNumber)));
-                return new NotFoundException(String.format(FIND_CHARGES_MESSAGE, companyNumber));
-            });
+            return createChargesApi(chargesAggregate, companyMetrics);
         } catch (DataAccessException ex) {
             LOGGER.error("Error occurred during a DB call for GET charges", ex);
             throw new ServiceUnavailableException("Error occurred during a DB call for GET charges");
         }
     }
 
-    private Optional<ChargesApi> createChargesApi(ChargesAggregate chargesAggregate,
+    private ChargesApi createChargesApi(ChargesAggregate chargesAggregate,
             Optional<MetricsApi> metrics) {
         var chargesApi = new ChargesApi();
         chargesAggregate.getChargesDocuments().forEach(
@@ -183,7 +180,7 @@ public class ChargesService {
         chargesApi.setUnfilteredCount(integerDefaultZero(mortgage == null ? null :
                 mortgage.getTotalCount()));
 
-        return Optional.of(chargesApi);
+        return chargesApi;
     }
 
     private int integerDefaultZero(Integer integer) {
