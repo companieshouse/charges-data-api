@@ -10,7 +10,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
-
 import java.util.function.Supplier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -37,7 +36,6 @@ import uk.gov.companieshouse.charges.data.serialization.NonBlankStringSerializer
 import uk.gov.companieshouse.charges.data.serialization.NotNullFieldObjectSerializer;
 import uk.gov.companieshouse.charges.data.serialization.OffsetDateTimeDeSerializer;
 import uk.gov.companieshouse.charges.data.serialization.OffsetDateTimeSerializer;
-
 import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.environment.impl.EnvironmentReaderImpl;
 import uk.gov.companieshouse.sdk.manager.ApiSdkManager;

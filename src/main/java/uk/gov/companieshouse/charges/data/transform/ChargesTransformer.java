@@ -4,7 +4,6 @@ import static uk.gov.companieshouse.charges.data.ChargesDataApiApplication.NAMES
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.GenerateEtagUtil;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
