@@ -2,7 +2,6 @@ package uk.gov.companieshouse.charges.data.model;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
