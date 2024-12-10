@@ -57,8 +57,7 @@ public class ChargesController {
         LOGGER.info("Upserting company charges", DataMapHolder.getLogMap());
 
         chargesService.upsertCharges(contextId, companyNumber, chargeId, requestBody);
-
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -93,12 +92,7 @@ public class ChargesController {
         DataMapHolder.get().companyNumber(companyNumber);
         DataMapHolder.get().mortgageId(chargeId);
         LOGGER.info("Getting company charge details", DataMapHolder.getLogMap());
-
-        return chargesService.getChargeDetails(companyNumber, chargeId).map(chargesDocument ->
-                        new ResponseEntity<>(
-                                chargesDocument,
-                                HttpStatus.OK))
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return ResponseEntity.ok().body(chargesService.getChargeDetails(companyNumber, chargeId));
     }
 
     /**
@@ -115,13 +109,7 @@ public class ChargesController {
             @RequestParam(value = "filter", required = false) final String filter) {
         DataMapHolder.get().companyNumber(companyNumber);
         LOGGER.info("Getting all charges for company", DataMapHolder.getLogMap());
-
-        return chargesService.findCharges(companyNumber,
-                        new RequestCriteria()
-                                .setItemsPerPage(itemsPerPage)
-                                .setStartIndex(startIndex)
-                                .setFilter(filter))
-                .map(charges -> new ResponseEntity<>(charges, HttpStatus.OK))
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return ResponseEntity.ok().body(chargesService.findCharges(companyNumber,
+                new RequestCriteria().setItemsPerPage(itemsPerPage).setStartIndex(startIndex).setFilter(filter)));
     }
 }

@@ -39,6 +39,8 @@ import uk.gov.companieshouse.logging.LoggerFactory;
 public class ChargesService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NAMESPACE);
+    private static final String GET_CHARGE_MESSAGE = "Charge: %s not found for company: %s";
+    private static final String FIND_CHARGES_MESSAGE = "Charges does not exist for company: %s";
 
     private final ChargesApiService chargesApiService;
     private final ChargesTransformer chargesTransformer;
@@ -83,7 +85,7 @@ public class ChargesService {
                                     this.chargesTransformer.transform(companyNumber, chargeId, requestBody);
 
                             saveAndInvokeChsKafkaApi(contextId, companyNumber, chargeId, charges);
-                        } else {
+                            } else {
                             LOGGER.error("Charge not saved as record provided is older than the one already stored",
                                     DataMapHolder.getLogMap());
                         }
@@ -94,8 +96,8 @@ public class ChargesService {
                         saveAndInvokeChsKafkaApi(contextId, companyNumber, chargeId, charges);
                     });
         } catch (DataAccessException ex) {
-            LOGGER.error("Error connecting to MongoDB");
-            throw new ServiceUnavailableException("Error connecting to MongoDB");
+            LOGGER.error("Error occurred during a DB call for PUT charges");
+            throw new ServiceUnavailableException("Error occurred during a DB call for PUT charges");
         }
 
     }
@@ -107,14 +109,16 @@ public class ChargesService {
      * @param chargeId      the chargeId.
      * @return charge details.
      */
-    public Optional<ChargeApi> getChargeDetails(final String companyNumber, final String chargeId) {
-        Optional<ChargesDocument> chargesDocuments =
-                this.chargesRepository.findChargeDetails(companyNumber, chargeId);
-        if (chargesDocuments.isEmpty()) {
-            LOGGER.trace("Company charges not found for company", DataMapHolder.getLogMap());
-            return Optional.empty();
+    public ChargeApi getChargeDetails(final String companyNumber, final String chargeId) {
+        try {
+            Optional<ChargesDocument> chargesDocuments =
+                    this.chargesRepository.findChargeDetails(companyNumber, chargeId);
+            return chargesDocuments.map(ChargesDocument::getData).orElseThrow(() -> new NotFoundException(
+                    String.format(GET_CHARGE_MESSAGE, chargeId, companyNumber)));
+        } catch (DataAccessException ex) {
+            LOGGER.error("Error occurred during a DB call for GET charge", ex);
+            throw new ServiceUnavailableException("Error occurred during a DB call for GET charge");
         }
-        return chargesDocuments.map(ChargesDocument::getData);
     }
 
     /**
@@ -123,25 +127,30 @@ public class ChargesService {
      * @param companyNumber company Number.
      * @return charges.
      */
-    public Optional<ChargesApi> findCharges(final String companyNumber,
+    public ChargesApi findCharges(final String companyNumber,
             final RequestCriteria requestCriteria) {
-        List<String> statusFilter = new ArrayList<>();
-        if ("outstanding".equals(requestCriteria.getFilter())) {
-            statusFilter.add(ChargeApi.StatusEnum.SATISFIED.toString());
-            statusFilter.add(ChargeApi.StatusEnum.FULLY_SATISFIED.toString());
-        }
-        ChargesAggregate chargesAggregate =
-                chargesRepository.findCharges(companyNumber, statusFilter,
-                        Optional.ofNullable(requestCriteria.getStartIndex()).orElse(0),
-                        Math.min(Optional.ofNullable(requestCriteria.getItemsPerPage()).orElse(25), 100));
+        try {
+            List<String> statusFilter = new ArrayList<>();
+            if ("outstanding".equals(requestCriteria.getFilter())) {
+                statusFilter.add(ChargeApi.StatusEnum.SATISFIED.toString());
+                statusFilter.add(ChargeApi.StatusEnum.FULLY_SATISFIED.toString());
+            }
+            ChargesAggregate chargesAggregate =
+                    chargesRepository.findCharges(companyNumber, statusFilter,
+                            Optional.ofNullable(requestCriteria.getStartIndex()).orElse(0),
+                            Math.min(Optional.ofNullable(requestCriteria.getItemsPerPage()).orElse(25), 100));
 
-        Optional<MetricsApi> companyMetrics =
-                companyMetricsApiService.getCompanyMetrics(companyNumber);
+            Optional<MetricsApi> companyMetrics =
+                    companyMetricsApiService.getCompanyMetrics(companyNumber);
 
-        if (companyMetrics.isEmpty()) {
-            LOGGER.error("No company metrics data found for company", DataMapHolder.getLogMap());
+            if (companyMetrics.isEmpty()) {
+                LOGGER.error("No company metrics data found for company", DataMapHolder.getLogMap());
+            }
+            return createChargesApi(chargesAggregate, companyMetrics);
+        } catch (DataAccessException ex) {
+            LOGGER.error("Error occurred during a DB call for GET charges", ex);
+            throw new ServiceUnavailableException("Error occurred during a DB call for GET charges");
         }
-        return Optional.of(createChargesApi(chargesAggregate, companyMetrics));
     }
 
     private ChargesApi createChargesApi(ChargesAggregate chargesAggregate,
