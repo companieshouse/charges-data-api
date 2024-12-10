@@ -1,8 +1,0 @@
-app_name: charges-data-api
-group: api
-weight: 900
-routes:
-   1: ^/healthcheck
-   2: ^/company/(.*)/charges/(.*)
-   3: ^/company/(.*)/charge/(.*)
-   4: ^/company/(.*)/charges.*
