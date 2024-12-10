@@ -5,11 +5,14 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 
+import java.util.function.Supplier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,11 +22,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import uk.gov.companieshouse.api.InternalApiClient;
 import uk.gov.companieshouse.api.charges.ScottishAlterationsApi;
 import uk.gov.companieshouse.api.charges.TransactionsLinks;
+import uk.gov.companieshouse.api.http.ApiKeyHttpClient;
 import uk.gov.companieshouse.charges.data.converter.ChargeApiReadConverter;
 import uk.gov.companieshouse.charges.data.converter.ChargeApiWriteConverter;
 import uk.gov.companieshouse.charges.data.converter.EnumConverters;
 import uk.gov.companieshouse.charges.data.converter.OffsetDateTimeReadConverter;
 import uk.gov.companieshouse.charges.data.converter.OffsetDateTimeWriteConverter;
+import uk.gov.companieshouse.charges.data.logging.DataMapHolder;
 import uk.gov.companieshouse.charges.data.serialization.LocalDateDeSerializer;
 import uk.gov.companieshouse.charges.data.serialization.LocalDateSerializer;
 import uk.gov.companieshouse.charges.data.serialization.LocalDateTimeDeSerializer;
@@ -49,6 +54,24 @@ public class ChargesApplicationConfig implements WebMvcConfigurer {
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public InternalApiClient internalApiClient() {
         return ApiSdkManager.getPrivateSDK();
+    }
+
+    @Bean
+    public Supplier<InternalApiClient> internalApiClientSupplier(
+            @Value("${chs.kafka.api.key}") String apiKey,
+            @Value("${chs.kafka.api.endpoint}") String apiUrl) {
+        return () -> {
+            ApiKeyHttpClient apiKeyHttpClient = new ApiKeyHttpClient(apiKey);
+            apiKeyHttpClient.setRequestId(DataMapHolder.getRequestId());
+            InternalApiClient internalApiClient = new InternalApiClient(apiKeyHttpClient);
+            internalApiClient.setBasePath(apiUrl);
+            return internalApiClient;
+        };
+    }
+
+    @Bean
+    public Supplier<Instant> instantSupplier() {
+        return Instant::now;
     }
 
     /**

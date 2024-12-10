@@ -42,7 +42,7 @@ management:
     web:
       base-path: /
       path-mapping:
-        health: charges-data-api/healthcheck
+        health: healthcheck
   endpoint:
     health:
       show-details: never

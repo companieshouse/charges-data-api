@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import java.io.IOException;
 import java.time.LocalDate;
 
-import uk.gov.companieshouse.charges.data.util.DateTimeFormatter;
+import uk.gov.companieshouse.charges.data.util.DateUtils;
 
 public class LocalDateSerializer extends JsonSerializer<LocalDate> {
 
@@ -17,7 +17,7 @@ public class LocalDateSerializer extends JsonSerializer<LocalDate> {
         if (localDate == null) {
             jsonGenerator.writeNull();
         } else {
-            String format = DateTimeFormatter.format(localDate);
+            String format = DateUtils.format(localDate);
             jsonGenerator.writeRawValue("ISODate(\"" + format + "\")");
         }
     }

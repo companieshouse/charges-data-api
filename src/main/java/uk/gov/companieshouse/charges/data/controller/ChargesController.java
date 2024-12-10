@@ -57,8 +57,25 @@ public class ChargesController {
         LOGGER.info("Upserting company charges", DataMapHolder.getLogMap());
 
         chargesService.upsertCharges(contextId, companyNumber, chargeId, requestBody);
+        return ResponseEntity.ok().build();
+    }
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+    /**
+     * Delete a company charge id from company charges.
+     *
+     * @param companyNumber the company number for charges
+     * @param chargeId      the charge information for a company
+     */
+    @DeleteMapping("/company/{company_number}/charge/{charge_id}/internal")
+    public ResponseEntity<Void> deleteCharge(
+            @RequestHeader("x-request-id") String contextId, @PathVariable("company_number") String companyNumber,
+            @PathVariable("charge_id") String chargeId, @RequestHeader("X-DELTA-AT") String deltaAt) {
+        DataMapHolder.get().companyNumber(companyNumber);
+        DataMapHolder.get().mortgageId(chargeId);
+        LOGGER.info("Deleting company charge", DataMapHolder.getLogMap());
+
+        chargesService.deleteCharge(contextId, companyNumber, chargeId, deltaAt);
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -75,12 +92,7 @@ public class ChargesController {
         DataMapHolder.get().companyNumber(companyNumber);
         DataMapHolder.get().mortgageId(chargeId);
         LOGGER.info("Getting company charge details", DataMapHolder.getLogMap());
-
-        return chargesService.getChargeDetails(companyNumber, chargeId).map(chargesDocument ->
-                        new ResponseEntity<>(
-                                chargesDocument,
-                                HttpStatus.OK))
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return ResponseEntity.ok().body(chargesService.getChargeDetails(companyNumber, chargeId));
     }
 
     /**
@@ -97,40 +109,7 @@ public class ChargesController {
             @RequestParam(value = "filter", required = false) final String filter) {
         DataMapHolder.get().companyNumber(companyNumber);
         LOGGER.info("Getting all charges for company", DataMapHolder.getLogMap());
-
-        return chargesService.findCharges(companyNumber,
-                        new RequestCriteria()
-                                .setItemsPerPage(itemsPerPage)
-                                .setStartIndex(startIndex)
-                                .setFilter(filter))
-                .map(charges -> new ResponseEntity<>(charges, HttpStatus.OK))
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return ResponseEntity.ok().body(chargesService.findCharges(companyNumber,
+                new RequestCriteria().setItemsPerPage(itemsPerPage).setStartIndex(startIndex).setFilter(filter)));
     }
-
-    /**
-     * Delete a company charge id from company charges.
-     *
-     * @param companyNumber the company number for charges
-     * @param chargeId      the charge information for a company
-     */
-    @DeleteMapping("/company/{company_number}/charges/{charge_id}")
-    public ResponseEntity<Void> deleteCharge(
-            @RequestHeader("x-request-id") String contextId,
-            @PathVariable("company_number") String companyNumber,
-            @PathVariable("charge_id") String chargeId) {
-        DataMapHolder.get().companyNumber(companyNumber);
-        DataMapHolder.get().mortgageId(chargeId);
-        LOGGER.info("Deleting company charge", DataMapHolder.getLogMap());
-
-        try {
-            chargesService.deleteCharge(contextId, chargeId);
-            return ResponseEntity.status(HttpStatus.OK).build();
-        } catch (ResponseStatusException responseStatusException) {
-            return ResponseEntity.status(responseStatusException.getStatusCode()).build();
-        } catch (Exception exception) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-
-    }
-
 }
