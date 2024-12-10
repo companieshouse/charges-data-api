@@ -21,22 +21,11 @@ public class ChargesApiService {
     private final Supplier<InternalApiClient> internalApiClientSupplier;
     private final ResourceChangedRequestMapper mapper;
 
-
-    /**
-     * Invoke Charges API.
-     */
-
     public ChargesApiService(Supplier<InternalApiClient> internalApiClientSupplier, ResourceChangedRequestMapper mapper) {
         this.internalApiClientSupplier = internalApiClientSupplier;
         this.mapper = mapper;
     }
 
-
-    /**
-     * Calls the CHS Kafka api.
-     * @param resourceChangedRequest encapsulates details relating to the updated or deleted company exemption
-     * @return The service status of the response from chs kafka api
-     */
     public void invokeChsKafkaApi(ResourceChangedRequest resourceChangedRequest) {
         InternalApiClient internalApiClient = internalApiClientSupplier.get();
 

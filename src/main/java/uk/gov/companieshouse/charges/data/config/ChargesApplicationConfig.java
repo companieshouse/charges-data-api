@@ -28,6 +28,7 @@ import uk.gov.companieshouse.charges.data.converter.ChargeApiWriteConverter;
 import uk.gov.companieshouse.charges.data.converter.EnumConverters;
 import uk.gov.companieshouse.charges.data.converter.OffsetDateTimeReadConverter;
 import uk.gov.companieshouse.charges.data.converter.OffsetDateTimeWriteConverter;
+import uk.gov.companieshouse.charges.data.logging.DataMapHolder;
 import uk.gov.companieshouse.charges.data.serialization.LocalDateDeSerializer;
 import uk.gov.companieshouse.charges.data.serialization.LocalDateSerializer;
 import uk.gov.companieshouse.charges.data.serialization.LocalDateTimeDeSerializer;
@@ -60,7 +61,9 @@ public class ChargesApplicationConfig implements WebMvcConfigurer {
             @Value("${chs.kafka.api.key}") String apiKey,
             @Value("${chs.kafka.api.endpoint}") String apiUrl) {
         return () -> {
-            InternalApiClient internalApiClient = new InternalApiClient(new ApiKeyHttpClient(apiKey));
+            ApiKeyHttpClient apiKeyHttpClient = new ApiKeyHttpClient(apiKey);
+            apiKeyHttpClient.setRequestId(DataMapHolder.getRequestId());
+            InternalApiClient internalApiClient = new InternalApiClient(apiKeyHttpClient);
             internalApiClient.setBasePath(apiUrl);
             return internalApiClient;
         };
