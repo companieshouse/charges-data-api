@@ -3,13 +3,12 @@ package uk.gov.companieshouse.charges.data.auth;
 import static uk.gov.companieshouse.charges.data.ChargesDataApiApplication.NAMESPACE;
 
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.ServletException;
+import jakarta.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.Optional;
-
-import jakarta.validation.constraints.NotNull;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
