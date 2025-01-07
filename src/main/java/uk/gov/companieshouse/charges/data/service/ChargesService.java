@@ -84,6 +84,7 @@ public class ChargesService {
                             } else {
                             LOGGER.error("Charge not saved as record provided is older than the one already stored",
                                     DataMapHolder.getLogMap());
+                            throw new ConflictException("Received stale delta");
                         }
                     },
                     () -> {
