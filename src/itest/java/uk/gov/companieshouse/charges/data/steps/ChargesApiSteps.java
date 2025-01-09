@@ -65,6 +65,7 @@ public class ChargesApiSteps {
     private static final String COMPANY_NUMBER = "08124207";
     private static final String CHARGE_ID = "AbRiNTU3NjNjZWI1Y2YxMzkzYWY3MzQ0YzVlOTg4ZGVhZTBkYWI4Ng==";
     private static final String INSOLVENCY_CASES_HAPPY_PATH_INPUT = "Insolvency_cases_Happy_Path_input";
+    private static final String INSOLVENCY_CASES_STALE_INPUT = "Insolvency_cases_stale_input";
     private static final String INVALID_PAYLOAD = "Invalid_payload";
     private static final String X_REQUEST_VALUE = "5234234234";
     private static final String X_REQUEST_ID = "x-request-id";
@@ -433,4 +434,10 @@ public class ChargesApiSteps {
         chargesRepository.save(chargesDocument);
     }
 
+    @When("I send PUT request for company number {string} and chargeId {string} with outdated delta at")
+    public void iSendPUTRequestForCompanyNumberAndChargeIdWithOutdatedDeltaAt(String companyNumber, String chargeId) {
+        readCompanyChargeFile(INSOLVENCY_CASES_STALE_INPUT);
+        i_send_put_request_for_company_number_and_charge_id_with_payload(COMPANY_NUMBER,
+                CHARGE_ID);
+    }
 }

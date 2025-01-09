@@ -82,7 +82,7 @@ public class ChargesService {
 
                             saveAndInvokeChsKafkaApi(contextId, companyNumber, chargeId, charges);
                             } else {
-                            LOGGER.error("Charge not saved as record provided is older than the one already stored",
+                            LOGGER.error("Charge not saved, stale delta received",
                                     DataMapHolder.getLogMap());
                             throw new ConflictException("Received stale delta");
                         }
