@@ -580,6 +580,29 @@ class ChargesServiceTest {
         verifyNoMoreInteractions(chargesRepository);
     }
 
+    @Test
+    void testUpdateChargesThrowsConflictExceptionWhenStaleDeltaIsGiven() {
+        // given
+        ChargesDocument deltaChargesDocument = new ChargesDocument().setId("chargeIdDELTA")
+                .setCompanyNumber("012345678")
+                .setDeltaAt(OffsetDateTime.parse("2023-11-05T15:30:00.000000Z"));
+
+        ChargesDocument existingDocument = new ChargesDocument().setId(CHARGE_ID)
+                .setCompanyNumber(COMPANY_NUMBER)
+                .setDeltaAt(OffsetDateTime.parse("2023-11-06T15:30:00.000000Z"));
+
+        when(chargesRepository.findById(any())).thenReturn(Optional.of(existingDocument));
+
+        // when
+        Executable actual = () -> chargesService.upsertCharges("contextId", "012345678",
+                "chargeIdDELTA", buildInternalCharges(OffsetDateTime.parse("2023-11-05T15:30:00.000000Z")));
+
+        // then
+        assertThrows(ConflictException.class, actual);
+        verify(chargesRepository, times(0)).save(deltaChargesDocument);
+        verifyNoInteractions(chargesApiService);
+    }
+
     private Optional<ChargesDocument> populateChargesDocument(String chargeId, ChargeApi chargeApi,
             OffsetDateTime deltaAtOffset) {
         return Optional.of(new ChargesDocument()
