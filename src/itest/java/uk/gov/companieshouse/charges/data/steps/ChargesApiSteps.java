@@ -437,7 +437,7 @@ public class ChargesApiSteps {
     @When("I send PUT request for company number {string} and chargeId {string} with outdated delta at")
     public void iSendPUTRequestForCompanyNumberAndChargeIdWithOutdatedDeltaAt(String companyNumber, String chargeId) {
         readCompanyChargeFile(INSOLVENCY_CASES_STALE_INPUT);
-        i_send_put_request_for_company_number_and_charge_id_with_payload(COMPANY_NUMBER,
-                CHARGE_ID);
+        i_send_put_request_for_company_number_and_charge_id_with_payload(companyNumber,
+                chargeId);
     }
 }
