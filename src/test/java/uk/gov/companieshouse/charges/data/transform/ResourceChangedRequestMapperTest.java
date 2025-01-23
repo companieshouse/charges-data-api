@@ -1,10 +1,17 @@
 package uk.gov.companieshouse.charges.data.transform;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.companieshouse.api.charges.ChargeApi.AssetsCeasedReleasedEnum.PART_PROPERTY_RELEASED;
 import static uk.gov.companieshouse.api.charges.ChargeApi.StatusEnum.PART_SATISFIED;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -13,6 +20,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
@@ -29,6 +37,7 @@ import uk.gov.companieshouse.api.charges.SecuredDetailsApi;
 import uk.gov.companieshouse.api.charges.TransactionsApi;
 import uk.gov.companieshouse.api.chskafka.ChangedResource;
 import uk.gov.companieshouse.api.chskafka.ChangedResourceEvent;
+import uk.gov.companieshouse.charges.data.exception.SerDesException;
 import uk.gov.companieshouse.charges.data.model.ResourceChangedRequest;
 import uk.gov.companieshouse.charges.data.util.DateUtils;
 
@@ -44,11 +53,16 @@ class ResourceChangedRequestMapperTest {
     private static final String DELETED_EVENT = "deleted";
     private static final Instant UPDATED_AT = Instant.now().truncatedTo(ChronoUnit.MILLIS);
     private static final String PUBLISHED_AT = DateUtils.formatPublishedAt(UPDATED_AT);
+    private static final ChargeApi charge = new ChargeApi();
+    private static final Object chargeMapped = new Object();
+
+    @InjectMocks
+    private ResourceChangedRequestMapper mapper;
 
     @Mock
     private Supplier<Instant> instantSupplier;
-    @InjectMocks
-    private ResourceChangedRequestMapper mapper;
+    @Mock
+    private ObjectMapper objectMapper;
 
     @Test
     void shouldMapChangedEvent() {
@@ -73,15 +87,51 @@ class ResourceChangedRequestMapperTest {
 
     @ParameterizedTest
     @MethodSource("resourceChangedScenarios")
-    void shouldMapDeletedEvent(ResourceChangedTestArgument argument) {
+    void shouldMapDeletedEvent(ResourceChangedTestArgument argument) throws Exception {
         // given
         when(instantSupplier.get()).thenReturn(UPDATED_AT);
+        String serialisedData = "serialisedData";
+        when(objectMapper.writeValueAsString(any())).thenReturn(serialisedData);
+        when(objectMapper.readValue(anyString(), eq(Object.class))).thenReturn(argument.changedResource().getDeletedData());
 
         // when
         ChangedResource actual = mapper.mapDeletedEvent(argument.request());
 
         // then
         assertEquals(argument.changedResource(), actual);
+        verify(objectMapper).writeValueAsString(argument.request().data());
+        verify(objectMapper).readValue(serialisedData, Object.class);
+    }
+
+    @Test
+    void testMapperThrowsSerDesExceptionIfObjectMapperWriteFails() throws Exception {
+        // given
+        when(instantSupplier.get()).thenReturn(UPDATED_AT);
+        when(objectMapper.writeValueAsString(any())).thenThrow(JsonProcessingException.class);
+
+        // when
+        Executable actual = () -> mapper.mapDeletedEvent(
+                new ResourceChangedRequest(EXPECTED_CONTEXT_ID, CHARGE_ID, COMPANY_NUMBER,
+                        null, true));
+
+        // then
+        assertThrows(SerDesException.class, actual);
+    }
+
+    @Test
+    void testMapperThrowsSerDesExceptionIfObjectMapperReadFails() throws Exception {
+        // given
+        when(instantSupplier.get()).thenReturn(UPDATED_AT);
+        when(objectMapper.writeValueAsString(any())).thenReturn("deletedDataAsString");
+        when(objectMapper.readValue(anyString(), eq(Object.class))).thenThrow(JsonProcessingException.class);
+
+        // when
+        Executable actual = () -> mapper.mapDeletedEvent(
+                new ResourceChangedRequest(EXPECTED_CONTEXT_ID, CHARGE_ID, COMPANY_NUMBER,
+                        null, true));
+
+        // then
+        assertThrows(SerDesException.class, actual);
     }
 
     static Stream<ResourceChangedTestArgument> resourceChangedScenarios() {
@@ -97,12 +147,12 @@ class ResourceChangedRequestMapperTest {
                         .build(),
                 ResourceChangedTestArgument.builder()
                         .withRequest(new ResourceChangedRequest(EXPECTED_CONTEXT_ID, CHARGE_ID, COMPANY_NUMBER,
-                                getCharges(), true))
+                                charge, true))
                         .withContextId(EXPECTED_CONTEXT_ID)
                         .withResourceUri(RESOURCE_URI)
                         .withResourceKind(RESOURCE_KIND)
                         .withEventType(DELETED_EVENT)
-                        .withDeletedData(getCharges())
+                        .withDeletedData(chargeMapped)
                         .withEventPublishedAt(PUBLISHED_AT)
                         .build()
         );
@@ -176,39 +226,5 @@ class ResourceChangedRequestMapperTest {
             changedResource.setDeletedData(deletedData);
             return new ResourceChangedTestArgument(this.request, changedResource);
         }
-    }
-
-    private static ChargeApi getCharges() {
-        ChargeApi charges = new ChargeApi();
-        ClassificationApi classificationApi = new ClassificationApi();
-        ParticularsApi particularsApi = new ParticularsApi();
-        SecuredDetailsApi securedDetailsApi = new SecuredDetailsApi();
-        ScottishAlterationsApi scottishAlterationsApi = new ScottishAlterationsApi();
-        List<PersonsEntitledApi> personsEntitled = new ArrayList<>();
-        List<TransactionsApi> transactions = new ArrayList<>();
-        List<InsolvencyCasesApi> insolvencyCases = new ArrayList<>();
-        ChargeLink chargeLink = new ChargeLink();
-        charges.setEtag("etag");
-        charges.setId("id");
-        charges.setChargeCode("chargeCode");
-        charges.setClassification(classificationApi);
-        charges.setChargeNumber(22);
-        charges.setStatus(PART_SATISFIED);
-        charges.setAssetsCeasedReleased(PART_PROPERTY_RELEASED);
-        charges.setAcquiredOn(null);
-        charges.setDeliveredOn(null);
-        charges.setResolvedOn(null);
-        charges.setCoveringInstrumentDate(null);
-        charges.createdOn(null);
-        charges.setSatisfiedOn(null);
-        charges.setParticulars(particularsApi);
-        charges.setSecuredDetails(securedDetailsApi);
-        charges.setScottishAlterations(scottishAlterationsApi);
-        charges.setMoreThanFourPersonsEntitled(false);
-        charges.setPersonsEntitled(personsEntitled);
-        charges.setTransactions(transactions);
-        charges.setInsolvencyCases(insolvencyCases);
-        charges.setLinks(chargeLink);
-        return charges;
     }
 }
