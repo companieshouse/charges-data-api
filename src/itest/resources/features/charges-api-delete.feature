@@ -23,8 +23,8 @@ Feature: Delete company charges information
     Then I should receive 200 status code
 
     Examples:
-      | company_number | charge_id             | payload                            |
-      | 08124207       | 12345678910123456789  | chs-kafka-api-12345678910123456789 |
+      | company_number | charge_id             | payload                                  |
+      | 08124207       | 12345678910123456789  | chs-kafka-api-12345678910123456789_empty |
 
   Scenario Outline: Delete company charges URL returns 503 when DB is down
 

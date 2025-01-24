@@ -1,0 +1,11 @@
+{
+  "resource_uri":"/company/08124207/charges/12345678910123456789",
+  "resource_kind":"company-charges",
+  "context_id":"5234234234",
+  "deleted_data": null,
+  "event":{
+    "fields_changed":null,
+    "published_at":"2022-06-08T16:16:06.625873+01:00",
+    "type":"deleted"
+  }
+}

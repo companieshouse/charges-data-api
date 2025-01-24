@@ -391,6 +391,7 @@ public class ChargesApiSteps {
         List<ServeEvent> serverEvents = WiremockTestConfig.getServeEvents();
         assertThat(serverEvents).hasSize(1);
         String requestReceived = serverEvents.getFirst().getRequest().getBodyAsString();
+        ObjectMapper mapper = new ObjectMapper();
 
         ChangedResource expectedChangedResource = mongoCustomConversions.readValue(file, ChangedResource.class);
         ChangedResource actualChangedResource = mongoCustomConversions.convertValue(Document.parse(requestReceived), ChangedResource.class);
@@ -399,6 +400,9 @@ public class ChargesApiSteps {
         assertEquals( expectedChangedResource.getResourceUri(), actualChangedResource.getResourceUri());
         assertEquals(expectedChangedResource.getResourceKind(), actualChangedResource.getResourceKind());
 
+        String expectedDeletedData = mapper.writeValueAsString(expectedChangedResource.getDeletedData());
+        String actualDeletedData = mapper.writeValueAsString(actualChangedResource.getDeletedData());
+        assertEquals(expectedDeletedData, actualDeletedData);
     }
 
     @When("I send GET request with company number {string} and charge id {string}")

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import uk.gov.companieshouse.charges.data.exception.BadRequestException;
 import uk.gov.companieshouse.charges.data.exception.ConflictException;
 import uk.gov.companieshouse.charges.data.exception.NotFoundException;
+import uk.gov.companieshouse.charges.data.exception.SerDesException;
 import uk.gov.companieshouse.charges.data.exception.ServiceUnavailableException;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
@@ -55,7 +56,7 @@ public class ControllerExceptionHandler {
                 .build();
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(value = {Exception.class, SerDesException.class})
     public ResponseEntity<Void> handleUnknownException(Exception ex) {
         LOGGER.error(ex.getClass().getName(), ex);
         return ResponseEntity
