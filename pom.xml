@@ -48,6 +48,7 @@
 		<!--sonar configuration-->
 		<sonar-maven-plugin.version>3.11.0.3922</sonar-maven-plugin.version>
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+		<sonar.projectName>charges-data-api</sonar.projectName>
 		<sonar.projectKey>uk.gov.companieshouse:charges-data-api</sonar.projectKey>
 		<sonar.sources>src/main</sonar.sources>
 		<sonar.tests>src/test,src/itest</sonar.tests>
@@ -56,6 +57,9 @@
 			${project.basedir}/target/site/jacoco/jacoco.xml
 		</sonar.coverage.jacoco.xmlReportPaths>
 		<sonar.jacoco.reports>${project.basedir}/target/site</sonar.jacoco.reports>
+		<sonar.token>${CODE_ANALYSIS_TOKEN}</sonar.token>
+		<sonar.login></sonar.login>
+		<sonar.password></sonar.password>
 	</properties>
 
 	<dependencyManagement>
