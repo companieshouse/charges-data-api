@@ -32,7 +32,6 @@ test-unit            Run unit tests
 The code present in this repository is used to define and deploy a dockerised container in AWS ECS.
 This is done by calling a [module](https://github.com/companieshouse/terraform-modules/tree/main/aws/ecs) from terraform-modules. Application specific attributes are injected and the service is then deployed using Terraform via the CICD platform 'Concourse'.
 
-
 Application specific attributes | Value                                | Description
 :---------|:-----------------------------------------------------------------------------|:-----------
 **ECS Cluster**        | public-data                                     | ECS cluster (stack) the service belongs to
