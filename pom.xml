@@ -46,7 +46,6 @@
 		<skip.unit.tests>false</skip.unit.tests>
 
 		<!--sonar configuration-->
-		<sonar-maven-plugin.version>3.11.0.3922</sonar-maven-plugin.version>
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 		<sonar.projectName>charges-data-api</sonar.projectName>
 		<sonar.projectKey>uk.gov.companieshouse:charges-data-api</sonar.projectKey>
