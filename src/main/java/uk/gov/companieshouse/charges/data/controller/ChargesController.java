@@ -52,7 +52,6 @@ public class ChargesController {
         DataMapHolder.get().companyNumber(companyNumber);
         DataMapHolder.get().mortgageId(chargeId);
         LOGGER.info("Upserting company charges", DataMapHolder.getLogMap());
-LOGGER.info("TEST");
         chargesService.upsertCharges(contextId, companyNumber, chargeId, requestBody);
         return ResponseEntity.ok().build();
     }
