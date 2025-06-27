@@ -34,7 +34,7 @@
 		<io-cucumber.version>7.23.0</io-cucumber.version>
 		<spring-cloud-contract-wiremock.version>4.3.0</spring-cloud-contract-wiremock.version>
 		<commons-io.version>2.19.0</commons-io.version>
-		<opemtelemtry.version>2.14.0</opemtelemtry.version>
+		<opentelemetry.version>2.14.0</opentelemetry.version>
 
 		<!-- internal dependencies -->
 		<structured-logging.version>3.0.32</structured-logging.version>
@@ -67,7 +67,7 @@
 			<dependency>
 				<groupId>io.opentelemetry.instrumentation</groupId>
 				<artifactId>opentelemetry-instrumentation-bom</artifactId>
-				<version>${opemtelemtry.version}</version>
+				<version>${opentelemetry.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
