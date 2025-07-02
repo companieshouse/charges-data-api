@@ -9,7 +9,7 @@ locals {
   docker_repo                = "charges-data-api"
   kms_alias                  = "alias/${var.aws_profile}/environment-services-kms"
   lb_listener_rule_priority  = 15
-  lb_listener_paths          = ["/company/*/charge","/company/*/charges","/company/*/charges/*", "/company/*/charge/*/internal"]
+  lb_listener_paths          = ["/company/*/charge", "/company/*/charges", "/company/*/charges/*", "/company/*/charge/*/internal"]
   healthcheck_path           = "/healthcheck" #healthcheck path for charges data api
   healthcheck_matcher        = "200"
   s3_config_bucket           = data.vault_generic_secret.shared_s3.data["config_bucket_name"]
@@ -41,7 +41,7 @@ locals {
 
   ssm_global_version_map = [
     for sec in data.aws_ssm_parameter.global_secret :
-      { "name"  = "GLOBAL_${var.ssm_version_prefix}${replace(upper(basename(sec.name)), "-", "_")}", "value" = sec.version }
+    { "name" = "GLOBAL_${var.ssm_version_prefix}${replace(upper(basename(sec.name)), "-", "_")}", "value" = sec.version }
   ]
 
   service_secrets_arn_map = {
@@ -55,20 +55,20 @@ locals {
 
   ssm_service_version_map = [
     for sec in module.secrets.secrets :
-      { "name"  = "${replace(upper(local.service_name), "-", "_")}_${var.ssm_version_prefix}${replace(upper(basename(sec.name)), "-", "_")}", "value" = sec.version }
+    { "name" = "${replace(upper(local.service_name), "-", "_")}_${var.ssm_version_prefix}${replace(upper(basename(sec.name)), "-", "_")}", "value" = sec.version }
   ]
 
   # secrets to go in list
-  task_secrets = concat(local.global_secret_list,local.service_secret_list)
+  task_secrets = concat(local.global_secret_list, local.service_secret_list)
 
-  task_environment = concat(local.ssm_global_version_map,local.ssm_service_version_map,[
+  task_environment = concat(local.ssm_global_version_map, local.ssm_service_version_map, [
     { "name" : "PORT", "value" : local.container_port }
   ])
 
-# get eric secrets from global secrets map
+  # get eric secrets from global secrets map
   eric_secrets = [
-    { "name": "API_KEY", "valueFrom": local.global_secrets_arn_map.eric_api_key },
-    { "name": "AES256_KEY", "valueFrom": local.global_secrets_arn_map.eric_aes256_key }
+    { "name" : "API_KEY", "valueFrom" : local.global_secrets_arn_map.eric_api_key },
+    { "name" : "AES256_KEY", "valueFrom" : local.global_secrets_arn_map.eric_aes256_key }
   ]
   eric_environment_filename = "eric.env"
 }
