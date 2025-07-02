@@ -48,7 +48,7 @@ data "aws_lb" "secondary_lb" {
 
 data "aws_lb_listener" "secondary_lb_listener" {
   load_balancer_arn = data.aws_lb.secondary_lb.arn
-  port = 443
+  port              = 443
 }
 
 
@@ -60,7 +60,7 @@ data "aws_ssm_parameters_by_path" "secrets" {
 # create a list of secrets names to retrieve them in a nicer format and lookup each secret by name
 data "aws_ssm_parameter" "secret" {
   for_each = toset(data.aws_ssm_parameters_by_path.secrets.names)
-  name = each.key
+  name     = each.key
 }
 
 # retrieve all global secrets for this env using global path
