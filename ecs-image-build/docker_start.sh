@@ -1,6 +1,5 @@
 #!/bin/bash
 #
-#
 # Start script for charges-data-api
 
 PORT=8080
