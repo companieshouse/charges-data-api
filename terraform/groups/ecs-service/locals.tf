@@ -23,6 +23,7 @@ locals {
 
   vpc_name = local.stack_secrets["vpc_name"]
 
+
   # create a map of secret name => secret arn to pass into ecs service module
   # using the trimprefix function to remove the prefixed path from the secret name
   secrets_arn_map = {
