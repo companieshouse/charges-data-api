@@ -87,7 +87,7 @@
 				<scope>import</scope>
 			</dependency>
 
-			<!-- Temporary managed override to fix CVE-2025-68161(6.3) -->
+			<!-- Temporary managed override to fix CVE-2025-68161(6.3) in  uk.gov.companieshouse:private-api-sdk-java:jar:4.0.452 -->
 			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-api</artifactId>
