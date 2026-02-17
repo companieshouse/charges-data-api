@@ -25,6 +25,11 @@ test-integration     Run integration tests
 test-unit            Run unit tests
 
 ```
+### Docker
+This service is part of the the Docker module `delta`\
+To run in Docker, enable the module with: `chs-dev modules enable delta`\
+To run the repo in development mode in Docker use: `chs-dev development enable charges-data-api`
+
 ## Terraform ECS
 
 ### What does this code do?
