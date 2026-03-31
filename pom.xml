@@ -19,7 +19,7 @@
 		<main.class>uk.gov.companieshouse.charges.data.ChargesDataApiApplication</main.class>
 
 		<!-- external dependencies -->
-		<spring.boot.version>3.5.10</spring.boot.version>
+		<spring.boot.version>3.5.13</spring.boot.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
@@ -34,8 +34,9 @@
 		<io-cucumber.version>7.23.0</io-cucumber.version>
 		<spring-cloud-contract-wiremock.version>4.3.0</spring-cloud-contract-wiremock.version>
 		<commons-io.version>2.19.0</commons-io.version>
-		<opentelemetry.version>2.14.0</opentelemetry.version>
+		<opentelemetry.version>2.25.0</opentelemetry.version>
 		<commons-lang3.version>3.20.0</commons-lang3.version>
+		<kotlin.version>2.2.21</kotlin.version>
 
 		<!-- internal dependencies -->
 		<structured-logging.version>3.0.49</structured-logging.version>
@@ -87,11 +88,24 @@
 				<scope>import</scope>
 			</dependency>
 
-			<!-- Temporary managed override to fix CVE-2025-68161(6.3) in  uk.gov.companieshouse:private-api-sdk-java:jar:4.0.452 -->
+			<!-- Temporary managed override to fix CVE-2025-68161(6.3) in uk.gov.companieshouse:private-api-sdk-java:jar:4.0.452 -->
 			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-api</artifactId>
 				<version>2.25.3</version>
+			</dependency>
+			<!-- Temporary managed override to fix CVE-2025-67030(8.8) in spring-cloud-contract-wiremock:4.30.0 -->
+			<dependency>
+				<groupId>org.codehaus.plexus</groupId>
+				<artifactId>plexus-utils</artifactId>
+				<version>4.0.3</version>
+				<scope>compile</scope>
+			</dependency>
+			<!-- Temporary managed override to fix CVE-2020-29582(5.3) in io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter:jar:2.25.0-->
+			<dependency>
+				<groupId>org.jetbrains.kotlin</groupId>
+				<artifactId>kotlin-stdlib</artifactId>
+				<version>${kotlin.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
