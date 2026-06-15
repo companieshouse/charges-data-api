@@ -33,3 +33,9 @@ api:
     metrics:
         endpoint: ${COMPANY_METRICS_API_URL:http://localhost:8888}
         key: ${COMPANY_METRICS_API_KEY:apiKey}
+
+management:
+  otlp:
+    metrics:
+      export:
+        enabled: false

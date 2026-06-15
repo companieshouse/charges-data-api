@@ -2,7 +2,7 @@ package uk.gov.companieshouse.charges.data.controller;
 
 import static uk.gov.companieshouse.charges.data.ChargesDataApiApplication.NAMESPACE;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
