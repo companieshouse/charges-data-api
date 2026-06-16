@@ -31,7 +31,7 @@ import org.assertj.core.api.Assertions;
 import org.bson.Document;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.resttestclient.TestRestTemplate;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
@@ -45,7 +45,7 @@ import uk.gov.companieshouse.api.charges.ChargeApi;
 import uk.gov.companieshouse.api.charges.ChargesApi;
 import uk.gov.companieshouse.api.charges.InternalChargeApi;
 import uk.gov.companieshouse.api.chskafka.ChangedResource;
-import uk.gov.companieshouse.charges.data.CucumberFeaturesRunnerITest;
+import uk.gov.companieshouse.charges.data.config.AbstractMongoConfig;
 import uk.gov.companieshouse.charges.data.config.CucumberContext;
 import uk.gov.companieshouse.charges.data.config.WiremockTestConfig;
 import uk.gov.companieshouse.charges.data.model.ChargesDocument;
@@ -79,8 +79,15 @@ public class ChargesApiSteps {
     }
 
     @After
-    public static void after_each() {
-        CucumberFeaturesRunnerITest.stop();
+    public void after_each() {
+        try {
+            chargesRepository.deleteAll();
+        } catch (Exception ignored) {
+            // MongoDB may have been stopped intentionally in this scenario
+        }
+        if (!AbstractMongoConfig.mongoDBContainer.isRunning()) {
+            AbstractMongoConfig.mongoDBContainer.start();
+        }
     }
 
     @Given("Charges data api service is running")
@@ -252,7 +259,7 @@ public class ChargesApiSteps {
     }
     @Given("MongoDB is not reachable")
     public void mongo_db_is_not_reachable() {
-        CucumberFeaturesRunnerITest.stop();
+        AbstractMongoConfig.mongoDBContainer.stop();
     }
 
     @When("PUT Rest endpoint is invoked with a valid json payload but Repository throws an error")
@@ -420,7 +427,7 @@ public class ChargesApiSteps {
 
     @Given("the company mortgages database is down")
     public void the_company_mortgages_db_is_down() {
-        CucumberFeaturesRunnerITest.mongoDBContainer.stop();
+        AbstractMongoConfig.mongoDBContainer.stop();
     }
 
     @Then("charge id {string} exist in mongo db")
