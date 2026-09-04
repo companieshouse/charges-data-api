@@ -46,3 +46,17 @@ management:
     health:
       show-details: never
       enabled: true
+  opentelemetry:
+    enabled: ${OTEL_LOG_ENABLED:false}
+    logging:
+      export:
+        otlp:
+          endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT}/v1/logs
+    tracing:
+      export:
+        otlp:
+          endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT}/v1/traces
+    metrics:
+      export:
+        otlp:
+          endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT}/v1/metrics
